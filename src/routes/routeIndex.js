@@ -1,7 +1,13 @@
 // Route endpoints to appropriate js and pages
-const express = require('express');
+import express from 'express';
+import path from 'path';
+import {fileURLToPath} from 'url';
+import {dirname} from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 const router = express.Router();
-const path = require('path');
 
 const root = path.join(__dirname, '../../public/views');
 
@@ -10,4 +16,4 @@ router.get('/', (req, res) => {
   res.sendFile('index.html', {root: root});
 });
 
-module.exports = router;
+export default router;
