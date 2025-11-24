@@ -1,13 +1,12 @@
 import {ColorFormat} from './constants.js';
 import {converter, parse, formatHex8, formatHex} from 'culori';
-
 /**
  * Converts a color to the specified format.
  *
  * @author Ali Aldaghishy
  * @param {string | object} color - The color to convert (e.g., hex string or color object).
- * @param {string} format - The target format (e.g., 'hex', 'rgb', 'hsl').
- * @returns {object} The converted color object.
+ * @param {string} format - The target format from ColorFormat enum (e.g., ColorFormat.HEX, ColorFormat.RGB, ColorFormat.HSL).
+ * @returns {object} The converted color object with mode and color properties.
  * @throws {Error} If the format is invalid or unsupported.
  */
 export const convertColor = (color, format) => {
