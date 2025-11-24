@@ -1,80 +1,70 @@
+import { convertColor } from "../../public/CommonCode/colorConversion.js";
+import { ColorFormat } from "../../public/CommonCode/constants.js";
+
+/**
+ * Utility for generating basic color harmony sets
+ * Uses the shared color conversion utilities defined by the project.
+ *
+ * @author DeAndre
+ */
 export class ColorHarmony {
+  
+  /**
+   * Convert HEX → HSL using shared converter
+   */
+  static _hexToHsl(hex) {
+    const hsl = convertColor(hex, ColorFormat.HSL);
+    return [hsl.h, hsl.s, hsl.l];
+  }
 
+  /**
+   * Convert HSL → HEX using shared converter
+   */
+  static _hslToHex(h, s, l) {
+    const newColor = convertColor({ h, s, l }, ColorFormat.HEX);
+    return newColor.value;
+  }
+
+  /**
+   * Complementary harmony
+   * 180° hue shift
+   */
   static complementary(hex) {
-    return [hex, ColorHarmony.rotateHue(hex, 180)];
+    const [h, s, l] = this._hexToHsl(hex);
+
+    const compHue = (h + 180) % 360;
+
+    return [
+      hex,
+      this._hslToHex(compHue, s, l)
+    ];
   }
 
+  /**
+   * Analogous harmony
+   * ±30° hue shifts
+   */
   static analogous(hex) {
+    const [h, s, l] = this._hexToHsl(hex);
+
     return [
-      ColorHarmony.rotateHue(hex, -30),
+      this._hslToHex((h + 30) % 360, s, l),
       hex,
-      ColorHarmony.rotateHue(hex, 30)
+      this._hslToHex((h + 330) % 360, s, l)
     ];
   }
 
+  /**
+   * Monochromatic harmony
+   * Adjust lightness around same hue
+   */
   static monochromatic(hex) {
+    const [h, s, l] = this._hexToHsl(hex);
+
     return [
-      ColorHarmony.adjustLightness(hex, 20),
+      this._hslToHex(h, s, Math.min(90, l + 30)),
       hex,
-      ColorHarmony.adjustLightness(hex, -20)
+      this._hslToHex(h, s, Math.max(10, l - 30))
     ];
-  }
-
-  // --- Helper functions ---
-  static rotateHue(hex, degrees) {
-    let { h, s, l } = ColorHarmony.hexToHSL(hex);
-    h = (h + degrees) % 360;
-    if (h < 0) h += 360;
-    return ColorHarmony.hslToHex(h, s, l);
-  }
-
-  static adjustLightness(hex, amount) {
-    let { h, s, l } = ColorHarmony.hexToHSL(hex);
-    l = Math.min(100, Math.max(0, l + amount));
-    return ColorHarmony.hslToHex(h, s, l);
-  }
-
-  static hexToHSL(hex) {
-    hex = hex.replace("#", "");
-    const bigint = parseInt(hex, 16);
-    const r = (bigint >> 16) & 255;
-    const g = (bigint >> 8) & 255;
-    const b = bigint & 255;
-
-    return ColorHarmony.rgbToHsl(r, g, b);
-  }
-
-  static rgbToHsl(r, g, b) {
-    r /= 255; g /= 255; b /= 255;
-    const max = Math.max(r, g, b);
-    const min = Math.min(r, g, b);
-    let h, s, l = (max + min) / 2;
-    const d = max - min;
-
-    if (d === 0) h = s = 0;
-    else {
-      s = d / (1 - Math.abs(2 * l - 1));
-      switch (max) {
-        case r: h = ((g - b) / d) * 60; break;
-        case g: h = (2 + (b - r) / d) * 60; break;
-        case b: h = (4 + (r - g) / d) * 60; break;
-      }
-    }
-
-    return { h: (h + 360) % 360, s: s * 100, l: l * 100 };
-  }
-
-  static hslToHex(h, s, l) {
-    s /= 100;
-    l /= 100;
-
-    const a = s * Math.min(l, 1 - l);
-    const f = (n) => {
-      const k = (n + h / 30) % 12;
-      const color = l - a * Math.max(-1, Math.min(k - 3, Math.min(9 - k, 1)));
-      return Math.round(255 * color).toString(16).padStart(2, "0");
-    };
-
-    return `#${f(0)}${f(8)}${f(4)}`;
   }
 }
