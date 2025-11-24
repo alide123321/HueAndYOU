@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/alide123321/Capstone_Project#readme",
   "dependencies": {
+    "culori": "^4.0.2",
     "dotenv": "^17.2.3",
     "express": "^5.1.0"
   }

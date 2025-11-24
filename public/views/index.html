@@ -5,15 +5,234 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>My Website</title>
-  <link rel="stylesheet" href="./style.css">
-  <link rel="icon" href="./favicon.ico" type="image/x-icon">
+  <title>Hue & YOU - Color Palette Generator</title>
+  <link rel="stylesheet" href="/views/style.css">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
 </head>
 
 <body>
-  <div>
-    <h1>Welcome to My Website</h1>
+  <!-- Top Bar -->
+  <header class="top-bar">
+    <div class="top-bar-content">
+      <div class="brand">Hue & YOU</div>
+      <nav class="nav-menu">
+        <a href="#generate" class="nav-item active">Generate</a>
+        <a href="#edit" class="nav-item">Edit</a>
+        <a href="#library" class="nav-item">Library</a>
+        <a href="#about" class="nav-item">About WCAG</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <div class="main-container">
+    <!-- Left Sidebar -->
+    <aside class="sidebar">
+      <!-- Color Card -->
+      <div class="card">
+        <h2 class="card-title">Color</h2>
+        
+        <div class="form-group">
+          <label for="harmony-type" class="form-label">Harmony type</label>
+          <select id="harmony-type" class="form-select">
+            <!-- Options populated from constants.js -->
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="base-color" class="form-label">Base color</label>
+          <button id="base-color" class="color-swatch-btn" aria-label="Select base color">
+            <span class="color-preview" style="background-color: #4A90E2;"></span>
+          </button>
+        </div>
+
+        <div class="form-group">
+          <label for="num-swatches" class="form-label">Number of swatches</label>
+          <div class="stepper">
+            <button class="stepper-btn" aria-label="Decrease">−</button>
+            <input type="number" id="num-swatches" class="stepper-input" value="5" min="3" max="10" readonly>
+            <button class="stepper-btn" aria-label="Increase">+</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filters Card -->
+      <div class="card">
+        <h2 class="card-title">Filters</h2>
+        
+        <div class="form-group">
+          <label for="colorblind-mode" class="form-label">Color-blind mode</label>
+          <select id="colorblind-mode" class="form-select">
+            <option value="none">None</option>
+            <!-- Colorblind options populated from constants.js -->
+          </select>
+        </div>
+
+
+        <button class="add-filter-btn">+ Add filter</button>
+      </div>
+
+      <!-- Actions Area (Bottom Left)-->
+      <div class="actions-area">
+        <div class="icon-buttons">
+          <button class="icon-btn" aria-label="Share" title="Share">
+            <span class="icon-text">⎘</span>
+          </button>
+          <button class="icon-btn" aria-label="Shuffle" title="Shuffle">
+            <span class="icon-text">⤨</span>
+          </button>
+          <button class="icon-btn" aria-label="Toggle theme" title="Toggle theme">
+            <span class="icon-text">☀</span>
+          </button>
+        </div>
+        <button class="primary-btn">Generate palette</button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area (Right Side) -->
+    <main class="main-content">
+      <!-- Empty State (Initially shown) -->
+      <div class="empty-state" id="empty-state">
+        <div class="empty-state-card">
+          <h1 class="empty-state-title">No palettes yet</h1>
+          <p class="empty-state-text">Adjust the settings on the left, then generate your first palette.</p>
+          <button class="generate-btn">Generate palette</button>
+        </div>
+      </div>
+
+      <!-- Palettes Grid (Hidden initially) -->
+      <!-- Placeholder palettes for demonstration -->
+
+      <div class="palettes-grid hidden" id="palettes-grid">
+        <div class="palette-card">
+          <div class="palette-colors">
+            <div class="palette-color" style="background-color: #4A90E2;"></div>
+            <div class="palette-color" style="background-color: #67A3E8;"></div>
+            <div class="palette-color" style="background-color: #85B6ED;"></div>
+            <div class="palette-color" style="background-color: #A2C9F3;"></div>
+            <div class="palette-color" style="background-color: #C0DCF8;"></div>
+          </div>
+          <div class="palette-info">
+            <span class="palette-label">Palette 1</span>
+            <div class="palette-actions">
+              <button class="text-btn">Export</button>
+              <button class="text-btn">Preview</button>
+              <button class="text-btn">Edit</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="palette-card">
+          <div class="palette-colors">
+            <div class="palette-color" style="background-color: #E24A90;"></div>
+            <div class="palette-color" style="background-color: #E867A3;"></div>
+            <div class="palette-color" style="background-color: #ED85B6;"></div>
+            <div class="palette-color" style="background-color: #F3A2C9;"></div>
+            <div class="palette-color" style="background-color: #F8C0DC;"></div>
+          </div>
+          <div class="palette-info">
+            <span class="palette-label">Palette 2</span>
+            <div class="palette-actions">
+              <button class="text-btn">Export</button>
+              <button class="text-btn">Preview</button>
+              <button class="text-btn">Edit</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="palette-card">
+          <div class="palette-colors">
+            <div class="palette-color" style="background-color: #90E24A;"></div>
+            <div class="palette-color" style="background-color: #A3E867;"></div>
+            <div class="palette-color" style="background-color: #B6ED85;"></div>
+            <div class="palette-color" style="background-color: #C9F3A2;"></div>
+            <div class="palette-color" style="background-color: #DCF8C0;"></div>
+          </div>
+          <div class="palette-info">
+            <span class="palette-label">Palette 3</span>
+            <div class="palette-actions">
+              <button class="text-btn">Export</button>
+              <button class="text-btn">Preview</button>
+              <button class="text-btn">Edit</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="palette-card">
+          <div class="palette-colors">
+            <div class="palette-color" style="background-color: #E2904A;"></div>
+            <div class="palette-color" style="background-color: #E8A367;"></div>
+            <div class="palette-color" style="background-color: #EDB685;"></div>
+            <div class="palette-color" style="background-color: #F3C9A2;"></div>
+            <div class="palette-color" style="background-color: #F8DCC0;"></div>
+          </div>
+          <div class="palette-info">
+            <span class="palette-label">Palette 4</span>
+            <div class="palette-actions">
+              <button class="text-btn">Export</button>
+              <button class="text-btn">Preview</button>
+              <button class="text-btn">Edit</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
   </div>
+
+  <script type="module">
+    import { ColorHarmony, FilterType, ColorFormat } from '/CommonCode/constants.js';
+
+    // Populate harmony type dropdown
+    const harmonySelect = document.getElementById('harmony-type');
+    Object.entries(ColorHarmony).forEach(([key, value]) => {
+      const option = document.createElement('option');
+      option.value = value;
+      option.textContent = key.split('_').map(word => 
+        word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+      ).join(' ');
+      harmonySelect.appendChild(option);
+    });
+
+    // Populate colorblind mode dropdown (keeping 'None' option)
+    const colorblindSelect = document.getElementById('colorblind-mode');
+    const colorblindFilters = ['PROTANOPIA', 'DEUTERANOPIA', 'TRITANOPIA'];
+    colorblindFilters.forEach(key => {
+      const option = document.createElement('option');
+      option.value = FilterType[key];
+      option.textContent = key.charAt(0) + key.slice(1).toLowerCase();
+      colorblindSelect.appendChild(option);
+    });
+
+    // Simple toggle between empty state and palette grid for demonstration
+    const primaryBtn = document.querySelector('.primary-btn');
+    const generate = document.querySelector('.generate-btn');
+    const emptyState = document.getElementById('empty-state');
+    const palettesGrid = document.getElementById('palettes-grid');
+
+    function toggleView() {
+      emptyState.classList.toggle('hidden');
+      palettesGrid.classList.toggle('hidden');
+    }
+
+    primaryBtn.addEventListener('click', toggleView);
+    generate.addEventListener('click', toggleView);
+
+    // Stepper functionality
+    const stepperBtns = document.querySelectorAll('.stepper-btn');
+    const stepperInput = document.getElementById('num-swatches');
+
+    stepperBtns.forEach((btn, index) => {
+      btn.addEventListener('click', () => {
+        let value = parseInt(stepperInput.value);
+        if (index === 0) { // Decrease
+          if (value > 3) stepperInput.value = value - 1;
+        } else { // Increase
+          if (value < 10) stepperInput.value = value + 1;
+        }
+      });
+    });
+  </script>
 </body>
 
 </html>
