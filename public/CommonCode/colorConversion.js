@@ -33,9 +33,18 @@ export const convertColor = (color, format) => {
     parsedColor = parse(color);
   } else {
     // If it's an object, ensure it has a mode property
-    parsedColor = color.mode
-      ? color
-      : {...color, mode: color.h !== undefined ? 'hsl' : 'rgb'};
+    if (color.mode) {
+      parsedColor = color;
+    } else {
+      // Infer mode based on properties
+      if (color.l !== undefined && color.c !== undefined) {
+        parsedColor = {mode: 'oklch', ...color};
+      } else if (color.h !== undefined && color.s !== undefined) {
+        parsedColor = {mode: 'hsl', ...color};
+      } else {
+        parsedColor = {mode: 'rgb', ...color};
+      }
+    }
   }
   return toFormat(parsedColor);
 };

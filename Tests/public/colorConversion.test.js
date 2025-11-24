@@ -76,4 +76,34 @@ describe('convertColor', () => {
     expect(result).toHaveProperty('mode', 'hex');
     expect(result.value).toBe('#ff0000');
   });
+
+  it('should convert hex to OKLCH', () => {
+    const result = convertColor('#ff0000', ColorFormat.OKLCH);
+    expect(result).toHaveProperty('mode', 'oklch');
+    expect(result.l).toBeCloseTo(0.628);
+    expect(result.c).toBeCloseTo(0.2577);
+    expect(result.h).toBeCloseTo(29.23);
+  });
+
+  it('should convert RGB object to OKLCH', () => {
+    const result = convertColor({r: 1, g: 0, b: 0}, ColorFormat.OKLCH);
+    expect(result).toHaveProperty('mode', 'oklch');
+    expect(result.l).toBeCloseTo(0.628);
+    expect(result.c).toBeCloseTo(0.2577);
+    expect(result.h).toBeCloseTo(29.23);
+  });
+
+  it('should convert OKLCH to RGB', () => {
+    const result = convertColor({l: 0.5, c: 0.2, h: 30}, ColorFormat.RGB);
+    expect(result).toHaveProperty('mode', 'rgb');
+    expect(result.r).toBeCloseTo(0.73);
+    expect(result.g).toBeCloseTo(0.052);
+    expect(result.b).toBeCloseTo(0);
+  });
+
+  it('should convert OKLCH to HEX', () => {
+    const result = convertColor({l: 0.6, c: 0.25, h: 0}, ColorFormat.HEX);
+    expect(result).toHaveProperty('mode', 'hex');
+    expect(result.value).toBe('#e9007a');
+  });
 });
