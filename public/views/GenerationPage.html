@@ -52,7 +52,7 @@
         <div class="form-group">
           <label for="base-color" class="form-label">Base color</label>
           <button id="base-color" class="color-swatch-btn" aria-label="Select base color">
-            <span class="color-preview" style="background-color: #4A90E2;"></span>
+            <span class="color-preview" style="background-color: #3399ff;"></span>
           </button>
         </div>
 
@@ -71,8 +71,8 @@
         <h2 class="card-title">Filters</h2>
         
         <div class="form-group">
-          <label for="colorblind-mode" class="form-label">Color-blind mode</label>
-          <select id="colorblind-mode" class="form-select">
+          <label for="filter-type" class="form-label">Color-blind mode</label>
+          <select id="filter-type" class="form-select">
             <option value="none">None</option>
             <!-- Colorblind options populated from constants.js -->
           </select>
@@ -194,15 +194,21 @@
     import { ColorHarmony, FilterType, ColorFormat } from '/commonCode/constants.js';
     import { ColorPicker } from '/paletteModule/colorPicker.js';
     import { initializeGenerateButtons } from '/src/generateBtn.js';
-    import { toggleTheme, share, randomize } from '/src/iconButtons.js';
+    import { share } from '/src/shareBtn.js';
+    import { toggleTheme } from '/src/toggleThemeBtn.js';
+    import { randomize } from '/src/randomizeBtn.js';
 
+    //set page theme based on localStorage @TODO a little slow may need optimization
+    if (localStorage.getItem('theme') === FilterType.DARK_MODE) toggleTheme(false);
+    
     // Initialize color picker
     const baseColorBtn = document.getElementById('base-color');
     const colorPicker = new ColorPicker(baseColorBtn, (color) => {
         // Callback when a color is selected in HEX format
       console.log('Selected color:', color);
+      baseColorBtn.querySelector('.color-preview').style.backgroundColor = color;
     });
-
+    
     // Populate harmony type dropdown
     const harmonySelect = document.getElementById('harmony-type');
     Object.entries(ColorHarmony).forEach(([key, value]) => {
@@ -214,15 +220,15 @@
       harmonySelect.appendChild(option);
     });
 
-    // Populate colorblind mode dropdown (keeping 'None' option)
-    const colorblindSelect = document.getElementById('colorblind-mode');
+    // Populate Filter Type  dropdown (keeping 'None' option)
+    const filterTypeSelect = document.getElementById('filter-type');
     Object.entries(FilterType).forEach(([key, value]) => {
       const option = document.createElement('option');
       option.value = value;
       option.textContent = key.split('_').map(word => 
         word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
       ).join(' ');
-      colorblindSelect.appendChild(option);
+      filterTypeSelect.appendChild(option);
     });
 
     // Initialize the generate buttons with their respective IDs and selectors
@@ -244,9 +250,9 @@
     });
 
     // Add event listeners for icon buttons
-    document.querySelector('.icon-btn[aria-label="Toggle theme"]').addEventListener('click', toggleTheme);
-    document.querySelector('.icon-btn[aria-label="Share"]').addEventListener('click', share);
-    document.querySelector('.icon-btn[aria-label="Randomize"]').addEventListener('click', randomize);
+    document.querySelector('.icon-btn[aria-label="Toggle theme"]').addEventListener('click', () => toggleTheme(true));
+    document.querySelector('.icon-btn[aria-label="Share"]').addEventListener('click', () => share());
+    document.querySelector('.icon-btn[aria-label="Randomize"]').addEventListener('click', () => randomize(colorPicker));
 
   </script>
 </body>
