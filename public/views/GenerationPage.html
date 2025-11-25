@@ -7,7 +7,17 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Hue & YOU - Color Palette Generator</title>
   <link rel="stylesheet" href="/views/style.css">
+  <link rel="stylesheet" href="/views/colorpicker.css" />
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <script type="importmap">
+    {
+      "imports": {
+        "culori": "https://cdn.jsdelivr.net/npm/culori@4.0.2/+esm"
+      }
+    }
+  </script>
+
+
 </head>
 
 <body>
@@ -78,7 +88,7 @@
           <button class="icon-btn" aria-label="Share" title="Share">
             <span class="icon-text">⎘</span>
           </button>
-          <button class="icon-btn" aria-label="Shuffle" title="Shuffle">
+          <button class="icon-btn" aria-label="Randomize" title="Randomize">
             <span class="icon-text">⤨</span>
           </button>
           <button class="icon-btn" aria-label="Toggle theme" title="Toggle theme">
@@ -181,7 +191,16 @@
   </div>
 
   <script type="module">
-    import { ColorHarmony, FilterType, ColorFormat } from '/CommonCode/constants.js';
+    import { ColorHarmony, FilterType, ColorFormat } from '/commonCode/constants.js';
+    import { ColorPicker } from '/paletteModule/colorPicker.js';
+    import { initializeGenerateButtons } from '/src/generateBtn.js';
+
+    // Initialize color picker
+    const baseColorBtn = document.getElementById('base-color');
+    const colorPicker = new ColorPicker(baseColorBtn, (color) => {
+        // Callback when a color is selected in HEX format
+      console.log('Selected color:', color);
+    });
 
     // Populate harmony type dropdown
     const harmonySelect = document.getElementById('harmony-type');
@@ -196,27 +215,17 @@
 
     // Populate colorblind mode dropdown (keeping 'None' option)
     const colorblindSelect = document.getElementById('colorblind-mode');
-    const colorblindFilters = ['PROTANOPIA', 'DEUTERANOPIA', 'TRITANOPIA'];
-    colorblindFilters.forEach(key => {
+    Object.entries(FilterType).forEach(([key, value]) => {
       const option = document.createElement('option');
-      option.value = FilterType[key];
-      option.textContent = key.charAt(0) + key.slice(1).toLowerCase();
+      option.value = value;
+      option.textContent = key.split('_').map(word => 
+        word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+      ).join(' ');
       colorblindSelect.appendChild(option);
     });
 
-    // Simple toggle between empty state and palette grid for demonstration
-    const primaryBtn = document.querySelector('.primary-btn');
-    const generate = document.querySelector('.generate-btn');
-    const emptyState = document.getElementById('empty-state');
-    const palettesGrid = document.getElementById('palettes-grid');
-
-    function toggleView() {
-      emptyState.classList.toggle('hidden');
-      palettesGrid.classList.toggle('hidden');
-    }
-
-    primaryBtn.addEventListener('click', toggleView);
-    generate.addEventListener('click', toggleView);
+    // Initialize the generate buttons with their respective IDs and selectors
+    initializeGenerateButtons('.primary-btn', '.generate-btn', 'empty-state', 'palettes-grid');
 
     // Stepper functionality
     const stepperBtns = document.querySelectorAll('.stepper-btn');
@@ -232,7 +241,7 @@
         }
       });
     });
+
   </script>
 </body>
-
 </html>

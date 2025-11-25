@@ -1,7 +1,7 @@
 import {describe, it, expect} from '@jest/globals';
 import {ColorHarmony} from '../../../shared/harmony/ColorHarmony.js';
-import {convertColor} from '../../../public/CommonCode/colorConversion.js';
-import {ColorFormat} from '../../../public/CommonCode/constants.js';
+import {convertColor} from '../../../public/commonCode/colorConversion.js';
+import {ColorFormat} from '../../../public/commonCode/constants.js';
 
 describe('ColorHarmony', () => {
   describe('complementary', () => {
