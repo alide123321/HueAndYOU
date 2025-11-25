@@ -194,6 +194,7 @@
     import { ColorHarmony, FilterType, ColorFormat } from '/commonCode/constants.js';
     import { ColorPicker } from '/paletteModule/colorPicker.js';
     import { initializeGenerateButtons } from '/src/generateBtn.js';
+    import { toggleTheme, share, randomize } from '/src/iconButtons.js';
 
     // Initialize color picker
     const baseColorBtn = document.getElementById('base-color');
@@ -241,6 +242,11 @@
         }
       });
     });
+
+    // Add event listeners for icon buttons
+    document.querySelector('.icon-btn[aria-label="Toggle theme"]').addEventListener('click', toggleTheme);
+    document.querySelector('.icon-btn[aria-label="Share"]').addEventListener('click', share);
+    document.querySelector('.icon-btn[aria-label="Randomize"]').addEventListener('click', randomize);
 
   </script>
 </body>
