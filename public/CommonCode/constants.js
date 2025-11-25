@@ -9,7 +9,6 @@ export const ColorHarmony = Object.freeze({
   ANALOGOUS: 'analogous',
   TRIADIC: 'triadic',
   TETRADIC: 'tetradic',
-  SPLIT_COMPLEMENTARY: 'split_complementary',
   MONOCHROMATIC: 'monochromatic',
 });
 

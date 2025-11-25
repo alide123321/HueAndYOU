@@ -6,6 +6,8 @@ import {ColorFormat} from '../../public/CommonCode/constants.js';
  * Uses the shared color conversion utilities defined by the project.
  *
  * @author DeAndre, Ali Aldaghishy
+ *
+ * @todo Implement triadic, and tetradic
  */
 export class ColorHarmony {
   /**
