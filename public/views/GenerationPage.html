@@ -71,8 +71,8 @@
         <h2 class="card-title">Filters</h2>
         
         <div class="form-group">
-          <label for="colorblind-mode" class="form-label">Color-blind mode</label>
-          <select id="colorblind-mode" class="form-select">
+          <label for="filter-type" class="form-label">Color-blind mode</label>
+          <select id="filter-type" class="form-select">
             <option value="none">None</option>
             <!-- Colorblind options populated from constants.js -->
           </select>
@@ -214,15 +214,15 @@
       harmonySelect.appendChild(option);
     });
 
-    // Populate colorblind mode dropdown (keeping 'None' option)
-    const colorblindSelect = document.getElementById('colorblind-mode');
+    // Populate Filter Type  dropdown (keeping 'None' option)
+    const filterTypeSelect = document.getElementById('filter-type');
     Object.entries(FilterType).forEach(([key, value]) => {
       const option = document.createElement('option');
       option.value = value;
       option.textContent = key.split('_').map(word => 
         word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
       ).join(' ');
-      colorblindSelect.appendChild(option);
+      filterTypeSelect.appendChild(option);
     });
 
     // Initialize the generate buttons with their respective IDs and selectors
