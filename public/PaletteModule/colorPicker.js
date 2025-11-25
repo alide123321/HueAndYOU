@@ -3,11 +3,17 @@ import {ColorFormat} from '../commonCode/constants.js';
 
 export class ColorPicker {
   constructor(buttonElement, onColorSelect) {
+    const hslColor = convertColor(
+      buttonElement.querySelector('.color-preview').style.backgroundColor ||
+        '#3399FF',
+      ColorFormat.HSL
+    );
+
     this.button = buttonElement;
     this.onColorSelect = onColorSelect;
-    this.currentHue = 220; // Blue hue
-    this.currentSaturation = 100;
-    this.currentLightness = 60;
+    this.currentHue = hslColor.h;
+    this.currentSaturation = hslColor.s * 100;
+    this.currentLightness = hslColor.l * 100;
     this.isDraggingCanvas = false;
     this.isDraggingHue = false;
 
@@ -16,6 +22,20 @@ export class ColorPicker {
 
     this.createModal();
     this.attachEventListeners();
+    this.updateColor();
+  }
+
+  /**
+   * Sets the color picker to a specific color
+   *
+   * @author Ali Aldaghishy
+   * @param {object|string} color - Color object or hex string
+   */
+  setColor(color) {
+    const hslColor = convertColor(color, ColorFormat.HSL);
+    this.currentHue = hslColor.h;
+    this.currentSaturation = hslColor.s * 100;
+    this.currentLightness = hslColor.l * 100;
     this.updateColor();
   }
 
@@ -114,11 +134,7 @@ export class ColorPicker {
       if (this.onColorSelect) {
         this.onColorSelect(hexColor.value);
       }
-      // Update the button's color preview
-      const colorPreview = this.button.querySelector('.color-preview');
-      if (colorPreview) {
-        colorPreview.style.backgroundColor = hexColor.value;
-      }
+
       this.close();
     });
 
@@ -243,18 +259,20 @@ export class ColorPicker {
       mode: ColorFormat.HSL,
     };
 
-    const rgbColor = convertColor(hslColor, ColorFormat.RGB);
-    const hexColor = convertColor(hslColor, ColorFormat.HEX);
-
     // Get selected format
     const formatSelect = this.overlay.querySelector('#format-select');
     const selectedFormat = formatSelect.value;
 
     // Update preview
-    this.colorPreview.style.backgroundColor = hexColor.value;
+    this.colorPreview.style.backgroundColor = convertColor(
+      hslColor,
+      ColorFormat.HEX
+    ).value;
 
     // Update color values based on selected format
     if (selectedFormat === ColorFormat.RGB) {
+      const rgbColor = convertColor(hslColor, ColorFormat.RGB);
+
       this.rValue.textContent = Math.round(rgbColor.r * 255);
       this.gValue.textContent = Math.round(rgbColor.g * 255);
       this.bValue.textContent = Math.round(rgbColor.b * 255);
@@ -262,6 +280,8 @@ export class ColorPicker {
       this.gValue.contentEditable = 'true';
       this.bValue.contentEditable = 'true';
     } else if (selectedFormat === ColorFormat.HEX) {
+      const hexColor = convertColor(hslColor, ColorFormat.HEX);
+
       this.rValue.textContent = hexColor.value;
       this.gValue.textContent = '';
       this.bValue.textContent = '';
@@ -319,13 +339,13 @@ export class ColorPicker {
       );
 
       // Convert RGB to HSL and update internal state
-      const hslColor = convertColor(
-        {r: r / 255, g: g / 255, b: b / 255, mode: ColorFormat.RGB},
-        ColorFormat.HSL
-      );
-      this.currentHue = hslColor.h;
-      this.currentSaturation = hslColor.s * 100;
-      this.currentLightness = hslColor.l * 100;
+
+      this.setColor({
+        r: r / 255,
+        g: g / 255,
+        b: b / 255,
+        mode: ColorFormat.RGB,
+      });
     } else if (selectedFormat === ColorFormat.HSL) {
       // Parse HSL values
 
@@ -350,19 +370,19 @@ export class ColorPicker {
       );
 
       // Update internal state
-      this.currentHue = h;
-      this.currentSaturation = s;
-      this.currentLightness = l;
+      this.setColor({
+        h,
+        s: s / 100,
+        l: l / 100,
+        mode: ColorFormat.HSL,
+      });
     } else if (selectedFormat === ColorFormat.HEX) {
       // Parse HEX value
       const hex = /^#[0-9A-Fa-f]{6}$/.test(this.rValue.textContent.trim())
         ? this.rValue.textContent.trim()
         : '#000000';
 
-      const hslColor = convertColor(hex, ColorFormat.HSL);
-      this.currentHue = hslColor.h;
-      this.currentSaturation = hslColor.s * 100;
-      this.currentLightness = hslColor.l * 100;
+      this.setColor(hex);
     } else if (selectedFormat === ColorFormat.OKLCH) {
       // Parse OKLCH values
 
@@ -387,13 +407,13 @@ export class ColorPicker {
       );
 
       // Convert OKLCH to HSL and update internal state
-      const hslColor = convertColor(
-        {l, c, h, mode: ColorFormat.OKLCH},
-        ColorFormat.HSL
-      );
-      this.currentHue = hslColor.h;
-      this.currentSaturation = hslColor.s * 100;
-      this.currentLightness = hslColor.l * 100;
+
+      this.setColor({
+        l,
+        c,
+        h,
+        mode: ColorFormat.OKLCH,
+      });
     }
 
     // Update the canvas and preview
