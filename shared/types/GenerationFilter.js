@@ -6,7 +6,7 @@
 * @property {dictionary} colorStyle - Settings for color style.
 * @module shared/types/GenerationFilter
 */
-class GenerationFilter {
+export class GenerationFilter {
     constructor(colorBlindMode = {}, colorStyle = {}) {
         this.colorBlindMode = colorBlindMode;
         this.colorStyle = colorStyle;

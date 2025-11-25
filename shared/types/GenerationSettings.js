@@ -1,9 +1,11 @@
 import { ColorHarmony } from '../../public/CommonCode/constants.js'; //relocate to shared later
+import { Color } from './Color.js';
+
 /**
  * GenerationSettings class to encapsulate settings for color generation.
  * @author Ian
  * @property {ColorHarmony} harmonyType - The type of color harmony to use.
- * @property {string} baseColor - The base color in hex format.
+ * @property {Color} baseColor - The base color in hex format.
  * @property {number} numberOfColors - The number of colors to generate.
  * @property {object} filters - The filters to apply during generation.
  * @property {boolean} isLightMode - Whether to use light mode.
@@ -12,13 +14,14 @@ import { ColorHarmony } from '../../public/CommonCode/constants.js'; //relocate 
  * @module shared/types/GenerationSettings
  * 
  */
-class GenerationSettings {
+export class GenerationSettings {
     constructor(
         gs = {}
     ) {
-        this.harmonyType = gs.harmonyType || 'complementary';
-        this.baseColor = gs.baseColor || '#FFFFFF';
+        this.harmonyType = gs.harmonyType || ColorHarmony.COMPLEMENTARY;
+        this.baseColor = gs.baseColor || new Color('#FFFFFF');
         this.numberOfColors = gs.numberOfColors || 2;
+        this.numberOfPalettes = gs.numberOfPalettes || 5;
         this.filters = gs.filters || {};
         this.isLightMode = gs.isLightMode || true;
         this.includeBgTextColors = gs.includeBgTextColors || false;
