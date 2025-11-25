@@ -30,6 +30,11 @@
   position: relative;
 }
 
+body.dark-mode .color-picker-modal {
+  background: #1e1e1e;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+}
+
 .color-picker-container {
   display: flex;
   flex-direction: column;
@@ -110,12 +115,20 @@
   border-radius: 8px;
 }
 
+body.dark-mode .color-info {
+  background: #2c2c2c;
+}
+
 .color-preview-large {
   width: 48px;
   height: 48px;
   border-radius: 8px;
   border: 2px solid #e0e0e0;
   flex-shrink: 0;
+}
+
+body.dark-mode .color-preview-large {
+  border-color: #444;
 }
 
 .color-values {
@@ -137,10 +150,18 @@
   text-transform: uppercase;
 }
 
+body.dark-mode .color-value-label {
+  color: #bbbbbb;
+}
+
 .color-value-number {
   font-size: 18px;
   font-weight: 700;
   color: #333;
+}
+
+body.dark-mode .color-value-number {
+  color: #ffffff;
 }
 
 /* Format Selector */
@@ -161,6 +182,12 @@
   background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%23666' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 8px center;
+}
+
+body.dark-mode .format-selector select {
+  background: #2c2c2c;
+  color: #ffffff;
+  border-color: #444;
 }
 
 /* Action Buttons */
@@ -186,8 +213,17 @@
   color: #666;
 }
 
+body.dark-mode .color-picker-btn-cancel {
+  background: #2c2c2c;
+  color: #bbbbbb;
+}
+
 .color-picker-btn-cancel:hover {
   background: #e0e0e0;
+}
+
+body.dark-mode .color-picker-btn-cancel:hover {
+  background: #3a3a3a;
 }
 
 .color-picker-btn-select {
@@ -195,7 +231,16 @@
   color: white;
 }
 
+body.dark-mode .color-picker-btn-select {
+  background: #4A90E2;
+  color: #ffffff;
+}
+
 .color-picker-btn-select:hover {
+  background: #3a7bc8;
+}
+
+body.dark-mode .color-picker-btn-select:hover {
   background: #3a7bc8;
 }
 
@@ -209,6 +254,16 @@
   transition: all 0.2s;
 }
 
+body.dark-mode .copy-btn {
+  background: #2c2c2c;
+  border-color: #444;
+  color: #bbbbbb;
+}
+
 .copy-btn:hover {
   background: #f5f5f5;
+}
+
+body.dark-mode .copy-btn:hover {
+  background: #3a3a3a;
 }
