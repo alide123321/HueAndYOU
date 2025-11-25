@@ -13,7 +13,7 @@ const root = path.join(__dirname, '../../public/views');
 
 // Serve the homepage
 router.get('/', (req, res) => {
-  res.sendFile('GenerationPage.html', {root: root});
+  res.sendFile('generationPage.html', {root: root});
 });
 
 export default router;
