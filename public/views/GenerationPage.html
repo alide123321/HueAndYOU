@@ -7,7 +7,17 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Hue & YOU - Color Palette Generator</title>
   <link rel="stylesheet" href="/views/style.css">
+  <link rel="stylesheet" href="/views/colorpicker.css" />
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <script type="importmap">
+    {
+      "imports": {
+        "culori": "https://cdn.jsdelivr.net/npm/culori@4.0.2/+esm"
+      }
+    }
+  </script>
+
+
 </head>
 
 <body>
@@ -182,6 +192,14 @@
 
   <script type="module">
     import { ColorHarmony, FilterType, ColorFormat } from '/CommonCode/constants.js';
+    import { ColorPicker } from '/PaletteModule/colorPicker.js';
+
+    // Initialize color picker
+    const baseColorBtn = document.getElementById('base-color');
+    const colorPicker = new ColorPicker(baseColorBtn, (color) => {
+        // Callback when a color is selected in HEX format
+      console.log('Selected color:', color);
+    });
 
     // Populate harmony type dropdown
     const harmonySelect = document.getElementById('harmony-type');
@@ -232,7 +250,7 @@
         }
       });
     });
+
   </script>
 </body>
-
 </html>
