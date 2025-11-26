@@ -2,17 +2,10 @@
 import { GenerationSettings } from '../../shared/types/GenerationSettings.js';
 import { Palette } from '../../shared/types/Palette.js';
 import { Color } from '../../shared/types/Color.js';
-import { convertColor } from '../../public/CommonCode/colorConversion.js';
 import { HarmonyStrategy } from './HarmonyStrategy.js';
-import { converter } from 'culori';
-import { ColorFormat } from '../../public/CommonCode/constants.js';
 
-//debug
+//temporary conversion code.
 import { rgbToOklch, oklchToRgb } from '../../shared/utils/tempColorConversion.js';
-
-// Create culori converters
-const toRgb = converter('rgb');
-const toOklch = converter('oklch');
 
 // lighten and darken helpers
 // const lighten = (colorOK, amount) => {
@@ -23,7 +16,6 @@ const toOklch = converter('oklch');
 // };
 
 const darken = (colorOK, amount) => {
-    console.warn(colorOK);
     return {
         ...colorOK,
         l: Math.max(colorOK.l - amount, 0)
@@ -62,12 +54,9 @@ export class Complementary extends HarmonyStrategy {
             mode: 'rgb'
         } // {r:..., g:..., b:..., mode:'rgb'}
 
-        console.warn(baseColor)
-
         // convert to okLCH
         // {l:..., c:..., h:..., mode:'oklch'}
-        const baseColorOK = convertColor(baseColor, ColorFormat.OKLCH);
-        console.warn(baseColorOK)
+        const baseColorOK = rgbToOklch(baseColor);
 
         // calculate complementary color in okLCH
         const complementaryOK = {
@@ -75,12 +64,11 @@ export class Complementary extends HarmonyStrategy {
             h: (baseColorOK.h + 180) % 360
         }
 
-        console.warn(complementaryOK)
 
         //const baseLight = lighten(baseColorOK, .20);
-        const baseDarkOK = darken(baseColorOK, 20);
+        const baseDarkOK = darken(baseColorOK, .20);
 
-        const complementaryDarkOK = darken(complementaryOK, 20);
+        const complementaryDarkOK = darken(complementaryOK, .20);
 
         const paletteOK = [
             baseColorOK,
@@ -90,7 +78,6 @@ export class Complementary extends HarmonyStrategy {
         ]
 
         // generates bg and text colors if specified
-        console.warn('Include BG/Text Colors:', gs.includeBgTextColors);
         if (gs.includeBgTextColors) {
             // Background + Text colors use the BASE hue.
             // Light mode → near-white background + near-black text
@@ -108,6 +95,7 @@ export class Complementary extends HarmonyStrategy {
                     h: hue,
                     mode: 'oklch',
                 };
+
 
                 // Text color (dark, slightly tinted)
                 const textOK = {
@@ -127,6 +115,7 @@ export class Complementary extends HarmonyStrategy {
                     mode: 'oklch',
                 };
 
+
                 // Light text color (near-white)
                 const textOK = {
                     l: 0.95,         // near-white
@@ -141,7 +130,7 @@ export class Complementary extends HarmonyStrategy {
 
         //Map to rgb and return Color object
         const colors = paletteOK.map(ok => {
-            const rgb = convertColor(ok, ColorFormat.RGB);
+            const rgb = oklchToRgb(ok);
             return new Color(rgb.r, rgb.g, rgb.b);
         });
 
