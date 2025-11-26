@@ -1,6 +1,6 @@
 import {describe, it, expect} from '@jest/globals';
-import {convertColor} from '../../public/commonCode/colorConversion.js';
-import {ColorFormat} from '../../public/commonCode/constants.js';
+import {convertColor} from '../../shared/utils/colorConversion.js';
+import {ColorFormat} from '../../shared/utils/constants.js';
 
 describe('convertColor', () => {
   it('should throw error when format is not provided', () => {

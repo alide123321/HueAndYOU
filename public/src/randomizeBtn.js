@@ -1,4 +1,4 @@
-import {FilterType} from '/commonCode/constants.js';
+import {FilterType} from '/shared/utils/constants.js';
 /**
  * randomize function to set random values for harmony type, base color, number of swatches, and filter type.
  *

@@ -13,8 +13,9 @@ const port = 3000;
 // Middleware to parse JSON bodies
 app.use(express.json());
 
-// Serve static files from the public directory
+// Serve static files from the public and shared directories
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/shared', express.static(path.join(__dirname, 'shared')))
 
 // routing
 // branches into controllers (if necessary)

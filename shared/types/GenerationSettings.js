@@ -1,4 +1,4 @@
-import { ColorHarmony } from '../../public/CommonCode/constants.js'; //relocate to shared later
+import { ColorHarmony } from '../utils/constants.js'; //relocate to shared later
 import { Color } from './Color.js';
 
 /**

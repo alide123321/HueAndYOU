@@ -1,5 +1,5 @@
-import {convertColor} from '../commonCode/colorConversion.js';
-import {ColorFormat} from '../commonCode/constants.js';
+import {convertColor} from '/shared/utils/colorConversion.js';
+import {ColorFormat} from '/shared/utils/constants.js';
 
 export class ColorPicker {
   constructor(buttonElement, onColorSelect) {
