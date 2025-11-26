@@ -18,7 +18,6 @@ export class GenerationSettings {
     constructor(
         gs = {}
     ) {
-        console.warn(gs)
         this.harmonyType = gs.harmonyType || ColorHarmony.COMPLEMENTARY;
         this.baseColor = gs.baseColor || new Color('#FFFFFF');
         this.numberOfColors = gs.numberOfColors || 2;
