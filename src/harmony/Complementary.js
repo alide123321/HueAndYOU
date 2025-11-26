@@ -4,9 +4,15 @@ import { Palette } from '../../shared/types/Palette.js';
 import { Color } from '../../shared/types/Color.js';
 import { convertColor } from '../../public/CommonCode/colorConversion.js';
 import { HarmonyStrategy } from './HarmonyStrategy.js';
+import { converter } from 'culori';
+import { ColorFormat } from '../../public/CommonCode/constants.js';
 
 //debug
 import { rgbToOklch, oklchToRgb } from '../../shared/utils/tempColorConversion.js';
+
+// Create culori converters
+const toRgb = converter('rgb');
+const toOklch = converter('oklch');
 
 // lighten and darken helpers
 // const lighten = (colorOK, amount) => {
@@ -17,6 +23,7 @@ import { rgbToOklch, oklchToRgb } from '../../shared/utils/tempColorConversion.j
 // };
 
 const darken = (colorOK, amount) => {
+    console.warn(colorOK);
     return {
         ...colorOK,
         l: Math.max(colorOK.l - amount, 0)
@@ -55,9 +62,12 @@ export class Complementary extends HarmonyStrategy {
             mode: 'rgb'
         } // {r:..., g:..., b:..., mode:'rgb'}
 
+        console.warn(baseColor)
+
         // convert to okLCH
         // {l:..., c:..., h:..., mode:'oklch'}
-        const baseColorOK = rgbToOklch(rgb=baseColor, 'oklch');
+        const baseColorOK = convertColor(baseColor, ColorFormat.OKLCH);
+        console.warn(baseColorOK)
 
         // calculate complementary color in okLCH
         const complementaryOK = {
@@ -65,10 +75,12 @@ export class Complementary extends HarmonyStrategy {
             h: (baseColorOK.h + 180) % 360
         }
 
-        //const baseLight = lighten(baseColorOK, .20);
-        const baseDarkOK = darken(baseColorOK, .2);
+        console.warn(complementaryOK)
 
-        const complementaryDarkOK = darken(complementaryOK, );
+        //const baseLight = lighten(baseColorOK, .20);
+        const baseDarkOK = darken(baseColorOK, 20);
+
+        const complementaryDarkOK = darken(complementaryOK, 20);
 
         const paletteOK = [
             baseColorOK,
@@ -129,7 +141,7 @@ export class Complementary extends HarmonyStrategy {
 
         //Map to rgb and return Color object
         const colors = paletteOK.map(ok => {
-            const rgb = oklchToRgb(oklch=ok, 'rgb');
+            const rgb = convertColor(ok, ColorFormat.RGB);
             return new Color(rgb.r, rgb.g, rgb.b);
         });
 

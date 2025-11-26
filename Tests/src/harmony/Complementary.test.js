@@ -51,7 +51,6 @@ describe('Complementary Harmony Strategy', () => {
             rgb={ ...complement.getRGB(), mode: 'rgb' },
             'oklch'
         );
-        
 
         const expectedHue = (baseOK.h + 180) % 360;
         const diff = Math.abs(complementOK.h - expectedHue);
