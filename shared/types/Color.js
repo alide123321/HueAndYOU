@@ -1,5 +1,5 @@
-import { convertColor } from '../../public/CommonCode/colorConversion.js';
-import { ColorFormat } from '../../public/CommonCode/constants.js';
+import { convertColor } from '../utils/colorConversion.js';
+import { ColorFormat } from '../utils/constants.js';
 // '../utils/...' would be nicer to have. Need to refactor
 
 export class Color {
