@@ -6,12 +6,12 @@
  *
  */
 export class WCAGReport {
-    /**
-     * 
-     * @param {Color} background 
-     * @param {Color} text 
-     * @param {WCAGColorResult[]} results 
-     */
+  /**
+   *
+   * @param {Color} background
+   * @param {Color} text
+   * @param {WCAGColorResult[]} results
+   */
   constructor(background, text, results) {
     this.background = background;
     this.text = text;

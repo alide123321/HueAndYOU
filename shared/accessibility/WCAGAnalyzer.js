@@ -27,7 +27,7 @@ export class WCAGAnalyzer {
     const Bnorm = b <= 0.04505 ? b / 12.92 : Math.pow((b + 0.055) / 1.055, 2.4);
 
     //calculation
-    const luminance = 0.02126 * Rnorm + 0.7152 * Gnorm + 0.0722 * Bnorm;
+    const luminance = 0.2126 * Rnorm + 0.7152 * Gnorm + 0.0722 * Bnorm;
     return luminance;
   }
 
@@ -41,8 +41,10 @@ export class WCAGAnalyzer {
    * @return {double} contrast ratio
    */
   static computePairContrast(foreground, background) {
-    const L1 = WCAGAnalyzer.luminance(foreground.getRGB());
-    const L2 = WCAGAnalyzer.luminance(background.getRGB());
+    fg = foreground.getRGB();
+    bg = background.getRGB();
+    const L1 = WCAGAnalyzer.luminance(fg.r, fg.g, fg.b);
+    const L2 = WCAGAnalyzer.luminance(bg.r, bg.g, bg.b);
 
     const lighter = Math.max(L1, L2);
     const darker = Math.min(L1, L2);
@@ -94,7 +96,9 @@ export class WCAGAnalyzer {
 
       const bestContrast = Math.max(contrastWithBg, contrastWithText);
       const bestAgainst =
-        contrastWithBg >= contrastWithText ? ColorRole.BACKGROUND : ColorRole.TEXT;
+        contrastWithBg >= contrastWithText
+          ? ColorRole.BACKGROUND
+          : ColorRole.TEXT;
 
       const label = WCAGAnalyzer.wcagLabel(bestContrast);
 
