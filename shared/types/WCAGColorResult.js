@@ -3,16 +3,16 @@
  * @author Ian Timchak
  */
 export class WCAGColorResult {
-    /**
-     * 
-     * @param {Number} index - index of color in palette, null if no palette
-     * @param {Color} color - Color() object, the testing color.
-     * @param {Number} contrastOnBg - Contrast ratio value (#.##) onBG
-     * @param {Number} contrastOnText - Contrast ratio value (#.##) onText
-     * @param {Number} bestContrast - What the best contrast is based on the test
-     * @param {Object} bestAgainst - {role: ColorRole, color: Color}
-     * @param {String} wcagLabel 
-     */
+  /**
+   *
+   * @param {Number} index - index of color in palette, null if no palette
+   * @param {Color} color - Color() object, the testing color.
+   * @param {Number} contrastOnBg - Contrast ratio value (#.##) onBG
+   * @param {Number} contrastOnText - Contrast ratio value (#.##) onText
+   * @param {Number} bestContrast - What the best contrast is based on the test
+   * @param {Object} bestAgainst - {role: ColorRole, color: Color}
+   * @param {String} wcagLabel
+   */
   constructor(
     index,
     color,
