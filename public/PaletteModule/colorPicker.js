@@ -33,7 +33,9 @@ export class ColorPicker {
    */
   setColor(color) {
     const hslColor = convertColor(color, ColorFormat.HSL);
-    this.currentHue = hslColor.h;
+    // For achromatic colors (white, black, grays), hue may be undefined
+    // In that case, keep the current hue to maintain UI state
+    this.currentHue = hslColor.h !== undefined ? hslColor.h : this.currentHue;
     this.currentSaturation = hslColor.s * 100;
     this.currentLightness = hslColor.l * 100;
     this.updateColor();
@@ -207,10 +209,9 @@ export class ColorPicker {
     this.currentLightness = 100 - (y / rect.height) * 100;
 
     // Update cursor position
-    this.canvasCursor.style.left = x + 'px';
-    this.canvasCursor.style.top = y + 'px';
 
     this.updateColor();
+    this.updateThumbPositions();
   }
 
   updateFromHueSlider(e) {
@@ -223,11 +224,9 @@ export class ColorPicker {
     // Convert to hue (0-360)
     this.currentHue = (x / rect.width) * 360;
 
-    // Update thumb position
-    this.hueThumb.style.left = x + 'px';
-
     this.drawCanvas();
     this.updateColor();
+    this.updateThumbPositions();
   }
 
   drawCanvas() {
@@ -251,6 +250,10 @@ export class ColorPicker {
     this.ctx.fillRect(0, 0, width, height);
   }
 
+  /**
+   * Update color preview and value displays based on current HSL state
+   * @author Ali Aldaghishy
+   */
   updateColor() {
     const hslColor = {
       h: this.currentHue,
@@ -416,26 +419,34 @@ export class ColorPicker {
       });
     }
 
-    // Update the canvas and preview
+    // Update the canvas and preview and thumb positions
     this.drawCanvas();
     this.updateColor();
+    this.updateThumbPositions();
+  }
+
+  /**
+   * Update thumb positions based on current HSL state
+   * @author Ali Aldaghishy
+   */
+  updateThumbPositions() {
+    // Update canvas cursor position
+    const rect = this.canvasElement.getBoundingClientRect();
+    const x = (this.currentSaturation / 100) * rect.width;
+    const y = (1 - this.currentLightness / 100) * rect.height;
+    this.canvasCursor.style.left = x + 'px';
+    this.canvasCursor.style.top = y + 'px';
+    // Update hue thumb position
+    const hueRect = this.hueSlider.getBoundingClientRect();
+    const hueX = (this.currentHue / 360) * hueRect.width;
+    this.hueThumb.style.left = hueX + 'px';
   }
 
   open() {
     this.overlay.classList.add('active');
     this.drawCanvas();
 
-    // Set initial cursor position
-    const rect = this.canvasElement.getBoundingClientRect();
-    const x = (this.currentSaturation / 100) * rect.width;
-    const y = (1 - this.currentLightness / 100) * rect.height;
-    this.canvasCursor.style.left = x + 'px';
-    this.canvasCursor.style.top = y + 'px';
-
-    // Set initial hue thumb position
-    const hueRect = this.hueSlider.getBoundingClientRect();
-    const hueX = (this.currentHue / 360) * hueRect.width;
-    this.hueThumb.style.left = hueX + 'px';
+    this.updateThumbPositions();
   }
 
   close() {
