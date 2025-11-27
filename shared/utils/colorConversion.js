@@ -28,7 +28,7 @@ export const convertColor = (color, format) => {
   // If color is already an object (RGB, HSL, etc.), add mode property if missing
   // Otherwise, parse the string
   let parsedColor;
-  if (typeof color === 'string') {
+  if (typeof color === 'string' || color?.mode === 'hex') {
     parsedColor = parse(color);
   } else {
     // If it's an object, ensure it has a mode property

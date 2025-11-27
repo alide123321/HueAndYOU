@@ -95,7 +95,7 @@
             <span class="icon-text">☀</span>
           </button>
         </div>
-        <button class="primary-btn">Generate palette</button>
+        <button class="generate-btn">Generate palette</button>
       </div>
     </aside>
 
@@ -114,78 +114,7 @@
       <!-- Placeholder palettes for demonstration -->
 
       <div class="palettes-grid hidden" id="palettes-grid">
-        <div class="palette-card">
-          <div class="palette-colors">
-            <div class="palette-color" style="background-color: #4A90E2;"></div>
-            <div class="palette-color" style="background-color: #67A3E8;"></div>
-            <div class="palette-color" style="background-color: #85B6ED;"></div>
-            <div class="palette-color" style="background-color: #A2C9F3;"></div>
-            <div class="palette-color" style="background-color: #C0DCF8;"></div>
-          </div>
-          <div class="palette-info">
-            <span class="palette-label">Palette 1</span>
-            <div class="palette-actions">
-              <button class="text-btn">Export</button>
-              <button class="text-btn">Preview</button>
-              <button class="text-btn">Edit</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="palette-card">
-          <div class="palette-colors">
-            <div class="palette-color" style="background-color: #E24A90;"></div>
-            <div class="palette-color" style="background-color: #E867A3;"></div>
-            <div class="palette-color" style="background-color: #ED85B6;"></div>
-            <div class="palette-color" style="background-color: #F3A2C9;"></div>
-            <div class="palette-color" style="background-color: #F8C0DC;"></div>
-          </div>
-          <div class="palette-info">
-            <span class="palette-label">Palette 2</span>
-            <div class="palette-actions">
-              <button class="text-btn">Export</button>
-              <button class="text-btn">Preview</button>
-              <button class="text-btn">Edit</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="palette-card">
-          <div class="palette-colors">
-            <div class="palette-color" style="background-color: #90E24A;"></div>
-            <div class="palette-color" style="background-color: #A3E867;"></div>
-            <div class="palette-color" style="background-color: #B6ED85;"></div>
-            <div class="palette-color" style="background-color: #C9F3A2;"></div>
-            <div class="palette-color" style="background-color: #DCF8C0;"></div>
-          </div>
-          <div class="palette-info">
-            <span class="palette-label">Palette 3</span>
-            <div class="palette-actions">
-              <button class="text-btn">Export</button>
-              <button class="text-btn">Preview</button>
-              <button class="text-btn">Edit</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="palette-card">
-          <div class="palette-colors">
-            <div class="palette-color" style="background-color: #E2904A;"></div>
-            <div class="palette-color" style="background-color: #E8A367;"></div>
-            <div class="palette-color" style="background-color: #EDB685;"></div>
-            <div class="palette-color" style="background-color: #F3C9A2;"></div>
-            <div class="palette-color" style="background-color: #F8DCC0;"></div>
-          </div>
-          <div class="palette-info">
-            <span class="palette-label">Palette 4</span>
-            <div class="palette-actions">
-              <button class="text-btn">Export</button>
-              <button class="text-btn">Preview</button>
-              <button class="text-btn">Edit</button>
-            </div>
-          </div>
-        </div>
-
+        <!-- Generated palettes will be inserted here -->
       </div>
     </main>
   </div>
@@ -197,6 +126,8 @@
     import { share } from '/src/shareBtn.js';
     import { toggleTheme } from '/src/toggleThemeBtn.js';
     import { randomize } from '/src/randomizeBtn.js';
+    import { generatePalette } from '/src/generateBtn.js';
+    import {getTextColor} from '/shared/utils/textColorOverlay.js';
 
     //set page theme based on localStorage @TODO a little slow may need optimization
     if (localStorage.getItem('theme') === FilterType.DARK_MODE) toggleTheme(false);
@@ -232,7 +163,7 @@
     });
 
     // Initialize the generate buttons with their respective IDs and selectors
-    initializeGenerateButtons('.primary-btn', '.generate-btn', 'empty-state', 'palettes-grid');
+    initializeGenerateButtons('.generate-btn', '.generate-btn', 'empty-state', 'palettes-grid');
 
     // Stepper functionality
     const stepperBtns = document.querySelectorAll('.stepper-btn');
@@ -249,7 +180,89 @@
       });
     });
 
-    // Add event listeners for icon buttons
+    const generationSettings = {
+      harmonyType: harmonySelect.value,
+      numSwatches: parseInt(stepperInput.value),
+      filterType: filterTypeSelect.value,
+      baseColor: document.querySelector('.color-preview').style.backgroundColor
+    };
+
+    // Add event listeners for buttons
+    document.querySelector('.generate-btn').addEventListener('click', () => {
+      const paletteList = generatePalette(generationSettings);
+
+      const palettesGrid = document.getElementById('palettes-grid');
+      const emptyState = document.getElementById('empty-state');
+
+      console.log('Generated palettes:', paletteList);
+
+      // Show palettes grid and hide empty state
+      palettesGrid.classList.remove('hidden');
+      emptyState.classList.add('hidden');
+
+      // Clear existing palettes
+      palettesGrid.innerHTML = '';
+
+      // Create a card for each palette in the list
+      paletteList.forEach((palette, paletteIndex) => {
+        // Create palette card
+        const card = document.createElement('div');
+        card.className = 'palette-card';
+
+        // Palette colors - extract from the palette's colorMap
+        const colorsContainer = document.createElement('div');
+        colorsContainer.className = 'palette-colors';
+        
+        // Iterate through the colorMap to get all colors
+        for (const [color, role] of palette.colorMap.entries()) {
+          const colorDiv = document.createElement('div');
+          colorDiv.className = 'palette-color';
+          colorDiv.style.backgroundColor = color.getHEX().value;
+          
+          //add text on top of color swatch
+          const colorLabel = document.createElement('span');
+          colorLabel.className = 'color-label';
+          colorLabel.textContent = role;
+          colorLabel.style.color = getTextColor(color).value;
+          colorDiv.appendChild(colorLabel);
+
+          colorsContainer.appendChild(colorDiv);
+        }
+        card.appendChild(colorsContainer);
+
+        // Palette info and actions
+        const info = document.createElement('div');
+        info.className = 'palette-info';
+
+        const label = document.createElement('span');
+        label.className = 'palette-label';
+        const nextIndex = palettesGrid.querySelectorAll('.palette-card').length + 1;
+        label.textContent = `Palette ${nextIndex}`;
+        info.appendChild(label);
+
+        const actions = document.createElement('div');
+        actions.className = 'palette-actions';
+        ['Export', 'Preview', 'Edit'].forEach(text => {
+          const btn = document.createElement('button');
+          btn.className = 'text-btn';
+          btn.textContent = text;
+          actions.appendChild(btn);
+        });
+        info.appendChild(actions);
+
+        card.appendChild(info);
+
+        // Append to grid
+        palettesGrid.appendChild(card);
+      });
+
+      // Scroll the last card into view
+      const lastCard = palettesGrid.lastElementChild;
+      if (lastCard) {
+        lastCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+
+    });
     document.querySelector('.icon-btn[aria-label="Toggle theme"]').addEventListener('click', () => toggleTheme(true));
     document.querySelector('.icon-btn[aria-label="Share"]').addEventListener('click', () => share());
     document.querySelector('.icon-btn[aria-label="Randomize"]').addEventListener('click', () => randomize(colorPicker));

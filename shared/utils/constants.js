@@ -48,7 +48,7 @@ export const ColorFormat = Object.freeze({
  */
 export const ColorRole = Object.freeze({
   PRIMARY: 'primary',
-  SECONDAY: 'secondary',
+  SECONDARY: 'secondary',
   ACCENT: 'accent',
   BACKGROUND: 'background',
   TEXT: 'text',

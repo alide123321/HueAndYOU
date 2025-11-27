@@ -1,25 +1,27 @@
 import {Color} from './Color.js';
+import {ColorRole} from '../utils/constants.js';
 
 export class Palette {
   /**
-   * @param {Color[]} colors
-   * @param {Object} roles  - Example: { 4: "bg", 5: "text" }
+   * @param {Map<Color, string>} colorMap - A map of color objects to their roles.
+   * @param {boolean} isDarkTheme - Indicates if the palette is for a dark theme.
+   *
+   * @author Ali Aldaghishy
    */
-  constructor(colors = [], roles = {}, isDarkTheme = false) {
-    this.colors = colors; // array of Color instances
-    this.roles = roles; // mapping index -> role ("bg", "text", etc.)
+  constructor(colorMap, isDarkTheme = false) {
+    this.colorMap = colorMap;
     this.isDarkTheme = isDarkTheme;
   }
 
   /**
    * getBackgroundColor()
    *
-   * @author Ian Timchak
-   * Returns the Color assigned to role "bg", or null.
+   * @author Ali Aldaghishy
+   * @Returns the Color assigned to the role, or null.
    */
   getBackgroundColor() {
-    for (const [index, role] of Object.entries(this.roles)) {
-      if (role === 'bg') return this.colors[index] || null;
+    for (const [color, role] of this.colorMap.entries()) {
+      if (role === ColorRole.BACKGROUND) return color;
     }
     return null;
   }
@@ -27,12 +29,12 @@ export class Palette {
   /**
    * getTextColor()
    *
-   * @author Ian Timchak
-   * @returns the Color assigned to role "text", or null.
+   * @author Ali Aldaghishy
+   * @returns the Color assigned to the role, or null.
    */
   getTextColor() {
-    for (const [index, role] of Object.entries(this.roles)) {
-      if (role === 'text') return this.colors[index] || null;
+    for (const [color, role] of this.colorMap.entries()) {
+      if (role === ColorRole.TEXT) return color;
     }
     return null;
   }

@@ -11,10 +11,9 @@ export class Color {
 
   static fromHex(hex) {
     // Convert hex to RGBA
-    var r = parseInt(hex.slice(1, 3), 16);
-    var g = parseInt(hex.slice(3, 5), 16);
-    var b = parseInt(hex.slice(5, 7), 16);
-    return new Color(r, g, b);
+    let color = convertColor(hex, ColorFormat.RGB);
+
+    return new Color(color.r, color.g, color.b);
   }
 
   /**
@@ -23,5 +22,15 @@ export class Color {
    */
   getRGB() {
     return {r: this.r, g: this.g, b: this.b};
+  }
+
+  /**
+   * Returns the HEX value of the color.
+   *
+   * @author Ali Aldaghishy
+   * @returns HEX vale of color
+   */
+  getHEX() {
+    return convertColor(this, ColorFormat.HEX);
   }
 }
