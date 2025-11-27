@@ -40,3 +40,16 @@ export const ColorFormat = Object.freeze({
   HSL: 'hsl',
   OKLCH: 'oklch',
 });
+
+/**
+ * Constants for color roles
+ * @author Ian Timchak
+ * @enum {string}
+ */
+export const ColorRole = Object.freeze({
+  PRIMARY: 'primary',
+  SECONDAY: 'secondary',
+  ACCENT: 'accent',
+  BACKGROUND: 'background',
+  TEXT: 'text',
+});
