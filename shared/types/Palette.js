@@ -5,9 +5,10 @@ export class Palette {
      * @param {Color[]} colors
      * @param {Object} roles  - Example: { 4: "bg", 5: "text" }
      */
-    constructor(colors = [], roles = {}) {
+    constructor(colors = [], roles = {}, isDarkTheme = false) {
         this.colors = colors;     // array of Color instances
         this.roles = roles;       // mapping index -> role ("bg", "text", etc.)
+        this.isDarkTheme = isDarkTheme;
     }
 
     /**
