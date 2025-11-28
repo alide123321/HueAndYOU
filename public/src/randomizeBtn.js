@@ -47,8 +47,7 @@ export function randomize(
 
   // pick either light or dark mode filter based on current mode
   if (changeFilterType) {
-    document.querySelector('.icon-btn[aria-label="Toggle theme"] .icon-text')
-      .textContent === '☀'
+    localStorage.getItem('theme') === FilterType.LIGHT_MODE
       ? (document.getElementById('filter-type').value = FilterType.LIGHT_MODE)
       : (document.getElementById('filter-type').value = FilterType.DARK_MODE);
   }
