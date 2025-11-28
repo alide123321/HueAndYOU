@@ -95,7 +95,7 @@
             <span class="icon-text">☀</span>
           </button>
         </div>
-        <button class="generate-btn">Generate palette</button>
+        <button class="generate-btn">Generate palettes</button>
       </div>
     </aside>
 
@@ -106,7 +106,7 @@
         <div class="empty-state-card">
           <h1 class="empty-state-title">No palettes yet</h1>
           <p class="empty-state-text">Adjust the settings on the left, then generate your first palette.</p>
-          <button class="generate-btn">Generate palette</button>
+          <button class="generate-btn">Generate palettes</button>
         </div>
       </div>
 
@@ -188,72 +188,73 @@
     };
 
     // Add event listeners for buttons
-    document.querySelector('.generate-btn').addEventListener('click', () => {
-      const paletteList = generatePalette(generationSettings);
+    document.querySelectorAll('.generate-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const paletteList = generatePalette(generationSettings);
 
-      const palettesGrid = document.getElementById('palettes-grid');
-      const emptyState = document.getElementById('empty-state');
+        const palettesGrid = document.getElementById('palettes-grid');
+        const emptyState = document.getElementById('empty-state');
 
-      console.log('Generated palettes:', paletteList);
+        console.log('Generated palettes:', paletteList);
 
-      // Show palettes grid and hide empty state
-      palettesGrid.classList.remove('hidden');
-      emptyState.classList.add('hidden');
+        // Show palettes grid and hide empty state
+        palettesGrid.classList.remove('hidden');
+        emptyState.classList.add('hidden');
 
-      // Clear existing palettes
-      palettesGrid.innerHTML = '';
+        // Clear existing palettes
+        palettesGrid.innerHTML = '';
 
-      // Create a card for each palette in the list
-      paletteList.forEach((palette, paletteIndex) => {
-        // Create palette card
-        const card = document.createElement('div');
-        card.className = 'palette-card';
+        // Create a card for each palette in the list
+        paletteList.forEach((palette, paletteIndex) => {
+          // Create palette card
+          const card = document.createElement('div');
+          card.className = 'palette-card';
 
-        // Palette colors - extract from the palette's colorMap
-        const colorsContainer = document.createElement('div');
-        colorsContainer.className = 'palette-colors';
-        
-        // Iterate through the colorMap to get all colors
-        for (const [color, role] of palette.colorMap.entries()) {
-          const colorDiv = document.createElement('div');
-          colorDiv.className = 'palette-color';
-          colorDiv.style.backgroundColor = color.getHEX().value;
-          
-          //add text on top of color swatch
-          const colorLabel = document.createElement('span');
-          colorLabel.className = 'color-label';
-          colorLabel.textContent = role;
-          colorLabel.style.color = getTextColor(color).value;
-          colorDiv.appendChild(colorLabel);
+          // Palette colors - extract from the palette's colorMap
+          const colorsContainer = document.createElement('div');
+          colorsContainer.className = 'palette-colors';
 
-          colorsContainer.appendChild(colorDiv);
-        }
-        card.appendChild(colorsContainer);
+          // Iterate through the colorMap to get all colors
+          for (const [color, role] of palette.colorMap.entries()) {
+            const colorDiv = document.createElement('div');
+            colorDiv.className = 'palette-color';
+            colorDiv.style.backgroundColor = color.getHEX().value;
 
-        // Palette info and actions
-        const info = document.createElement('div');
-        info.className = 'palette-info';
+            //add text on top of color swatch
+            const colorLabel = document.createElement('span');
+            colorLabel.className = 'color-label';
+            colorLabel.textContent = role;
+            colorLabel.style.color = getTextColor(color).value;
+            colorDiv.appendChild(colorLabel);
 
-        const label = document.createElement('span');
-        label.className = 'palette-label';
-        const nextIndex = palettesGrid.querySelectorAll('.palette-card').length + 1;
-        label.textContent = `Palette ${nextIndex}`;
-        info.appendChild(label);
+            colorsContainer.appendChild(colorDiv);
+          }
+          card.appendChild(colorsContainer);
 
-        const actions = document.createElement('div');
-        actions.className = 'palette-actions';
-        ['Export', 'Preview', 'Edit'].forEach(text => {
-          const btn = document.createElement('button');
-          btn.className = 'text-btn';
-          btn.textContent = text;
-          actions.appendChild(btn);
-        });
-        info.appendChild(actions);
+          // Palette info and actions
+          const info = document.createElement('div');
+          info.className = 'palette-info';
 
-        card.appendChild(info);
+          const label = document.createElement('span');
+          label.className = 'palette-label';
+          const nextIndex = palettesGrid.querySelectorAll('.palette-card').length + 1;
+          label.textContent = `Palette ${nextIndex}`;
+          info.appendChild(label);
 
-        // Append to grid
-        palettesGrid.appendChild(card);
+          const actions = document.createElement('div');
+          actions.className = 'palette-actions';
+          ['Export', 'Preview', 'Edit'].forEach(text => {
+            const btn = document.createElement('button');
+            btn.className = 'text-btn';
+            btn.textContent = text;
+            actions.appendChild(btn);
+          });
+          info.appendChild(actions);
+
+          card.appendChild(info);
+
+          // Append to grid
+          palettesGrid.appendChild(card);
       });
 
       // Scroll the last card into view
@@ -262,6 +263,7 @@
         lastCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
 
+      });
     });
     document.querySelector('.icon-btn[aria-label="Toggle theme"]').addEventListener('click', () => toggleTheme(true));
     document.querySelector('.icon-btn[aria-label="Share"]').addEventListener('click', () => share());
