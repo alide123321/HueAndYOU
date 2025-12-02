@@ -38,6 +38,7 @@ export function initializeGenerateButtons(
 /** Generate a color palette based on the provided generation settings.
  *
  * @todo Implement the actual palette generation logic. | Currently returns basic
+ *       Should call generator functions.
  *
  * @param {GenerationSettings} generationSettings
  * @author Ali Aldaghishy
