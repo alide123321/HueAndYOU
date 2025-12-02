@@ -22,6 +22,26 @@ export class Color {
   }
 
   /**
+   * 
+   * @param {String} str 
+   * @returns 
+   */
+  static fromRGBString(str) {
+    // Simple pattern, human readable
+    const rgbPattern = /rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)/i;
+    const match = rgbPattern.exec(str);
+
+    if (match) {
+      const r = parseInt(match[1], 10);
+      const g = parseInt(match[2], 10);
+      const b = parseInt(match[3], 10);
+      return new Color(r, g, b, 'rgb');
+    }
+
+    throw new Error(`Invalid RGB string: ${str}`);
+  }
+
+  /**
    * getRGB()
    * Returns the RGB components of the color.
    */

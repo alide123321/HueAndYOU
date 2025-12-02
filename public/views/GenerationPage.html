@@ -52,7 +52,7 @@
         <div class="form-group">
           <label for="base-color" class="form-label">Base color</label>
           <button id="base-color" class="color-swatch-btn" aria-label="Select base color">
-            <span class="color-preview" style="background-color: #3399ff;"></span>
+            <span id="selected-color" class="color-preview" style="background-color: #a6f3e2;"></span>
           </button>
         </div>
 
@@ -181,16 +181,17 @@
       });
     });
 
-    const generationSettings = {
-      harmonyType: harmonySelect.value,
-      numSwatches: parseInt(stepperInput.value),
-      filterType: filterTypeSelect.value,
-      baseColor: document.querySelector('.color-preview').style.backgroundColor
-    };
+    
 
     // Add event listeners for buttons
     document.querySelectorAll('.generate-btn').forEach(btn => {
       btn.addEventListener('click', async () => {
+        const generationSettings = {
+          harmonyType: harmonySelect.value,
+          numSwatches: parseInt(stepperInput.value),
+          filterType: filterTypeSelect.value,
+          baseColor: window.getComputedStyle(document.getElementById('selected-color'), null).getPropertyValue('background-color')
+        };
         const paletteList = await generatePalette(generationSettings);
 
         const palettesGrid = document.getElementById('palettes-grid');
