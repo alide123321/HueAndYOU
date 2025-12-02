@@ -40,6 +40,19 @@ export class Palette {
   }
 
   /**
+   * .rehydrateColorMap()
+   */
+  rehydrateColorMap() {
+    const newMap = new Map();
+    for ( const [colorObj, role] of this.colorMap ) {
+      const color = new Color(colorObj.r, colorObj.g, colorObj.b);
+      newMap.set(color, role);
+    }
+
+    this.colorMap = newMap;
+  }
+
+  /**
    * .visualize()
    *
    * @author Ian Timchak
@@ -48,7 +61,7 @@ export class Palette {
   visualize() {
     const ESC = '\u001b[';
 
-    const rows = this.colors.map((color, index) => {
+    const rows = this.colorMap.map((color, index) => {
       const {r, g, b} = color.getRGB();
 
       // ANSI 24-bit truecolor background

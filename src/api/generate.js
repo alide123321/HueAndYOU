@@ -14,7 +14,7 @@ const generateBatchPalettes = (req, res) => {
   //temporarily use a default setting for testing
   const test = new GenerationSettings({
     harmonyType: ColorHarmony.COMPLEMENTARY,
-    baseColor: Color.fromHex('#00ff00'),
+    baseColor: Color.fromHex('#3366ff'),
     includeBgTextColors: true,
     isLightMode: true,
   });
@@ -24,6 +24,7 @@ const generateBatchPalettes = (req, res) => {
 
   // generate palettes
   const palettes = generator.generate();
+  console.log(palettes);
 
   // Serialize and send palette list as response
   res.json(palettes);

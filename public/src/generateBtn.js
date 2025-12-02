@@ -80,7 +80,7 @@ export function initializeGenerateButtons(
 // }
 
 export async function generatePalette(generationSettings) {
-  await fetch('/api/generate', {
+  const paletteList = await fetch('/api/generate', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -90,6 +90,15 @@ export async function generatePalette(generationSettings) {
   })
     .then((response) => response.json())
     .then((data) => {
-      return data;
+      //rehydrate the palette objects
+      const paletteList = data.map((p) => {
+        const palette = new Palette(p.colorMap, p.isDarkTheme);
+        palette.rehydrateColorMap();
+        return palette;
+      });
+
+      return paletteList;
     });
+
+  return paletteList;
 }

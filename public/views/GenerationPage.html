@@ -216,7 +216,7 @@
           colorsContainer.className = 'palette-colors';
 
           // Iterate through the colorMap to get all colors
-          for (const [color, role] of palette.colorMap.entries()) {
+          for (const [color, role] of palette.colorMap ) {
             const colorDiv = document.createElement('div');
             colorDiv.className = 'palette-color';
             colorDiv.style.backgroundColor = color.getHEX().value;
