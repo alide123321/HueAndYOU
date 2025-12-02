@@ -92,7 +92,7 @@ export class Complementary extends HarmonyStrategy {
           mode: 'hsl',
           h: hue,
           s: subtleSaturation,
-          l: 0.98, // near-white
+          l: 0.95, // near-white
         };
 
         // Text color (dark, slightly tinted)
@@ -100,7 +100,7 @@ export class Complementary extends HarmonyStrategy {
           mode: 'hsl',
           h: hue,
           s: subtleSaturation,
-          l: 0.1, // near-black
+          l: 0.05, // near-black
         };
 
         paletteHsl.push(bgHsl, textHsl);
@@ -110,7 +110,7 @@ export class Complementary extends HarmonyStrategy {
           mode: 'hsl',
           h: hue,
           s: subtleSaturation,
-          l: 0.08, // near-black
+          l: 0.05, // near-black
         };
 
         // Light text color (near-white)
@@ -135,10 +135,24 @@ export class Complementary extends HarmonyStrategy {
 
     //map color objects in a Color, Role mapping
     //JSON cant send map objects apparently, so convert to array of arrays
+    //To DO: properly deserialize maps on the api side, not priority at this moment 
     let colorsWithRoles = [];
     colors.forEach((color, index) => {
       colorsWithRoles.push([color, null]); // null role by default
-    });
+
+      //assign roles based on position
+      switch (index) {
+        case 0:
+          colorsWithRoles[index][1] = 'PRIMARY';
+          break;
+        case 4:
+          colorsWithRoles[index][1] = 'BACKGROUND';
+          break;
+        case 5:
+          colorsWithRoles[index][1] = 'TEXT';
+          break;
+      }
+    }); 
 
     return new Palette(colorsWithRoles);
   }

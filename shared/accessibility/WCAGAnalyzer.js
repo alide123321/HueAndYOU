@@ -90,7 +90,10 @@ export class WCAGAnalyzer {
     //Compute results for each color
     const results = [];
 
-    palette.colors.forEach((c, index) => {
+    // palette.colors.forEach((c, index) => {
+
+    // Temporary use of nested arrays instead of map while we figure out serialization
+    for (const [c, role] of palette.colorMap) {
       const contrastWithBg = WCAGAnalyzer.computePairContrast(c, bg);
       const contrastWithText = WCAGAnalyzer.computePairContrast(c, text);
 
@@ -113,7 +116,7 @@ export class WCAGAnalyzer {
           label
         )
       );
-    });
+    };
 
     // 3. Final structured report
     return new WCAGReport(bg, text, results);

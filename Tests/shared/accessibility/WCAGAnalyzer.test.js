@@ -124,9 +124,9 @@ describe('WCAGAnalyzer', () => {
   //  Check bestAgainst logic
   // --------------------------
   test('bestAgainst correctly identifies bg or text as higher contrast', () => {
-    const colors = [new Color(180, 180, 180), new Color(50, 50, 50)];
+    const colors = [[new Color(180, 180, 180), null], [new Color(50, 50, 50), 'bg']];
 
-    const palette = new Palette(colors, {0: 'bg', 1: 'text'}, false);
+    const palette = new Palette(colors, false);
 
     const report = WCAGAnalyzer.analyzePalette(palette);
     const result0 = report.results[0];
