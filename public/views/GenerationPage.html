@@ -71,7 +71,7 @@
         <h2 class="card-title">Filters</h2>
         
         <div class="form-group">
-          <label for="filter-type" class="form-label">Color-blind mode</label>
+          <label for="filter-type" class="form-label">Palette Theme mode</label>
           <select id="filter-type" class="form-select">
             <option value="none">None</option>
             <!-- Colorblind options populated from constants.js -->
@@ -118,6 +118,7 @@
       </div>
     </main>
   </div>
+  
 
   <script type="module">
     import { ColorHarmony, FilterType, ColorFormat } from '/shared/utils/constants.js';
@@ -241,6 +242,7 @@
           label.textContent = `Palette ${nextIndex}`;
           info.appendChild(label);
 
+          // Ian: It may be more preferable to use HTML templates for the cards rather than creating elements via JS
           const actions = document.createElement('div');
           actions.className = 'palette-actions';
           ['Export', 'Preview', 'Edit'].forEach(text => {

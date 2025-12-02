@@ -1,30 +1,32 @@
 /**
  * Constants for Color Harmony Types
  * @author Ali Aldaghishy
+ * @modification Ian Timchak - disabled unimplemented types for prototype
  * @readonly
  * @enum {string}
  */
 export const ColorHarmony = Object.freeze({
   COMPLEMENTARY: 'complementary',
-  ANALOGOUS: 'analogous',
-  TRIADIC: 'triadic',
-  TETRADIC: 'tetradic',
-  MONOCHROMATIC: 'monochromatic',
+  //ANALOGOUS: 'analogous',
+  //TRIADIC: 'triadic',
+  //TETRADIC: 'tetradic',
+  //MONOCHROMATIC: 'monochromatic',
 });
 
 /**
  * Constants for filter types
  * @author Ali Aldaghishy
+ * @modification Ian Timchak - disabled unimplemented filters for prototype
  * @readonly
  * @enum {string}
  */
 export const FilterType = Object.freeze({
   DARK_MODE: 'dark_mode',
   LIGHT_MODE: 'light_mode',
-  HIGH_CONTRAST: 'high_contrast',
-  PROTANOPIA: 'protanopia',
-  DEUTERANOPIA: 'deuteranopia',
-  TRITANOPIA: 'tritanopia',
+  //HIGH_CONTRAST: 'high_contrast',
+  //PROTANOPIA: 'protanopia',
+  //DEUTERANOPIA: 'deuteranopia',
+  //TRITANOPIA: 'tritanopia',
 });
 
 /**
