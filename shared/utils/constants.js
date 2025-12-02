@@ -7,10 +7,10 @@
  */
 export const ColorHarmony = Object.freeze({
   COMPLEMENTARY: 'complementary',
-  //ANALOGOUS: 'analogous',
-  //TRIADIC: 'triadic',
-  //TETRADIC: 'tetradic',
-  //MONOCHROMATIC: 'monochromatic',
+  ANALOGOUS: 'analogous',
+  TRIADIC: 'triadic',
+  TETRADIC: 'tetradic',
+  MONOCHROMATIC: 'monochromatic',
 });
 
 /**
@@ -23,10 +23,10 @@ export const ColorHarmony = Object.freeze({
 export const FilterType = Object.freeze({
   DARK_MODE: 'dark_mode',
   LIGHT_MODE: 'light_mode',
-  //HIGH_CONTRAST: 'high_contrast',
-  //PROTANOPIA: 'protanopia',
-  //DEUTERANOPIA: 'deuteranopia',
-  //TRITANOPIA: 'tritanopia',
+  HIGH_CONTRAST: 'high_contrast',
+  PROTANOPIA: 'protanopia',
+  DEUTERANOPIA: 'deuteranopia',
+  TRITANOPIA: 'tritanopia',
 });
 
 /**
