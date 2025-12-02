@@ -18,8 +18,8 @@ export class GenerationSettings {
   constructor(gs = {}) {
     this.harmonyType = gs.harmonyType || ColorHarmony.COMPLEMENTARY;
     this.baseColor = gs.baseColor || new Color('#FFFFFF');
-    this.numberOfColors = gs.numberOfColors || 2;
-    this.numberOfPalettes = gs.numberOfPalettes || 5;
+    this.numberOfColors = gs.numberOfColors || 5;
+    this.numberOfPalettes = gs.numberOfPalettes || 1;
     this.filters = gs.filters || {};
     this.isLightMode = gs.isLightMode;
     this.includeBgTextColors = gs.includeBgTextColors || false;

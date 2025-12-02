@@ -22,6 +22,7 @@ app.use('/shared', express.static(path.join(__dirname, 'shared')))
 
 // home default route
 app.use('/', routeIndex);
+app.use('/api', routeIndex);
 
 app.listen(port, () => {
   console.log(`Hue & YOU server listening on http://localhost:${port}`);

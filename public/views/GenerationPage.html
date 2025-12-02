@@ -190,8 +190,8 @@
 
     // Add event listeners for buttons
     document.querySelectorAll('.generate-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const paletteList = generatePalette(generationSettings);
+      btn.addEventListener('click', async () => {
+        const paletteList = await generatePalette(generationSettings);
 
         const palettesGrid = document.getElementById('palettes-grid');
         const emptyState = document.getElementById('empty-state');
