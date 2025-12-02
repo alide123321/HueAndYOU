@@ -12,6 +12,11 @@ export class Color {
   static fromHex(hex) {
     // Convert hex to RGBA
     let color = convertColor(hex, ColorFormat.RGB);
+    
+    //is in form 0-1, must be in form 0-255
+    color.r = Math.round(color.r * 255);
+    color.g = Math.round(color.g * 255);
+    color.b = Math.round(color.b * 255);
 
     return new Color(color.r, color.g, color.b);
   }
@@ -31,6 +36,12 @@ export class Color {
    * @returns HEX vale of color
    */
   getHEX() {
-    return convertColor(this, ColorFormat.HEX);
+    //0-1 range expected
+    const rgb01 = {
+      r: this.r / 255,
+      g: this.g / 255,
+      b: this.b / 255,
+    };
+    return convertColor(rgb01, ColorFormat.HEX);
   }
 }

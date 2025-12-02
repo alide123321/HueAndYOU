@@ -133,13 +133,13 @@ export class Complementary extends HarmonyStrategy {
 
     // console.log(colors);
 
-    // //map color objects in a Color, Role mapping
-    // //JSON cant send map objects apparently, so convert to array of arrays
-    // let colorsWithRoles = [];
-    // colors.forEach((color, index) => {
-    //   colorsWithRoles.push([color, null]); // null role by default
-    // });
+    //map color objects in a Color, Role mapping
+    //JSON cant send map objects apparently, so convert to array of arrays
+    let colorsWithRoles = [];
+    colors.forEach((color, index) => {
+      colorsWithRoles.push([color, null]); // null role by default
+    });
 
-    return new Palette(colors);
+    return new Palette(colorsWithRoles);
   }
 }
