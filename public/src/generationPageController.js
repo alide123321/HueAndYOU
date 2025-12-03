@@ -128,6 +128,16 @@ document.querySelectorAll('.generate-btn').forEach((btn) => {
         const colorReport = reportResults.find(
           (result) => result.getColor().getHEX().value === color.getHEX().value
         );
+
+        //null check
+        if (!colorReport) {
+          console.error(
+            'No WCAG report found for color:',
+            color.getHEX().value
+          );
+          continue;
+        }
+
         //bestAgainst has the role
         const targetColor =
           colorReport.bestAgainst === 'background'

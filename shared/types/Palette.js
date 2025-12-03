@@ -50,6 +50,7 @@ export class Palette {
 
   /**
    * .rehydrateColorMap()
+   * Rehydrates the colorMap's Color objects after deserialization.
    */
   rehydrateColorMap() {
     const newMap = new Map();
@@ -59,6 +60,17 @@ export class Palette {
     }
 
     this.colorMap = newMap;
+  }
+  /**
+   * .serializeColorMap()
+   * Serializes as 2d array for transmission.
+   */
+  serializeColorMap() {
+    const serialized = [];
+    for ( const [colorObj, role] of this.colorMap.entries() ) {
+      serialized.push([colorObj, role]);
+    }
+    this.colorMap = serialized;
   }
 
   /**

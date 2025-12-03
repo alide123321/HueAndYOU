@@ -158,6 +158,9 @@ export class Complementary extends HarmonyStrategy {
       }
     });
 
-    return new Palette(colorsWithRoles);
+    //Convert colorsWithRoles from 2darray to a map for Palette constructor
+    let colorMap = new Map(colorsWithRoles);
+
+    return new Palette(colorMap);
   }
 }

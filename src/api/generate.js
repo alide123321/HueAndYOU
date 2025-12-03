@@ -22,9 +22,12 @@ const generateBatchPalettes = (req, res) => {
   generator.applySettings(gs);
 
   // generate palettes
-  const palettes = generator.generate();
+  let palettes = generator.generate();
 
   // Serialize and send palette list as response
+  for (let palette of palettes) {
+    palette.serializeColorMap();
+  }
   res.json(palettes);
 };
 
