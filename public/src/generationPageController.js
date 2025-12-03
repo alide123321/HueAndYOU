@@ -11,6 +11,7 @@ import {randomize} from '/src/randomizeBtn.js';
 import {generatePalette} from '/src/generateBtn.js';
 import {getTextColor} from '/shared/utils/textColorOverlay.js';
 import {WCAGAnalyzer} from '/shared/accessibility/WCAGAnalyzer.js';
+import {exportPalette} from '/src/exportBtn.js';
 
 //set page theme based on localStorage @TODO a little slow may need optimization
 if (localStorage.getItem('theme') === FilterType.DARK_MODE) toggleTheme(false);
@@ -217,6 +218,14 @@ document.querySelectorAll('.generate-btn').forEach((btn) => {
         const btn = document.createElement('button');
         btn.className = 'text-btn';
         btn.textContent = text;
+
+        // EXPORT HANDLER
+        if (text === 'Export') {
+          btn.addEventListener('click', (event) => {
+            exportPalette(event, palette);
+          });
+        }
+
         actions.appendChild(btn);
       });
       info.appendChild(actions);
