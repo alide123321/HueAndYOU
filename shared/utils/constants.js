@@ -7,10 +7,10 @@
  */
 export const ColorHarmony = Object.freeze({
   COMPLEMENTARY: 'complementary',
-  // ANALOGOUS: 'analogous',
-  // TRIADIC: 'triadic',
-  // TETRADIC: 'tetradic',
-  // MONOCHROMATIC: 'monochromatic',
+  ANALOGOUS: 'analogous',
+  TRIADIC: 'triadic',
+  TETRADIC: 'tetradic',
+  MONOCHROMATIC: 'monochromatic',
 });
 
 /**
