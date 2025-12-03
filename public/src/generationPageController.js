@@ -106,7 +106,8 @@ document.querySelectorAll('.generate-btn').forEach((btn) => {
       const colorsContainer = document.createElement('div');
       colorsContainer.className = 'palette-colors';
 
-      const reportResults = WCAGAnalyzer.analyzePalette(palette).getColorResults();
+      const reportResults =
+        WCAGAnalyzer.analyzePalette(palette).getColorResults();
 
       // Iterate through the colorMap to get all colors
       for (const [color, role] of palette.colorMap) {
@@ -124,10 +125,18 @@ document.querySelectorAll('.generate-btn').forEach((btn) => {
 
         // Apply report data
         //get the color report associated with the color
-        const colorReport = reportResults.find((result => result.getColor().getHEX().value === color.getHEX().value));
+        const colorReport = reportResults.find(
+          (result) => result.getColor().getHEX().value === color.getHEX().value
+        );
         //bestAgainst has the role
-        const targetColor = colorReport.bestAgainst === 'background' ? palette.getBackgroundColor() : palette.getTextColor();
-        
+        const targetColor =
+          colorReport.bestAgainst === 'background'
+            ? palette.getBackgroundColor()
+            : palette.getTextColor();
+
+        //Example of 'fail' badge appearing:
+        //#364fd4
+
         //add color value label
         const valueLabel = document.createElement('span');
         valueLabel.className = 'color-bold-label';
@@ -138,7 +147,7 @@ document.querySelectorAll('.generate-btn').forEach((btn) => {
         //add role on top of color swatch
         const roleLabel = document.createElement('span');
         roleLabel.className = 'color-normal-label';
-        roleLabel.textContent = role;
+        roleLabel.textContent = role != null ? role.toUpperCase() : '';
         roleLabel.style.color = targetColor.getHEX().value;
         topGroup.appendChild(roleLabel);
 
@@ -152,7 +161,9 @@ document.querySelectorAll('.generate-btn').forEach((btn) => {
         //add contrast ratio
         const ratioLabel = document.createElement('span');
         ratioLabel.className = 'color-normal-label';
-        ratioLabel.textContent = `${colorReport.getBestContrast().toFixed(2)}:1`;
+        ratioLabel.textContent = `${colorReport
+          .getBestContrast()
+          .toFixed(2)}:1`;
         ratioLabel.style.color = targetColor.getHEX().value;
         bottomGroup.appendChild(ratioLabel);
 
