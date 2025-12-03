@@ -2,6 +2,7 @@ import {FilterType} from '/shared/utils/constants.js';
 import {toggleTheme} from '/src/toggleThemeBtn.js';
 import {getLibraryPalettes} from '/src/libraryPalettes.js';
 import {getTextColor} from '/shared/utils/textColorOverlay.js';
+import {exportPalette} from '/src/exportBtn.js';
 
 export function initLibrary() {
   // set page theme based on localStorage
@@ -74,6 +75,14 @@ export function initLibrary() {
       const btn = document.createElement('button');
       btn.className = 'text-btn';
       btn.textContent = text;
+
+      // EXPORT HANDLER
+      if (text === 'Export') {
+        btn.addEventListener('click', (event) => {
+          exportPalette(event, palette);
+        });
+      }
+
       actions.appendChild(btn);
     });
     info.appendChild(actions);
