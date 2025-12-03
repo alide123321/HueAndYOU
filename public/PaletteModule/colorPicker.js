@@ -205,8 +205,17 @@ export class ColorPicker {
     y = Math.max(0, Math.min(y, rect.height));
 
     // Convert to saturation and lightness (0-100)
-    this.currentSaturation = (x / rect.width) * 100;
-    this.currentLightness = 100 - (y / rect.height) * 100;
+    const xRatio = x / rect.width;
+    const yRatio = y / rect.height;
+
+    // Saturation: 0% (left) to 100% (right)
+    this.currentSaturation = xRatio * 100;
+
+    // Lightness calculation for standard HSL picker
+    // Top edge (yRatio = 0): lightness ranges from 100% (left, white) to 50% (right, pure hue)
+    // Bottom edge (yRatio = 1): lightness is 0% (black) everywhere
+    const topLightness = 100 - xRatio * 50;
+    this.currentLightness = topLightness * (1 - yRatio);
 
     // Update cursor position
 
@@ -233,19 +242,29 @@ export class ColorPicker {
     const width = this.canvas.width;
     const height = this.canvas.height;
 
-    // Create gradient from white to pure hue
+    // Draw the saturation-lightness gradient for the current hue
+    // Standard HSL color picker:
+    // - Top-right: pure saturated hue
+    // - Top-left: white
+    // - Bottom: black
+    // - Left edge: greyscale
+    // - Right edge: saturated color
+
+    //Fill with pure saturated hue
+    this.ctx.fillStyle = `hsl(${this.currentHue}, 100%, 50%)`;
+    this.ctx.fillRect(0, 0, width, height);
+
+    //Add white gradient from left (reduces saturation)
     const gradientH = this.ctx.createLinearGradient(0, 0, width, 0);
     gradientH.addColorStop(0, '#ffffff');
-    gradientH.addColorStop(1, `hsl(${this.currentHue}, 100%, 50%)`);
-
+    gradientH.addColorStop(1, 'rgba(255, 255, 255, 0)');
     this.ctx.fillStyle = gradientH;
     this.ctx.fillRect(0, 0, width, height);
 
-    // Create gradient from transparent to black
+    //Add black gradient from top to bottom (reduces lightness)
     const gradientV = this.ctx.createLinearGradient(0, 0, 0, height);
     gradientV.addColorStop(0, 'rgba(0, 0, 0, 0)');
     gradientV.addColorStop(1, 'rgba(0, 0, 0, 1)');
-
     this.ctx.fillStyle = gradientV;
     this.ctx.fillRect(0, 0, width, height);
   }
@@ -432,8 +451,19 @@ export class ColorPicker {
   updateThumbPositions() {
     // Update canvas cursor position
     const rect = this.canvasElement.getBoundingClientRect();
+
+    // X position is straightforward - based on saturation (0% left to 100% right)
     const x = (this.currentSaturation / 100) * rect.width;
-    const y = (1 - this.currentLightness / 100) * rect.height;
+    const xRatio = x / rect.width;
+
+    // Y position: solve for y from lightness equation
+    // currentLightness = topLightness * (1 - yRatio)
+    // where topLightness = 100 - xRatio * 50
+    const topLightness = 100 - xRatio * 50;
+    const yRatio =
+      topLightness > 0 ? 1 - this.currentLightness / topLightness : 1;
+    const y = yRatio * rect.height;
+
     this.canvasCursor.style.left = x + 'px';
     this.canvasCursor.style.top = y + 'px';
     // Update hue thumb position
