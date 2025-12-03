@@ -114,7 +114,10 @@ document.querySelectorAll('.generate-btn').forEach((btn) => {
       for (const [color, role] of palette.colorMap) {
         const colorDiv = document.createElement('div');
         colorDiv.className = 'palette-color';
-        colorDiv.style.backgroundColor = color.getHEX().value;
+        const hexValue = color.getHEX().value;
+        colorDiv.style.backgroundColor = hexValue;
+        colorDiv.style.cursor = 'pointer';
+        colorDiv.title = `Click to copy ${hexValue}`;
 
         // Grouping for top and bottom labels
         const topGroup = document.createElement('div');
@@ -154,6 +157,21 @@ document.querySelectorAll('.generate-btn').forEach((btn) => {
         valueLabel.textContent = color.getHEX().value.toUpperCase();
         valueLabel.style.color = targetColor.getHEX().value;
         topGroup.appendChild(valueLabel);
+
+        // Add click listener to copy hex code
+        colorDiv.addEventListener('click', async () => {
+          try {
+            await navigator.clipboard.writeText(hexValue);
+            // Visual feedback - change the value label
+            const originalLabel = valueLabel.textContent;
+            valueLabel.textContent = 'COPIED!';
+            setTimeout(() => {
+              valueLabel.textContent = originalLabel;
+            }, 1000);
+          } catch (err) {
+            console.error('Failed to copy color:', err);
+          }
+        });
 
         //add role on top of color swatch
         const roleLabel = document.createElement('span');

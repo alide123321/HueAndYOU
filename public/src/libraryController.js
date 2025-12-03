@@ -2,6 +2,7 @@ import {FilterType} from '/shared/utils/constants.js';
 import {toggleTheme} from '/src/toggleThemeBtn.js';
 import {getLibraryPalettes} from '/src/libraryPalettes.js';
 import {getTextColor} from '/shared/utils/textColorOverlay.js';
+import {WCAGAnalyzer} from '/shared/accessibility/WCAGAnalyzer.js';
 import {exportPalette} from '/src/exportBtn.js';
 
 export function initLibrary() {
@@ -40,18 +41,87 @@ export function initLibrary() {
     const colorsContainer = document.createElement('div');
     colorsContainer.className = 'palette-colors';
 
+    const reportResults =
+      WCAGAnalyzer.analyzePalette(palette).getColorResults();
+
     // Iterate through the colorMap to get all colors
-    for (const [color, role] of palette.colorMap.entries()) {
+    for (const [color, role] of palette.colorMap) {
       const colorDiv = document.createElement('div');
       colorDiv.className = 'palette-color';
-      colorDiv.style.backgroundColor = color.getHEX().value;
 
-      // add text on top of color swatch
-      const colorLabel = document.createElement('span');
-      colorLabel.className = 'color-label';
-      colorLabel.textContent = role;
-      colorLabel.style.color = getTextColor(color).value;
-      colorDiv.appendChild(colorLabel);
+      const hexValue = color.getHEX().value;
+      colorDiv.style.backgroundColor = hexValue;
+      colorDiv.style.cursor = 'pointer';
+      colorDiv.title = `Click to copy ${hexValue}`;
+
+      // Grouping for top and bottom labels
+      const topGroup = document.createElement('div');
+      topGroup.className = 'palette-top-group';
+      const bottomGroup = document.createElement('div');
+      bottomGroup.className = 'palette-bottom-group';
+      colorDiv.appendChild(topGroup);
+      colorDiv.appendChild(bottomGroup);
+
+      // Apply report data
+      //get the color report associated with the color
+      const colorReport = reportResults.find(
+        (result) => result.getColor().getHEX().value === color.getHEX().value
+      );
+
+      //null check
+      if (!colorReport) {
+        console.error('No WCAG report found for color:', color.getHEX().value);
+        continue;
+      }
+
+      //bestAgainst has the role
+      const targetColor =
+        colorReport.bestAgainst === 'background'
+          ? palette.getBackgroundColor()
+          : palette.getTextColor();
+
+      //add color value label
+      const valueLabel = document.createElement('span');
+      valueLabel.className = 'color-bold-label';
+      valueLabel.textContent = color.getHEX().value.toUpperCase();
+      valueLabel.style.color = targetColor.getHEX().value;
+      topGroup.appendChild(valueLabel);
+
+      // Add click listener to copy hex code
+      colorDiv.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(hexValue);
+          // Visual feedback - change the value label
+          const originalLabel = valueLabel.textContent;
+          valueLabel.textContent = 'COPIED!';
+          setTimeout(() => {
+            valueLabel.textContent = originalLabel;
+          }, 1000);
+        } catch (err) {
+          console.error('Failed to copy color:', err);
+        }
+      });
+
+      //add role on top of color swatch
+      const roleLabel = document.createElement('span');
+      roleLabel.className = 'color-normal-label';
+      roleLabel.textContent = role != null ? role.toUpperCase() : '';
+      roleLabel.style.color = targetColor.getHEX().value;
+      topGroup.appendChild(roleLabel);
+
+      //add WCAG label
+      const contrastLabel = document.createElement('span');
+      contrastLabel.className = 'color-normal-label';
+      contrastLabel.textContent = `WCAG ${colorReport.getLabel()}`;
+      contrastLabel.style.color = targetColor.getHEX().value;
+      bottomGroup.appendChild(contrastLabel);
+
+      //add contrast ratio
+      const ratioLabel = document.createElement('span');
+      ratioLabel.className = 'color-normal-label';
+      ratioLabel.textContent = `${colorReport.getBestContrast().toFixed(2)}:1`;
+      ratioLabel.style.color = targetColor.getHEX().value;
+      bottomGroup.appendChild(ratioLabel);
 
       colorsContainer.appendChild(colorDiv);
     }
