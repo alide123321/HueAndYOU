@@ -41,8 +41,8 @@ export class WCAGAnalyzer {
    * @return {double} contrast ratio
    */
   static computePairContrast(foreground, background) {
-    fg = foreground.getRGB();
-    bg = background.getRGB();
+    let fg = foreground.getRGB();
+    let bg = background.getRGB();
     const L1 = WCAGAnalyzer.luminance(fg.r, fg.g, fg.b);
     const L2 = WCAGAnalyzer.luminance(bg.r, bg.g, bg.b);
 
@@ -107,7 +107,6 @@ export class WCAGAnalyzer {
 
       results.push(
         new WCAGColorResult(
-          index,
           c,
           contrastWithBg,
           contrastWithText,

@@ -23,7 +23,11 @@ export class Palette {
     for (const [color, role] of this.colorMap.entries()) {
       if (role === ColorRole.BACKGROUND) return color;
     }
-    return null;
+    if (!this.isDarkTheme) {
+      return new Color(255, 255, 255);
+    } else {
+      return new Color(0, 0, 0);
+    }
   }
 
   /**
@@ -36,11 +40,17 @@ export class Palette {
     for (const [color, role] of this.colorMap.entries()) {
       if (role === ColorRole.TEXT) return color;
     }
-    return null;
+    //if light theme, return black
+    if (!this.isDarkTheme) {
+      return new Color(0, 0, 0);
+    } else {
+      return new Color(255, 255, 255);
+    }
   }
 
   /**
    * .rehydrateColorMap()
+   * Rehydrates the colorMap's Color objects after deserialization.
    */
   rehydrateColorMap() {
     const newMap = new Map();
@@ -50,6 +60,17 @@ export class Palette {
     }
 
     this.colorMap = newMap;
+  }
+  /**
+   * .serializeColorMap()
+   * Serializes as 2d array for transmission.
+   */
+  serializeColorMap() {
+    const serialized = [];
+    for ( const [colorObj, role] of this.colorMap.entries() ) {
+      serialized.push([colorObj, role]);
+    }
+    this.colorMap = serialized;
   }
 
   /**
