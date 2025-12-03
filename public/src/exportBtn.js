@@ -11,7 +11,8 @@ export function exportPalette(event, palette) {
   const blob = new Blob([jsonString], {type: 'application/json'});
 
   // File name
-  const filename = `palette.json`;
+  const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+  const filename = `palette-${timestamp}.json`;
 
   // Trigger download
   const link = document.createElement('a');
