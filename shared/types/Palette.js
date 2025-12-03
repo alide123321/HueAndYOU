@@ -23,7 +23,11 @@ export class Palette {
     for (const [color, role] of this.colorMap.entries()) {
       if (role === ColorRole.BACKGROUND) return color;
     }
-    return null;
+    if (!this.isDarkTheme) {
+      return new Color(255, 255, 255);
+    } else {
+      return new Color(0, 0, 0);
+    }
   }
 
   /**
@@ -36,7 +40,12 @@ export class Palette {
     for (const [color, role] of this.colorMap.entries()) {
       if (role === ColorRole.TEXT) return color;
     }
-    return null;
+    //if light theme, return black
+    if (!this.isDarkTheme) {
+      return new Color(0, 0, 0);
+    } else {
+      return new Color(255, 255, 255);
+    }
   }
 
   /**

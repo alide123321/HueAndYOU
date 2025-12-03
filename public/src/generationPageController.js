@@ -10,6 +10,7 @@ import {toggleTheme} from '/src/toggleThemeBtn.js';
 import {randomize} from '/src/randomizeBtn.js';
 import {generatePalette} from '/src/generateBtn.js';
 import {getTextColor} from '/shared/utils/textColorOverlay.js';
+import {WCAGAnalyzer} from '/shared/accessibility/WCAGAnalyzer.js';
 
 //set page theme based on localStorage @TODO a little slow may need optimization
 if (localStorage.getItem('theme') === FilterType.DARK_MODE) toggleTheme(false);
@@ -105,17 +106,29 @@ document.querySelectorAll('.generate-btn').forEach((btn) => {
       const colorsContainer = document.createElement('div');
       colorsContainer.className = 'palette-colors';
 
+      const reportResults = WCAGAnalyzer.analyzePalette(palette).getColorResults();
+      console.log(`WCAG Report for Palette ${paletteIndex + 1}:`, reportResults);
+
       // Iterate through the colorMap to get all colors
       for (const [color, role] of palette.colorMap) {
         const colorDiv = document.createElement('div');
         colorDiv.className = 'palette-color';
         colorDiv.style.backgroundColor = color.getHEX().value;
 
+        console.log('color: ' + color.getHEX().value);
+        //get the color report associated with the color
+        const colorReport = reportResults.find((result => result.getColor().getHEX().value === color.getHEX().value));
+        //bestAgainst has the role
+        const targetColor = colorReport.bestAgainst === 'background' ? palette.getBackgroundColor() : palette.getTextColor();
+        console.log(targetColor);
+        console.log(targetColor.getHEX().value)
+
+
         //add text on top of color swatch
         const colorLabel = document.createElement('span');
         colorLabel.className = 'color-label';
         colorLabel.textContent = role;
-        colorLabel.style.color = getTextColor(color).value;
+        colorLabel.style.color = targetColor.getHEX().value;
         colorDiv.appendChild(colorLabel);
 
         colorsContainer.appendChild(colorDiv);

@@ -14,7 +14,6 @@ export class WCAGColorResult {
    * @param {String} wcagLabel
    */
   constructor(
-    index,
     color,
     contrastOnBg,
     contrastOnText,
@@ -22,7 +21,6 @@ export class WCAGColorResult {
     bestAgainst,
     wcagLabel
   ) {
-    this.index = index;
     this.color = color;
     this.contrastOnBg = contrastOnBg;
     this.contrastOnText = contrastOnText;
@@ -36,8 +34,8 @@ export class WCAGColorResult {
    * @author Ian Timchak
    * @returns index [int of color in palette, otherwise 'null'], color (Color)
    */
-  getColorMapping() {
-    return this.index, this.color;
+  getColor() {
+    return this.color;
   }
 
   /**

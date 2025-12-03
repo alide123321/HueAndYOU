@@ -50,9 +50,9 @@ describe('WCAGAnalyzer', () => {
   // --------------------------
   test('analyzePalette returns WCAGReport with correct structure', () => {
     const colors = [
-      new Color(255, 255, 255), // white
-      new Color(0, 0, 0), // black
-      new Color(200, 0, 0), // red
+      [new Color(255, 255, 255), null], // white
+      [new Color(0, 0, 0), null], // black
+      [new Color(200, 0, 0), null], // red
     ];
 
     const palette = new Palette(
@@ -89,7 +89,7 @@ describe('WCAGAnalyzer', () => {
   // --------------------------
   test('analyzePalette uses fallback bg/text when none are provided (light mode)', () => {
     const palette = new Palette(
-      [new Color(50, 50, 50)], // single color
+      [[new Color(50, 50, 50), null]], // single color
       {}, // no roles
       false // light theme
     );
@@ -108,7 +108,7 @@ describe('WCAGAnalyzer', () => {
 
   test('analyzePalette uses fallback bg/text in dark theme', () => {
     const palette = new Palette(
-      [new Color(200, 200, 200)],
+      [[new Color(200, 200, 200), null]],
       {},
       true // dark theme
     );
