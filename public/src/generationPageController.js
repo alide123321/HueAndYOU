@@ -107,7 +107,6 @@ document.querySelectorAll('.generate-btn').forEach((btn) => {
       colorsContainer.className = 'palette-colors';
 
       const reportResults = WCAGAnalyzer.analyzePalette(palette).getColorResults();
-      console.log(`WCAG Report for Palette ${paletteIndex + 1}:`, reportResults);
 
       // Iterate through the colorMap to get all colors
       for (const [color, role] of palette.colorMap) {
@@ -115,21 +114,47 @@ document.querySelectorAll('.generate-btn').forEach((btn) => {
         colorDiv.className = 'palette-color';
         colorDiv.style.backgroundColor = color.getHEX().value;
 
-        console.log('color: ' + color.getHEX().value);
+        // Grouping for top and bottom labels
+        const topGroup = document.createElement('div');
+        topGroup.className = 'palette-top-group';
+        const bottomGroup = document.createElement('div');
+        bottomGroup.className = 'palette-bottom-group';
+        colorDiv.appendChild(topGroup);
+        colorDiv.appendChild(bottomGroup);
+
+        // Apply report data
         //get the color report associated with the color
         const colorReport = reportResults.find((result => result.getColor().getHEX().value === color.getHEX().value));
         //bestAgainst has the role
         const targetColor = colorReport.bestAgainst === 'background' ? palette.getBackgroundColor() : palette.getTextColor();
-        console.log(targetColor);
-        console.log(targetColor.getHEX().value)
+        
+        //add color value label
+        const valueLabel = document.createElement('span');
+        valueLabel.className = 'color-bold-label';
+        valueLabel.textContent = color.getHEX().value.toUpperCase();
+        valueLabel.style.color = targetColor.getHEX().value;
+        topGroup.appendChild(valueLabel);
 
+        //add role on top of color swatch
+        const roleLabel = document.createElement('span');
+        roleLabel.className = 'color-normal-label';
+        roleLabel.textContent = role;
+        roleLabel.style.color = targetColor.getHEX().value;
+        topGroup.appendChild(roleLabel);
 
-        //add text on top of color swatch
-        const colorLabel = document.createElement('span');
-        colorLabel.className = 'color-label';
-        colorLabel.textContent = role;
-        colorLabel.style.color = targetColor.getHEX().value;
-        colorDiv.appendChild(colorLabel);
+        //add WCAG label
+        const contrastLabel = document.createElement('span');
+        contrastLabel.className = 'color-normal-label';
+        contrastLabel.textContent = `WCAG ${colorReport.getLabel()}`;
+        contrastLabel.style.color = targetColor.getHEX().value;
+        bottomGroup.appendChild(contrastLabel);
+
+        //add contrast ratio
+        const ratioLabel = document.createElement('span');
+        ratioLabel.className = 'color-normal-label';
+        ratioLabel.textContent = `${colorReport.getBestContrast().toFixed(2)}:1`;
+        ratioLabel.style.color = targetColor.getHEX().value;
+        bottomGroup.appendChild(ratioLabel);
 
         colorsContainer.appendChild(colorDiv);
       }
