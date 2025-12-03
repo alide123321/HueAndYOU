@@ -11,9 +11,15 @@ const router = express.Router();
 
 const root = path.join(__dirname, '../../public/views');
 
+// api paths
+const apiRoot = path.join(__dirname, '../api');
+import * as generateAPI from '../api/generate.js';
+
 // Serve the homepage
 router.get('/', (req, res) => {
   res.sendFile('generationPage.html', {root: root});
 });
+
+router.post('/generate', express.json(), generateAPI.generateBatchPalettes);
 
 export default router;

@@ -5,7 +5,6 @@
 export class WCAGColorResult {
   /**
    *
-   * @param {Number} index - index of color in palette, null if no palette
    * @param {Color} color - Color() object, the testing color.
    * @param {Number} contrastOnBg - Contrast ratio value (#.##) onBG
    * @param {Number} contrastOnText - Contrast ratio value (#.##) onText
@@ -14,7 +13,6 @@ export class WCAGColorResult {
    * @param {String} wcagLabel
    */
   constructor(
-    index,
     color,
     contrastOnBg,
     contrastOnText,
@@ -22,7 +20,6 @@ export class WCAGColorResult {
     bestAgainst,
     wcagLabel
   ) {
-    this.index = index;
     this.color = color;
     this.contrastOnBg = contrastOnBg;
     this.contrastOnText = contrastOnText;
@@ -34,10 +31,10 @@ export class WCAGColorResult {
   //accessors
   /**
    * @author Ian Timchak
-   * @returns index [int of color in palette, otherwise 'null'], color (Color)
+   * @returns the color object being tested.
    */
-  getColorMapping() {
-    return this.index, this.color;
+  getColor() {
+    return this.color;
   }
 
   /**

@@ -41,8 +41,8 @@ export class WCAGAnalyzer {
    * @return {double} contrast ratio
    */
   static computePairContrast(foreground, background) {
-    fg = foreground.getRGB();
-    bg = background.getRGB();
+    let fg = foreground.getRGB();
+    let bg = background.getRGB();
     const L1 = WCAGAnalyzer.luminance(fg.r, fg.g, fg.b);
     const L2 = WCAGAnalyzer.luminance(bg.r, bg.g, bg.b);
 
@@ -90,7 +90,10 @@ export class WCAGAnalyzer {
     //Compute results for each color
     const results = [];
 
-    palette.colors.forEach((c, index) => {
+    // palette.colors.forEach((c, index) => {
+
+    // Temporary use of nested arrays instead of map while we figure out serialization
+    for (const [c, role] of palette.colorMap) {
       const contrastWithBg = WCAGAnalyzer.computePairContrast(c, bg);
       const contrastWithText = WCAGAnalyzer.computePairContrast(c, text);
 
@@ -104,7 +107,6 @@ export class WCAGAnalyzer {
 
       results.push(
         new WCAGColorResult(
-          index,
           c,
           contrastWithBg,
           contrastWithText,
@@ -113,7 +115,7 @@ export class WCAGAnalyzer {
           label
         )
       );
-    });
+    };
 
     // 3. Final structured report
     return new WCAGReport(bg, text, results);

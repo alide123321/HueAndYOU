@@ -1,6 +1,7 @@
 /**
  * Constants for Color Harmony Types
  * @author Ali Aldaghishy
+ * @modification Ian Timchak - disabled unimplemented types for prototype
  * @readonly
  * @enum {string}
  */
@@ -15,6 +16,7 @@ export const ColorHarmony = Object.freeze({
 /**
  * Constants for filter types
  * @author Ali Aldaghishy
+ * @modification Ian Timchak - disabled unimplemented filters for prototype
  * @readonly
  * @enum {string}
  */

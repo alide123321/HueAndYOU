@@ -34,6 +34,7 @@ export function randomize(
   ) {
     const baseColorBtn = document.getElementById('base-color');
     const randomColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+    console.log('Random Color:', randomColor);
     document.querySelector('.color-preview').style.backgroundColor =
       randomColor;
     colorPickerInstance.setColor(randomColor);

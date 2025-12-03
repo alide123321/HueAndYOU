@@ -23,7 +23,7 @@ describe('Complementary Harmony Strategy (HSL)', () => {
         const palette = strat.buildPalette(gs);
 
         expect(palette).toBeInstanceOf(Palette);
-        expect(Array.isArray(palette.colors)).toBe(true);
+        expect(Array.isArray(palette.colorMap)).toBe(true);
     });
 
     test('should generate complementary colors correctly (HSL hue)', () => {
@@ -39,7 +39,7 @@ describe('Complementary Harmony Strategy (HSL)', () => {
 
         const baseHsl = rgbToHsl({ ...base.getRGB(), mode: 'rgb' });
 
-        const complement = palette.colors[1];
+        const complement = palette.colorMap[1];
         const complementHsl = rgbToHsl({ ...complement.getRGB(), mode: 'rgb' });
 
         const expectedHue = (baseHsl.h + 180) % 360;
@@ -50,7 +50,7 @@ describe('Complementary Harmony Strategy (HSL)', () => {
 
     test('should add bg/text colors when includeBgTextColors = true', () => {
         const gs = new GenerationSettings({
-            baseColor: Color.fromHex('#00ff00'),
+            baseColor: Color.fromHex('#526aec'),
             includeBgTextColors: true,
             isLightMode: true
         });
@@ -61,7 +61,7 @@ describe('Complementary Harmony Strategy (HSL)', () => {
         // Base + complement + two dark variants = 4
         // BG + Text = +2
         console.log(palette.visualize());
-        expect(palette.colors.length).toBe(6);
+        expect(palette.colorMap.length).toBe(6);
     });
 
     test('should create light-mode bg as near-white (HSL)', () => {
@@ -74,7 +74,7 @@ describe('Complementary Harmony Strategy (HSL)', () => {
         const strat = new Complementary();
         const palette = strat.buildPalette(gs);
 
-        const bg = palette.colors[4]; // bg index
+        const bg = palette.colorMap[4]; // bg index
         const bgHsl = rgbToHsl({ ...bg.getRGB(), mode: 'rgb' });
 
         // In HSL:
@@ -91,8 +91,9 @@ describe('Complementary Harmony Strategy (HSL)', () => {
 
         const strat = new Complementary();
         const palette = strat.buildPalette(gs);
+        console.log(palette);
 
-        const bg = palette.colors[4];
+        const bg = palette.colorMap[4];
         const bgHsl = rgbToHsl({ ...bg.getRGB(), mode: 'rgb' });
 
         // In HSL:

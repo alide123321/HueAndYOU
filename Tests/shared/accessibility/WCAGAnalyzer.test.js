@@ -49,18 +49,14 @@ describe('WCAGAnalyzer', () => {
   //  analyzePalette()
   // --------------------------
   test('analyzePalette returns WCAGReport with correct structure', () => {
-    const colors = [
-      new Color(255, 255, 255), // white
-      new Color(0, 0, 0), // black
-      new Color(200, 0, 0), // red
-    ];
+    const colors = new Map([
+      [new Color(255, 255, 255), null], // white
+      [new Color(0, 0, 0), null], // black
+      [new Color(200, 0, 0), null], // red
+    ]);
 
     const palette = new Palette(
       colors,
-      {
-        0: 'bg',
-        1: 'text',
-      },
       false
     );
 
@@ -89,8 +85,7 @@ describe('WCAGAnalyzer', () => {
   // --------------------------
   test('analyzePalette uses fallback bg/text when none are provided (light mode)', () => {
     const palette = new Palette(
-      [new Color(50, 50, 50)], // single color
-      {}, // no roles
+      new Map([[new Color(50, 50, 50), null]]), // single color
       false // light theme
     );
 
@@ -108,8 +103,7 @@ describe('WCAGAnalyzer', () => {
 
   test('analyzePalette uses fallback bg/text in dark theme', () => {
     const palette = new Palette(
-      [new Color(200, 200, 200)],
-      {},
+      new Map([[new Color(200, 200, 200), null]]),
       true // dark theme
     );
 
@@ -124,9 +118,12 @@ describe('WCAGAnalyzer', () => {
   //  Check bestAgainst logic
   // --------------------------
   test('bestAgainst correctly identifies bg or text as higher contrast', () => {
-    const colors = [new Color(180, 180, 180), new Color(50, 50, 50)];
+    const colors = [
+      [new Color(180, 180, 180), null],
+      [new Color(50, 50, 50), 'bg'],
+    ];
 
-    const palette = new Palette(colors, {0: 'bg', 1: 'text'}, false);
+    const palette = new Palette(new Map(colors), false);
 
     const report = WCAGAnalyzer.analyzePalette(palette);
     const result0 = report.results[0];

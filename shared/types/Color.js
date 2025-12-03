@@ -12,8 +12,33 @@ export class Color {
   static fromHex(hex) {
     // Convert hex to RGBA
     let color = convertColor(hex, ColorFormat.RGB);
+    
+    //is in form 0-1, must be in form 0-255
+    color.r = Math.round(color.r * 255);
+    color.g = Math.round(color.g * 255);
+    color.b = Math.round(color.b * 255);
 
     return new Color(color.r, color.g, color.b);
+  }
+
+  /**
+   * 
+   * @param {String} str 
+   * @returns 
+   */
+  static fromRGBString(str) {
+    // Simple pattern, human readable
+    const rgbPattern = /rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)/i;
+    const match = rgbPattern.exec(str);
+
+    if (match) {
+      const r = parseInt(match[1], 10);
+      const g = parseInt(match[2], 10);
+      const b = parseInt(match[3], 10);
+      return new Color(r, g, b, 'rgb');
+    }
+
+    throw new Error(`Invalid RGB string: ${str}`);
   }
 
   /**
@@ -31,6 +56,12 @@ export class Color {
    * @returns HEX vale of color
    */
   getHEX() {
-    return convertColor(this, ColorFormat.HEX);
+    //0-1 range expected
+    const rgb01 = {
+      r: this.r / 255,
+      g: this.g / 255,
+      b: this.b / 255,
+    };
+    return convertColor(rgb01, ColorFormat.HEX);
   }
 }

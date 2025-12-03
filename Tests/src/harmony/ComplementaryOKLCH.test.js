@@ -22,7 +22,7 @@ describe('Complementary Harmony Strategy', () => {
         const palette = strat.buildPalette(gs);
 
         expect(palette).toBeInstanceOf(Palette);
-        expect(Array.isArray(palette.colors)).toBe(true);
+        expect(Array.isArray(palette.colorMap)).toBe(true);
         //Uncomment the console.log sections to generate an html block that can view the results
         //console.log(palette.visualize());
     });
@@ -43,7 +43,7 @@ describe('Complementary Harmony Strategy', () => {
             { ...base.getRGB(), mode: 'rgb' }
         );
 
-        const complement = palette.colors[1]; // expected: complementary color
+        const complement = palette.colorMap[1]; // expected: complementary color
         const complementOK = rgbToOklch(
             { ...complement.getRGB(), mode: 'rgb' }
         );
@@ -67,7 +67,7 @@ describe('Complementary Harmony Strategy', () => {
         // Original palette entries: 4
         // BG + Text: +2
         //console.log(palette.visualize());
-        expect(palette.colors.length).toBe(6);
+        expect(palette.colorMap.length).toBe(6);
     });
 
     test('should create light-mode bg as near-white', () => {
@@ -80,7 +80,7 @@ describe('Complementary Harmony Strategy', () => {
         const strat = new Complementary();
         const palette = strat.buildPalette(gs);
 
-        const bg = palette.colors[4]; // 4th index == bg
+        const bg = palette.colorMap[4]; // 4th index == bg
 
         const bgOK = rgbToOklch({ ...bg.getRGB(), mode: 'rgb' });
 
@@ -99,7 +99,7 @@ describe('Complementary Harmony Strategy', () => {
         const strat = new Complementary();
         const palette = strat.buildPalette(gs);
 
-        const bg = palette.colors[4]; // 4th index == bg
+        const bg = palette.colorMap[4]; // 4th index == bg
         const bgOK = rgbToOklch({ ...bg.getRGB(), mode: 'rgb' });
 
         console.log(palette.visualize());
