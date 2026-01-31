@@ -1,7 +1,8 @@
 import {GenerationSettings} from '../../shared/types/GenerationSettings.js';
 import {ColorHarmony} from '../../shared/utils/constants.js';
 import {Palette} from '../../shared/types/Palette.js';
-import {Complementary} from '../harmony/ComplementaryHSL.js';
+import {Complementary as ComplementaryOKLCH} from '../harmony/ComplementaryOKLCH.js';
+import {Complementary as ComplementaryHSL} from '../harmony/ComplementaryHSL.js';
 
 /**
  * Generator class
@@ -14,9 +15,8 @@ export class Generator {
     this.selectedStrategy = null;
   }
 
-
   /**
-   * @author Ian Timchak
+   * @author Ian Timchak, Ali Aldaghishy
    * @param {GenerationSettings} settings
    */
   applySettings(settings) {
@@ -29,28 +29,32 @@ export class Generator {
     // For prototype, this will be sufficient.
     switch (settings.harmonyType) {
       case ColorHarmony.COMPLEMENTARY:
-        this.selectedStrategy = new Complementary();
+        // You can switch between ComplementaryHSL and ComplementaryOKLCH here
+        this.selectedStrategy = new ComplementaryOKLCH();
         break;
       default:
         throw new Error(`Unsupported harmony type: ${settings.harmonyType}`);
     }
   }
-  
+
   generate() {
     if (!this.selectedStrategy) {
-      throw new Error('No generation strategy selected. Please apply settings first.');
+      throw new Error(
+        'No generation strategy selected. Please apply settings first.'
+      );
     }
 
     const numberOfPalettes = this.generationSettings.numberOfPalettes || 1;
     const baseSeed = this.generationSettings.seed;
 
     let palettes = [];
-    
 
     for (let i = 0; i < numberOfPalettes; i++) {
       // update seed predictably for each palette to ensure reproducibility
       this.generationSettings.seed = baseSeed + i;
-      const palette = this.selectedStrategy.buildPalette(this.generationSettings);
+      const palette = this.selectedStrategy.buildPalette(
+        this.generationSettings
+      );
       palettes.push(palette);
     }
 

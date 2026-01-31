@@ -12,9 +12,13 @@ import {GenerationSettings} from '../../shared/types/GenerationSettings.js';
 import {Palette} from '../../shared/types/Palette.js';
 import {Color} from '../../shared/types/Color.js';
 import {HarmonyStrategy} from './HarmonyStrategy.js';
+import {ColorRole} from '../../shared/utils/constants.js';
 
 //temporary conversion code.
-import { rgbToOklch, oklchToRgb, } from '../../shared/utils/tempColorConversion.js';
+import {
+  rgbToOklch,
+  oklchToRgb,
+} from '../../shared/utils/tempColorConversion.js';
 
 // lighten and darken helpers
 // const lighten = (colorOK, amount) => {
@@ -140,6 +144,35 @@ export class Complementary extends HarmonyStrategy {
       return new Color(rgb.r, rgb.g, rgb.b);
     });
 
-    return new Palette(colors);
+    // console.log(colors);
+
+    //map color objects in a Color, Role mapping
+    //JSON cant send map objects apparently, so convert to array of arrays
+    //To DO: properly deserialize maps on the api side, not priority at this moment
+    let colorsWithRoles = [];
+    colors.forEach((color, index) => {
+      colorsWithRoles.push([color, null]); // null role by default
+
+      //assign roles based on position
+      switch (index) {
+        case 0:
+          colorsWithRoles[index][1] = ColorRole.PRIMARY;
+          break;
+        case 1:
+          colorsWithRoles[index][1] = ColorRole.SECONDARY;
+          break;
+        case 4:
+          colorsWithRoles[index][1] = ColorRole.BACKGROUND;
+          break;
+        case 5:
+          colorsWithRoles[index][1] = ColorRole.TEXT;
+          break;
+      }
+    });
+
+    //Convert colorsWithRoles from 2darray to a map for Palette constructor
+    let colorMap = new Map(colorsWithRoles);
+
+    return new Palette(colorMap);
   }
 }
