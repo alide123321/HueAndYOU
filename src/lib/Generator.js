@@ -2,6 +2,8 @@ import {GenerationSettings} from '../../shared/types/GenerationSettings.js';
 import {ColorHarmony} from '../../shared/utils/constants.js';
 import {Palette} from '../../shared/types/Palette.js';
 import {Complementary} from '../harmony/ComplementaryHSL.js';
+import {Monochromatic} from '../harmony/Monochromatic.js';
+
 
 /**
  * Generator class
@@ -31,6 +33,14 @@ export class Generator {
       case ColorHarmony.COMPLEMENTARY:
         this.selectedStrategy = new Complementary();
         break;
+      
+        case ColorHarmony.MONOCHROMATIC:
+  // Monochromatic harmony strategy
+  // Added by DeAndre Josey (CAP-23)
+  console.log('CAP-23: Monochromatic strategy selected');
+  this.selectedStrategy = new Monochromatic();
+  break;
+
       default:
         throw new Error(`Unsupported harmony type: ${settings.harmonyType}`);
     }
