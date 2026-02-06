@@ -78,27 +78,32 @@ export class Palette {
    *
    * @author Ian Timchak
    * @returns A string containing colored blocks showing each color, for output in a terminal.
+   * 
+   * Note: debug purposes only. Refactored on 02/06/2026 to support Map-based colorMap and to include role labels.
    */
   visualize() {
-    const ESC = '\u001b[';
+  const ESC = '\u001b[';
 
-    const rows = this.colorMap.map((color, index) => {
-      const {r, g, b} = color.getRGB();
+  const rows = [];
+  let index = 0;
 
-      // ANSI 24-bit truecolor background
-      const bg = `${ESC}48;2;${r};${g};${b}m`;
-      const reset = `${ESC}0m`;
+  for (const [color, role] of this.colorMap.entries()) {
+    const { r, g, b } = color.getRGB();
 
-      // Swatch width — adjust as desired
-      const swatch = ' '.repeat(20);
+    const bg = `${ESC}48;2;${r};${g};${b}m`;
+    const reset = `${ESC}0m`;
+    const swatch = ' '.repeat(20);
 
-      return (
-        `${index.toString().padStart(2, '0')}: ` +
-        `${bg}${swatch}${reset}` +
-        `  rgb(${r}, ${g}, ${b})`
-      );
-    });
+    rows.push(
+      `${index.toString().padStart(2, '0')}: ` +
+      `${bg}${swatch}${reset}` +
+      `  rgb(${r}, ${g}, ${b})` +
+      (role ? `  (${role})` : '')
+    );
 
-    return rows.join('\n');
+    index++;
   }
+
+  return rows.join('\n');
+}
 }
