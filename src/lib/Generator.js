@@ -31,10 +31,6 @@ export class Generator {
     // e.g., settings.strategy = new ComplimentaryHSL();
     // Then, we can do polymorphic calls without the switch statement.
     // For prototype, this will be sufficient.
-    
-    console.log('applySettings harmonyType:', settings.harmonyType);
-    console.log('applySettings type:', typeof settings.harmonyType);
-
     switch (settings.harmonyType) {
       case ColorHarmony.COMPLEMENTARY:
         this.selectedStrategy = new Complementary();
@@ -47,7 +43,7 @@ export class Generator {
         this.selectedStrategy = new Monochromatic();
         break;
 
-
+        
       case ColorHarmony.TRIADIC:
         // Triadic harmony strategy
         // Added by DeAndre Josey (CAP-24)
