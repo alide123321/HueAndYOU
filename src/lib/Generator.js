@@ -1,8 +1,10 @@
-import {GenerationSettings} from '../../shared/types/GenerationSettings.js';
-import {ColorHarmony} from '../../shared/utils/constants.js';
-import {Palette} from '../../shared/types/Palette.js';
-import {Complementary} from '../harmony/ComplementaryHSL.js';
-import {Monochromatic} from '../harmony/Monochromatic.js';
+import { GenerationSettings } from '../../shared/types/GenerationSettings.js';
+import { ColorHarmony } from '../../shared/utils/constants.js';
+import { Palette } from '../../shared/types/Palette.js';
+import { Complementary } from '../harmony/ComplementaryHSL.js';
+import { Monochromatic } from '../harmony/Monochromatic.js';
+import { Triadic } from '../harmony/Triadic.js';
+
 
 
 /**
@@ -29,23 +31,37 @@ export class Generator {
     // e.g., settings.strategy = new ComplimentaryHSL();
     // Then, we can do polymorphic calls without the switch statement.
     // For prototype, this will be sufficient.
+    
+    console.log('applySettings harmonyType:', settings.harmonyType);
+    console.log('applySettings type:', typeof settings.harmonyType);
+
     switch (settings.harmonyType) {
       case ColorHarmony.COMPLEMENTARY:
         this.selectedStrategy = new Complementary();
         break;
-      
-        case ColorHarmony.MONOCHROMATIC:
-  // Monochromatic harmony strategy
-  // Added by DeAndre Josey (CAP-23)
-  console.log('CAP-23: Monochromatic strategy selected');
-  this.selectedStrategy = new Monochromatic();
-  break;
+
+      case ColorHarmony.MONOCHROMATIC:
+        // Monochromatic harmony strategy
+        // Added by DeAndre Josey (CAP-23)
+        console.log('CAP-23: Monochromatic strategy selected');
+        this.selectedStrategy = new Monochromatic();
+        break;
+
+
+      case ColorHarmony.TRIADIC:
+        // Triadic harmony strategy
+        // Added by DeAndre Josey (CAP-24)
+        console.log('CAP-24: Triadic strategy selected');
+        this.selectedStrategy = new Triadic();
+        break;
+
+
 
       default:
         throw new Error(`Unsupported harmony type: ${settings.harmonyType}`);
     }
   }
-  
+
   generate() {
     if (!this.selectedStrategy) {
       throw new Error('No generation strategy selected. Please apply settings first.');
@@ -55,7 +71,7 @@ export class Generator {
     const baseSeed = this.generationSettings.seed;
 
     let palettes = [];
-    
+
 
     for (let i = 0; i < numberOfPalettes; i++) {
       // update seed predictably for each palette to ensure reproducibility
