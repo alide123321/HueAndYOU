@@ -16,6 +16,6 @@ describe('ComplementaryHSL', () => {
     // Base + complement + two dark variants = 4
     // BG + Text = +2
     console.log(palette.visualize());
-    expect(palette.colorMap.length).toBe(6);
+    expect(palette.colorMap.size).toBe(6);
   });
 });
