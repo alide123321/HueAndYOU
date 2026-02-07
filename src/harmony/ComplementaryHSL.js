@@ -13,6 +13,7 @@ import {HarmonyStrategy} from './HarmonyStrategy.js';
 // (from your tempColorConversionHsl.js module)
 import {rgbToHsl, hslToRgb} from '../../shared/utils/tempColorConversion.js';
 import {ColorRole} from '../../shared/utils/constants.js';
+import {mapColorsToRoles} from '../../shared/utils/paletteUtils.js';
 
 // lighten and darken helpers for HSL
 // HSL l is in [0,1]
@@ -134,32 +135,7 @@ export class Complementary extends HarmonyStrategy {
 
     // console.log(colors);
 
-    //map color objects in a Color, Role mapping
-    //JSON cant send map objects apparently, so convert to array of arrays
-    //To DO: properly deserialize maps on the api side, not priority at this moment
-    let colorsWithRoles = [];
-    colors.forEach((color, index) => {
-      colorsWithRoles.push([color, null]); // null role by default
-
-      //assign roles based on position
-      switch (index) {
-        case 0:
-          colorsWithRoles[index][1] = ColorRole.PRIMARY;
-          break;
-        case 1:
-          colorsWithRoles[index][1] = ColorRole.SECONDARY;
-          break;
-        case 4:
-          colorsWithRoles[index][1] = ColorRole.BACKGROUND;
-          break;
-        case 5:
-          colorsWithRoles[index][1] = ColorRole.TEXT;
-          break;
-      }
-    });
-
-    //Convert colorsWithRoles from 2darray to a map for Palette constructor
-    let colorMap = new Map(colorsWithRoles);
+    const colorMap = mapColorsToRoles(colors);
 
     return new Palette(colorMap);
   }
