@@ -3,6 +3,8 @@ import {ColorHarmony} from '../../shared/utils/constants.js';
 import {Palette} from '../../shared/types/Palette.js';
 import {Complementary as ComplementaryOKLCH} from '../harmony/ComplementaryOKLCH.js';
 import {Complementary as ComplementaryHSL} from '../harmony/ComplementaryHSL.js';
+import {Monochromatic} from '../harmony/Monochromatic.js';
+import {Analogous} from '../harmony/Analogous.js';
 
 /**
  * Generator class
@@ -32,6 +34,20 @@ export class Generator {
         // You can switch between ComplementaryHSL and ComplementaryOKLCH here
         this.selectedStrategy = new ComplementaryOKLCH();
         break;
+
+      case ColorHarmony.MONOCHROMATIC:
+        // Monochromatic harmony strategy
+        // Added by DeAndre Josey (CAP-23)
+        console.log('CAP-23: Monochromatic strategy selected');
+        this.selectedStrategy = new Monochromatic();
+        break;
+
+      case ColorHarmony.ANALOGOUS:
+        // Analogous harmony strategy
+        // Added by Ian Timchak (CAP-22)
+        this.selectedStrategy = new Analogous();
+        break;
+
       default:
         throw new Error(`Unsupported harmony type: ${settings.harmonyType}`);
     }
