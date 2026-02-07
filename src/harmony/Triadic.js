@@ -9,13 +9,15 @@
  * Module: src/harmony/Triadic
  */
 
-import {Palette} from '../../shared/types/Palette.js';
-import {Color} from '../../shared/types/Color.js';
-import {HarmonyStrategy} from './HarmonyStrategy.js';
+import { Palette } from '../../shared/types/Palette.js';
+import { Color } from '../../shared/types/Color.js';
+import { HarmonyStrategy } from './HarmonyStrategy.js';
 
-import {convertColor} from '../../shared/utils/colorConversion.js';
-import {ColorFormat, ColorRole} from '../../shared/utils/constants.js';
+import { convertColor } from '../../shared/utils/colorConversion.js';
+import { ColorFormat, ColorRole } from '../../shared/utils/constants.js';
 
+// OKLCH helpers
+// OKLCH lightness (l) is in [0,1]
 const clamp01 = (x) => Math.min(1, Math.max(0, x));
 const wrapHue360 = (h) => ((h % 360) + 360) % 360;
 
@@ -28,31 +30,21 @@ const shiftHue = (colorOklch, deltaH) => {
   };
 };
 
-const fitToRgbGamut = (oklch) => {
-  // Try converting. If out-of-gamut, reduce chroma gradually until it works.
-  let c = oklch.c ?? 0;
+// Matches Monochromatic’s approach: try converting, reduce chroma, fallback to grayscale if need be
+const safeOklchToRgb01 = (oklch) => {
+  let attempt = { ...oklch };
 
-  for (let i = 0; i < 40; i++) {
+  for (let i = 0; i < 12; i++) {
     try {
-      return convertColor(
-        {mode: 'oklch', l: clamp01(oklch.l), c, h: oklch.h},
-        ColorFormat.RGB
-        
-      );
-    } catch (err) {
-      // If conversion fails, reduce chroma and retry
-      c *= 0.85;
-
-      // Safety: if chroma gets extremely small, just treat it as gray
-      if (c < 1e-6) {
-        c = 0;
-      }
+      return convertColor(attempt, ColorFormat.RGB);
+    } catch (e) {
+      attempt = { ...attempt, c: attempt.c * 0.85 };
     }
   }
 
-  // If we STILL can't fit, force grayscale (c=0) as last resort
-  return convertColor({mode: 'oklch', l: clamp01(oklch.l), c: 0, h: oklch.h}, ColorFormat.RGB);
+  return convertColor({ ...attempt, c: 0 }, ColorFormat.RGB);
 };
+
 
 export class Triadic extends HarmonyStrategy {
   constructor() {
@@ -60,16 +52,19 @@ export class Triadic extends HarmonyStrategy {
   }
 
   buildPalette(gs) {
-    // base RGB in [0..255]
-    const base = gs.baseColor.getRGB();
+    const baseColorRgb = {
+      ...gs.baseColor.getRGB(),
+      mode: 'rgb',
+    };
 
-    // culori expects RGB in [0..1]
+    // Convert base color to OKLCH (culori uses RGB values in [0, 1])
     const baseRgb01 = {
       mode: 'rgb',
-      r: base.r / 255,
-      g: base.g / 255,
-      b: base.b / 255,
+      r: baseColorRgb.r / 255,
+      g: baseColorRgb.g / 255,
+      b: baseColorRgb.b / 255,
     };
+
 
     const baseOklch = convertColor(baseRgb01, ColorFormat.OKLCH);
 
@@ -77,46 +72,38 @@ export class Triadic extends HarmonyStrategy {
     const triad2 = shiftHue(baseOklch, 120);
     const triad3 = shiftHue(baseOklch, 240);
 
-    // We'll also include a 4th "support" color like your other palettes:
-    // a slightly lighter base (keeps hue, changes lightness)
-    const support = {
-      mode: 'oklch',
-      l: clamp01(baseOklch.l + 0.12),
-      c: baseOklch.c,
-      h: baseOklch.h,
-    };
+    // Core triadic palette (OKLCH) — exactly 3 colors
+    const paletteOklch = [baseOklch, triad2, triad3];
 
-    const paletteOklch = [baseOklch, triad2, triad3, support];
-
-    // Optional bg/text
+    // Generate background and text colors if specified
     if (gs.includeBgTextColors) {
       const hue = baseOklch.h;
       const chroma = baseOklch.c;
 
       if (gs.isLightMode) {
         paletteOklch.push(
-          {mode: 'oklch', l: 0.95, c: chroma, h: hue}, // background
-          {mode: 'oklch', l: 0.05, c: chroma, h: hue} // text
+          { mode: 'oklch', l: 0.95, c: chroma, h: hue }, // background
+          { mode: 'oklch', l: 0.05, c: chroma, h: hue }  // text
         );
       } else {
         paletteOklch.push(
-          {mode: 'oklch', l: 0.05, c: chroma, h: hue}, // background
-          {mode: 'oklch', l: 0.95, c: chroma, h: hue} // text
+          { mode: 'oklch', l: 0.05, c: chroma, h: hue }, // background
+          { mode: 'oklch', l: 0.95, c: chroma, h: hue }  // text
         );
       }
     }
 
-    // Convert OKLCH -> RGB -> Color objects
+    // Map OKLCH → RGB and return Color objects
     const colors = paletteOklch.map((oklch) => {
-  const rgb01 = fitToRgbGamut(oklch); // <-- key change
-  return new Color(
-    Math.round(rgb01.r * 255),
-    Math.round(rgb01.g * 255),
-    Math.round(rgb01.b * 255)
-  );
-});
+      const rgb01 = safeOklchToRgb01(oklch);
+      return new Color(
+        Math.round(rgb01.r * 255),
+        Math.round(rgb01.g * 255),
+        Math.round(rgb01.b * 255)
+      );
+    });
 
-    // Roles (match your app expectations)
+    // Map color objects into [Color, Role] pairs
     const colorsWithRoles = [];
     colors.forEach((color, index) => {
       colorsWithRoles.push([color, null]);
@@ -131,10 +118,10 @@ export class Triadic extends HarmonyStrategy {
         case 2:
           colorsWithRoles[index][1] = ColorRole.ACCENT;
           break;
-        case 4:
+        case 3:
           colorsWithRoles[index][1] = ColorRole.BACKGROUND;
           break;
-        case 5:
+        case 4:
           colorsWithRoles[index][1] = ColorRole.TEXT;
           break;
       }
