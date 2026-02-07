@@ -13,13 +13,10 @@ describe('ComplementaryHSL', () => {
 
     const strat = new Complementary();
     const palette = strat.buildPalette(gs);
-    console.log(palette);
 
-    const bg = palette.colorMap[4];
+    const bg = palette.getBackgroundColor();
     const bgHsl = rgbToHsl({...bg.getRGB(), mode: 'rgb'});
 
-    // In HSL:
-    //   near-black → lightness close to 0
     expect(bgHsl.l).toBeLessThan(0.15);
   });
 });
