@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Hue & YOU - Edit Palette</title>
+  <script type="importmap">
+    {
+      "imports": {
+        "culori": "https://cdn.jsdelivr.net/npm/culori@4.0.2/+esm"
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="/views/style.css">
+  <link rel="stylesheet" href="/views/colorpicker.css" />
+  <link rel="stylesheet" href="/views/editPage.css" />
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+</head>
+
+<body>
+  <!-- Top Bar -->
+  <header class="top-bar">
+    <div class="top-bar-content">
+      <div class="brand">Hue & YOU</div>
+      <nav class="nav-menu">
+        <a href="/views/GenerationPage.html" class="nav-item">Generate</a>
+        <a href="/views/editPage.html" class="nav-item active">Edit</a>
+        <a href="/views/library.html" class="nav-item">Library</a>
+        <a href="/views/GenerationPage.html#about" class="nav-item">About WCAG</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Status Bar -->
+  <div class="edit-status-bar" id="edit-status-bar">
+    Edit Page - No palette loaded
+  </div>
+
+  <!-- Empty State (shown when no palette in localStorage) -->
+  <div class="edit-empty-state" id="edit-empty-state">
+    <div class="empty-state-card">
+      <h1 class="empty-state-title">No palette to edit</h1>
+      <p class="empty-state-text">Generate or select a palette first, then click "Edit" to modify it here.</p>
+      <a href="/views/GenerationPage.html" class="generate-btn" style="display:inline-block;text-decoration:none;text-align:center;">Go to Generator</a>
+    </div>
+  </div>
+
+  <!-- Edit Container (hidden until palette loaded) -->
+  <div class="edit-container hidden" id="edit-container">
+    <div class="edit-card">
+      <!-- Palette Header -->
+      <div class="edit-palette-header">
+        <div class="edit-palette-header-text">
+          <h2 class="edit-palette-name" id="edit-palette-name" contenteditable="true">Palette</h2>
+          <p class="edit-palette-description" id="edit-palette-description" contenteditable="true">Click to add a description</p>
+        </div>
+      </div>
+
+      <!-- Color Swatches Section -->
+      <div class="edit-section">
+        <div class="edit-section-header">
+          <h3 class="edit-section-title">Color Swatches</h3>
+          <button class="text-btn" id="shuffle-colors-btn">Shuffle</button>
+        </div>
+        <div class="edit-swatches-row" id="edit-swatches-row">
+          <!-- Swatches rendered by JS -->
+        </div>
+      </div>
+
+      <!-- Roles Section -->
+      <div class="edit-section">
+        <div class="edit-section-header">
+          <h3 class="edit-section-title">Color Roles</h3>
+          <button class="text-btn" id="auto-assign-roles-btn">Auto-assign</button>
+        </div>
+        <div class="edit-roles-grid" id="edit-roles-grid">
+          <!-- Roles rendered by JS -->
+        </div>
+      </div>
+
+      <!-- WCAG Compliance Section -->
+      <div class="edit-section">
+        <div class="edit-section-header">
+          <h3 class="edit-section-title">WCAG Compliance</h3>
+        </div>
+        <div class="wcag-warning hidden" id="wcag-warning">No text color role assigned — using black (#000000) as default.</div>
+        <div class="wcag-legend">
+          <span class="wcag-legend-item"><span class="wcag-dot wcag-compliant"></span> Compliant (AA/AAA)</span>
+          <span class="wcag-legend-item"><span class="wcag-dot wcag-noncompliant"></span> Non-Compliant (FAIL)</span>
+        </div>
+        <table class="wcag-table" id="wcag-table">
+          <thead>
+            <tr>
+              <th>COLOR</th>
+              <th>TEXT COLOR</th>
+              <th>CONTRAST RATIO</th>
+              <th>COMPLIANCE</th>
+            </tr>
+          </thead>
+          <tbody id="wcag-table-body">
+            <!-- Rows rendered by JS -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Custom Color Test Section -->
+      <div class="edit-section">
+        <div class="edit-section-header">
+          <h3 class="edit-section-title">Custom Color Test</h3>
+        </div>
+        <div class="custom-color-row">
+          <input type="text" class="form-input" id="custom-color-input" placeholder="#FF5500" maxlength="7">
+          <span class="custom-color-preview" id="custom-color-preview"></span>
+        </div>
+        <table class="wcag-table hidden" id="custom-wcag-table">
+          <thead>
+            <tr>
+              <th>PALETTE COLOR</th>
+              <th>CUSTOM COLOR</th>
+              <th>CONTRAST RATIO</th>
+              <th>COMPLIANCE</th>
+            </tr>
+          </thead>
+          <tbody id="custom-wcag-table-body">
+            <!-- Rows rendered by JS -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Footer -->
+      <div class="edit-footer">
+        <button class="icon-btn" id="edit-theme-toggle" aria-label="Toggle theme" title="Toggle theme">
+          <span class="icon-text">&#9728;</span>
+        </button>
+        <div class="edit-footer-actions">
+          <button class="text-btn" id="share-palette-btn">Share</button>
+          <button class="generate-btn" id="preview-palette-btn" style="width:auto;padding:0.75rem 2rem;">Preview Palette</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/src/editPageController.js"></script>
+</body>
+</html>

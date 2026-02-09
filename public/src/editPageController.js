@@ -1,0 +1,542 @@
+import {ColorRole, FilterType, ColorFormat} from '/shared/utils/constants.js';
+import {ColorPicker} from '/paletteModule/colorPicker.js';
+import {toggleTheme} from '/src/toggleThemeBtn.js';
+import {share} from '/src/shareBtn.js';
+import {WCAGAnalyzer} from '/shared/accessibility/WCAGAnalyzer.js';
+import {getTextColor} from '/shared/utils/textColorOverlay.js';
+import {Palette} from '/shared/types/Palette.js';
+import {Color} from '/shared/types/Color.js';
+
+// --- Module state ---
+let currentPalette = null;
+let activeSwatchIndex = -1;
+
+// --- Theme ---
+if (localStorage.getItem('theme') === FilterType.DARK_MODE) toggleTheme(false);
+
+document
+  .getElementById('edit-theme-toggle')
+  .addEventListener('click', () => toggleTheme(true));
+
+// --- ColorPicker setup ---
+// Create a hidden anchor button for the picker (it needs a .color-preview child)
+const pickerAnchor = document.createElement('button');
+pickerAnchor.style.display = 'none';
+const pickerPreview = document.createElement('span');
+pickerPreview.className = 'color-preview';
+pickerPreview.style.backgroundColor = '#3399FF';
+pickerAnchor.appendChild(pickerPreview);
+document.body.appendChild(pickerAnchor);
+
+const colorPicker = new ColorPicker(pickerAnchor, (hexColor) => {
+  if (activeSwatchIndex < 0 || !currentPalette) return;
+
+  // Replace the color at activeSwatchIndex in the Map
+  const entries = [...currentPalette.colorMap.entries()];
+  if (activeSwatchIndex >= entries.length) return;
+
+  const [, role] = entries[activeSwatchIndex];
+  const newColor = Color.fromHex(hexColor);
+
+  // Rebuild Map preserving order
+  const newMap = new Map();
+  entries.forEach(([c, r], i) => {
+    if (i === activeSwatchIndex) {
+      newMap.set(newColor, role);
+    } else {
+      newMap.set(c, r);
+    }
+  });
+  currentPalette.colorMap = newMap;
+
+  renderSwatches();
+  renderRoles();
+  renderWCAGTable();
+  renderCustomColorTest();
+  updateStatus('Palette updated');
+});
+
+// The pickerAnchor is hidden (display:none), so the auto-click listener
+// the ColorPicker attaches to it is harmless. We open the picker manually
+// via pencil icon clicks on each swatch.
+
+// --- Init ---
+initEditPage();
+
+function initEditPage() {
+  const raw = localStorage.getItem('myPalette');
+  if (!raw) {
+    showEmptyState();
+    return;
+  }
+
+  try {
+    const data = JSON.parse(raw);
+    // data.colorMap is an array of [[{r,g,b}, role], ...]
+    const map = new Map();
+    data.colorMap.forEach(([colorObj, role]) => {
+      map.set(new Color(colorObj.r, colorObj.g, colorObj.b), role);
+    });
+    currentPalette = new Palette(map, data.isDarkTheme || false);
+
+    showEditCard();
+    renderSwatches();
+    renderRoles();
+    renderWCAGTable();
+    updateStatus('Palette loaded');
+  } catch (e) {
+    console.error('Failed to parse myPalette data:', e);
+    showEmptyState();
+  }
+}
+
+function showEmptyState() {
+  document.getElementById('edit-empty-state').classList.remove('hidden');
+  document.getElementById('edit-container').classList.add('hidden');
+  updateStatus('No palette loaded');
+}
+
+function showEditCard() {
+  document.getElementById('edit-empty-state').classList.add('hidden');
+  document.getElementById('edit-container').classList.remove('hidden');
+}
+
+function updateStatus(msg) {
+  document.getElementById('edit-status-bar').textContent = 'Edit Page - ' + msg;
+}
+
+// --- Render Swatches ---
+function renderSwatches() {
+  const container = document.getElementById('edit-swatches-row');
+  container.innerHTML = '';
+
+  let index = 0;
+  for (const [color, role] of currentPalette.colorMap) {
+    const hexValue = color.getHEX().value;
+    const textCol = getTextColor(color);
+    const textHex = textCol.value;
+
+    const swatch = document.createElement('div');
+    swatch.className = 'edit-swatch';
+    swatch.style.backgroundColor = hexValue;
+
+    const hexLabel = document.createElement('span');
+    hexLabel.className = 'edit-swatch-hex';
+    hexLabel.textContent = hexValue.toUpperCase();
+    hexLabel.style.color = textHex;
+
+    const roleLabel = document.createElement('span');
+    roleLabel.className = 'edit-swatch-role';
+    roleLabel.textContent = role || '';
+    roleLabel.style.color = textHex;
+
+    const editIcon = document.createElement('span');
+    editIcon.className = 'edit-swatch-edit-icon';
+    editIcon.textContent = '\u270E'; // pencil
+    editIcon.title = 'Edit color';
+
+    const idx = index;
+    editIcon.addEventListener('click', (e) => {
+      e.stopPropagation();
+      activeSwatchIndex = idx;
+      colorPicker.setColor(hexValue);
+      colorPicker.open();
+    });
+
+    // Delete icon (top-left, visible on hover)
+    const deleteIcon = document.createElement('span');
+    deleteIcon.className = 'edit-swatch-delete-icon';
+    deleteIcon.textContent = '\u2715'; // ✕
+    deleteIcon.title = 'Remove color';
+
+    deleteIcon.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (currentPalette.colorMap.size <= 1) return; // keep at least 1
+      const entries = [...currentPalette.colorMap.entries()];
+      entries.splice(idx, 1);
+      currentPalette.colorMap = new Map(entries);
+      renderSwatches();
+      renderRoles();
+      renderWCAGTable();
+      renderCustomColorTest();
+      updateStatus('Color removed');
+    });
+
+    swatch.appendChild(deleteIcon);
+    swatch.appendChild(hexLabel);
+    swatch.appendChild(roleLabel);
+    swatch.appendChild(editIcon);
+    container.appendChild(swatch);
+    index++;
+  }
+
+  // "Add Swatch" button at the end
+  const addBtn = document.createElement('button');
+  addBtn.className = 'edit-add-swatch';
+  const plus = document.createElement('span');
+  plus.textContent = '+';
+  plus.style.fontSize = '1.5rem';
+  const addLabel = document.createElement('span');
+  addLabel.textContent = 'Add Color';
+  addBtn.appendChild(plus);
+  addBtn.appendChild(addLabel);
+
+  addBtn.addEventListener('click', () => {
+    // Generate a random color
+    const r = Math.floor(Math.random() * 256);
+    const g = Math.floor(Math.random() * 256);
+    const b = Math.floor(Math.random() * 256);
+    const newColor = new Color(r, g, b);
+    currentPalette.colorMap.set(newColor, null);
+    renderSwatches();
+    renderRoles();
+    renderWCAGTable();
+    renderCustomColorTest();
+    updateStatus('Color added');
+  });
+
+  container.appendChild(addBtn);
+}
+
+// --- Render Roles ---
+function renderRoles() {
+  const container = document.getElementById('edit-roles-grid');
+  container.innerHTML = '';
+
+  const roleDescriptions = {
+    [ColorRole.PRIMARY]: 'Main brand color used for key UI elements',
+    [ColorRole.SECONDARY]: 'Supporting color for secondary actions',
+    [ColorRole.ACCENT]: 'Highlight color for emphasis and accents',
+    [ColorRole.BACKGROUND]: 'Base background color of the interface',
+    [ColorRole.TEXT]: 'Primary text color for readability',
+  };
+
+  const entries = [...currentPalette.colorMap.entries()];
+
+  entries.forEach(([color, role], index) => {
+    const item = document.createElement('div');
+    item.className = 'edit-role-item';
+
+    const dot = document.createElement('div');
+    dot.className = 'edit-role-dot';
+    dot.style.backgroundColor = color.getHEX().value;
+
+    const info = document.createElement('div');
+    info.className = 'edit-role-info';
+
+    const name = document.createElement('div');
+    name.className = 'edit-role-name';
+    name.textContent = role || 'Unassigned';
+
+    const desc = document.createElement('div');
+    desc.className = 'edit-role-description';
+    desc.textContent = role ? roleDescriptions[role] || '' : 'No role assigned';
+
+    info.appendChild(name);
+    info.appendChild(desc);
+
+    // Role reassignment dropdown
+    const select = document.createElement('select');
+    select.className = 'edit-role-select';
+
+    const noneOpt = document.createElement('option');
+    noneOpt.value = '';
+    noneOpt.textContent = 'None';
+    select.appendChild(noneOpt);
+
+    Object.values(ColorRole).forEach((r) => {
+      const opt = document.createElement('option');
+      opt.value = r;
+      opt.textContent = r.charAt(0).toUpperCase() + r.slice(1);
+      if (r === role) opt.selected = true;
+      select.appendChild(opt);
+    });
+
+    if (!role) noneOpt.selected = true;
+
+    select.addEventListener('change', () => {
+      const newRole = select.value || null;
+      // Update the Map entry
+      const allEntries = [...currentPalette.colorMap.entries()];
+      const newMap = new Map();
+      allEntries.forEach(([c, r], i) => {
+        newMap.set(c, i === index ? newRole : r);
+      });
+      currentPalette.colorMap = newMap;
+      renderRoles();
+      renderWCAGTable();
+    });
+
+    item.appendChild(dot);
+    item.appendChild(info);
+    item.appendChild(select);
+    container.appendChild(item);
+  });
+}
+
+// --- Render WCAG Table ---
+function renderWCAGTable() {
+  const tbody = document.getElementById('wcag-table-body');
+  tbody.innerHTML = '';
+
+  const warning = document.getElementById('wcag-warning');
+
+  // Find the color assigned to the TEXT role
+  let textColor = null;
+  for (const [color, role] of currentPalette.colorMap) {
+    if (role === ColorRole.TEXT) {
+      textColor = color;
+      break;
+    }
+  }
+
+  // Show/hide warning based on whether a text role exists
+  if (!textColor) {
+    textColor = new Color(0, 0, 0); // default to black
+    warning.classList.remove('hidden');
+  } else {
+    warning.classList.add('hidden');
+  }
+
+  const textHex = textColor.getHEX().value.toUpperCase();
+
+  for (const [color, role] of currentPalette.colorMap) {
+    // Skip the text color itself — no point testing it against itself
+    if (role === ColorRole.TEXT) continue;
+
+    const hexValue = color.getHEX().value.toUpperCase();
+
+    const contrast = WCAGAnalyzer.computePairContrast(color, textColor);
+    const label = WCAGAnalyzer.wcagLabel(contrast);
+    appendWCAGRow(
+      tbody,
+      hexValue,
+      color.getHEX().value,
+      textHex,
+      textColor.getHEX().value,
+      contrast,
+      label
+    );
+  }
+}
+
+function appendWCAGRow(
+  tbody,
+  hexLabel,
+  colorHex,
+  testLabel,
+  testBgHex,
+  contrast,
+  label
+) {
+  const tr = document.createElement('tr');
+
+  // Color cell
+  const tdColor = document.createElement('td');
+  const colorCell = document.createElement('div');
+  colorCell.className = 'wcag-color-cell';
+  const swatch1 = document.createElement('span');
+  swatch1.className = 'wcag-color-swatch';
+  swatch1.style.backgroundColor = colorHex;
+  colorCell.appendChild(swatch1);
+  colorCell.appendChild(document.createTextNode(hexLabel));
+  tdColor.appendChild(colorCell);
+
+  // Test color cell
+  const tdTest = document.createElement('td');
+  const testCell = document.createElement('div');
+  testCell.className = 'wcag-color-cell';
+  const swatch2 = document.createElement('span');
+  swatch2.className = 'wcag-color-swatch';
+  swatch2.style.backgroundColor = testBgHex;
+  testCell.appendChild(swatch2);
+  testCell.appendChild(document.createTextNode(testLabel));
+  tdTest.appendChild(testCell);
+
+  // Contrast ratio
+  const tdRatio = document.createElement('td');
+  tdRatio.textContent = contrast.toFixed(2) + ':1';
+
+  // Compliance
+  const tdCompliance = document.createElement('td');
+  tdCompliance.className =
+    'wcag-compliance-cell ' + (label === 'FAIL' ? 'fail' : 'pass');
+  tdCompliance.textContent = label;
+
+  tr.appendChild(tdColor);
+  tr.appendChild(tdTest);
+  tr.appendChild(tdRatio);
+  tr.appendChild(tdCompliance);
+  tbody.appendChild(tr);
+}
+
+// --- Custom Color Test ---
+function renderCustomColorTest() {
+  const input = document.getElementById('custom-color-input');
+  const hexVal = input.value.trim();
+  if (!hexVal) return;
+  if (!/^#[0-9A-Fa-f]{6}$/.test(hexVal)) return;
+  computeCustomContrast(hexVal);
+}
+
+document.getElementById('custom-color-input').addEventListener('input', (e) => {
+  let val = e.target.value.trim();
+  const preview = document.getElementById('custom-color-preview');
+  const table = document.getElementById('custom-wcag-table');
+
+  if (/^#[0-9A-Fa-f]{6}$/.test(val)) {
+    preview.style.backgroundColor = val;
+    table.classList.remove('hidden');
+    computeCustomContrast(val);
+  } else {
+    preview.style.backgroundColor = 'transparent';
+    table.classList.add('hidden');
+  }
+});
+
+function computeCustomContrast(hexVal) {
+  if (!currentPalette) return;
+
+  const customColor = Color.fromHex(hexVal);
+  const tbody = document.getElementById('custom-wcag-table-body');
+  tbody.innerHTML = '';
+
+  for (const [color] of currentPalette.colorMap) {
+    const paletteHex = color.getHEX().value.toUpperCase();
+    const contrast = WCAGAnalyzer.computePairContrast(color, customColor);
+    const label = WCAGAnalyzer.wcagLabel(contrast);
+
+    const tr = document.createElement('tr');
+
+    // Palette color cell
+    const tdPalette = document.createElement('td');
+    const paletteCell = document.createElement('div');
+    paletteCell.className = 'wcag-color-cell';
+    const sw1 = document.createElement('span');
+    sw1.className = 'wcag-color-swatch';
+    sw1.style.backgroundColor = color.getHEX().value;
+    paletteCell.appendChild(sw1);
+    paletteCell.appendChild(document.createTextNode(paletteHex));
+    tdPalette.appendChild(paletteCell);
+
+    // Custom color cell
+    const tdCustom = document.createElement('td');
+    const customCell = document.createElement('div');
+    customCell.className = 'wcag-color-cell';
+    const sw2 = document.createElement('span');
+    sw2.className = 'wcag-color-swatch';
+    sw2.style.backgroundColor = hexVal;
+    customCell.appendChild(sw2);
+    customCell.appendChild(document.createTextNode(hexVal.toUpperCase()));
+    tdCustom.appendChild(customCell);
+
+    // Contrast
+    const tdRatio = document.createElement('td');
+    tdRatio.textContent = contrast.toFixed(2) + ':1';
+
+    // Compliance
+    const tdCompliance = document.createElement('td');
+    tdCompliance.className =
+      'wcag-compliance-cell ' + (label === 'FAIL' ? 'fail' : 'pass');
+    tdCompliance.textContent = label;
+
+    tr.appendChild(tdPalette);
+    tr.appendChild(tdCustom);
+    tr.appendChild(tdRatio);
+    tr.appendChild(tdCompliance);
+    tbody.appendChild(tr);
+  }
+}
+
+// --- Shuffle Colors ---
+document.getElementById('shuffle-colors-btn').addEventListener('click', () => {
+  if (!currentPalette) return;
+
+  const entries = [...currentPalette.colorMap.entries()];
+  // Fisher-Yates shuffle on the color values, keeping roles in place
+  const colors = entries.map(([c]) => c);
+  for (let i = colors.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [colors[i], colors[j]] = [colors[j], colors[i]];
+  }
+
+  const newMap = new Map();
+  entries.forEach(([, role], i) => {
+    newMap.set(colors[i], role);
+  });
+  currentPalette.colorMap = newMap;
+
+  renderSwatches();
+  renderRoles();
+  renderWCAGTable();
+  renderCustomColorTest();
+  updateStatus('Colors shuffled');
+});
+
+// --- Auto-assign Roles ---
+document
+  .getElementById('auto-assign-roles-btn')
+  .addEventListener('click', () => {
+    if (!currentPalette) return;
+
+    const entries = [...currentPalette.colorMap.entries()];
+
+    // Sort by luminance
+    const sorted = entries
+      .map(([color, role], originalIndex) => ({
+        color,
+        role,
+        originalIndex,
+        luminance: WCAGAnalyzer.luminance(color.r, color.g, color.b),
+      }))
+      .sort((a, b) => a.luminance - b.luminance);
+
+    // Assign roles based on luminance
+    // Darkest → TEXT, Lightest → BACKGROUND, Middle → PRIMARY, etc.
+    const roleOrder = [
+      ColorRole.TEXT,
+      ColorRole.SECONDARY,
+      ColorRole.PRIMARY,
+      ColorRole.ACCENT,
+      ColorRole.BACKGROUND,
+    ];
+
+    const assignments = new Array(entries.length).fill(null);
+    sorted.forEach((item, sortedIdx) => {
+      if (sortedIdx < roleOrder.length) {
+        assignments[item.originalIndex] = roleOrder[sortedIdx];
+      }
+    });
+
+    const newMap = new Map();
+    entries.forEach(([color], i) => {
+      newMap.set(color, assignments[i]);
+    });
+    currentPalette.colorMap = newMap;
+
+    renderSwatches();
+    renderRoles();
+    renderWCAGTable();
+    updateStatus('Roles auto-assigned');
+  });
+
+// --- Share ---
+document
+  .getElementById('share-palette-btn')
+  .addEventListener('click', () => share());
+
+// --- Preview Palette ---
+document.getElementById('preview-palette-btn').addEventListener('click', () => {
+  if (!currentPalette) return;
+
+  const transferData = {
+    colorMap: [...currentPalette.colorMap.entries()].map(([c, r]) => [
+      {r: c.r, g: c.g, b: c.b},
+      r,
+    ]),
+    isDarkTheme: currentPalette.isDarkTheme,
+  };
+
+  localStorage.setItem('myPalette', JSON.stringify(transferData));
+  updateStatus('Palette saved for preview');
+});

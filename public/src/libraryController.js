@@ -153,6 +153,21 @@ export function initLibrary() {
         });
       }
 
+      // EDIT HANDLER
+      if (text === 'Edit') {
+        btn.addEventListener('click', () => {
+          const transferData = {
+            colorMap: [...palette.colorMap.entries()].map(([c, r]) => [
+              {r: c.r, g: c.g, b: c.b},
+              r,
+            ]),
+            isDarkTheme: palette.isDarkTheme,
+          };
+          localStorage.setItem('myPalette', JSON.stringify(transferData));
+          window.location.href = '/views/editPage.html';
+        });
+      }
+
       actions.appendChild(btn);
     });
     info.appendChild(actions);
