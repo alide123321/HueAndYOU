@@ -79,8 +79,8 @@ export class Complementary extends HarmonyStrategy {
     const complementaryAdjustedOK = adjustColor(complementaryOK, 0.2);
 
     // Background + Text colors use the BASE hue.
-    // Light mode → near-white background + near-black text
-    // Dark mode → near-black background + near-white text
+    // Light mode â†’ near-white background + near-black text
+    // Dark mode â†’ near-black background + near-white text
     const hue = baseColorOK.h;
     const chroma = baseColorOK.c * 0.05; // small chroma keeps the tint extremely subtle but present
 

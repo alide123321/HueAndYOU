@@ -81,8 +81,8 @@ export class Complementary extends HarmonyStrategy {
     // Generate background and text colors if specified
     if (gs.includeBgTextColors) {
       // Background + Text colors use the BASE hue.
-      // Light mode → near-white background + near-black text
-      // Dark mode → near-black background + near-white text
+      // Light mode â†’ near-white background + near-black text
+      // Dark mode â†’ near-black background + near-white text
 
       const hue = baseColorHsl.h;
       const subtleSaturation = baseColorHsl.s * 1;
@@ -127,9 +127,9 @@ export class Complementary extends HarmonyStrategy {
       }
     }
 
-    // Map HSL → RGB and return Color objects
+    // Map HSL â†’ RGB and return Color objects
     const colors = paletteHsl.map((hsl) => {
-      const rgb = hslToRgb(hsl); // { r,g,b,mode:'rgb' } with 0–255
+      const rgb = hslToRgb(hsl); // { r,g,b,mode:'rgb' } with 0â€“255
       return new Color(rgb.r, rgb.g, rgb.b);
     });
 
