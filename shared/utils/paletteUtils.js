@@ -18,42 +18,21 @@ export function mapColorsToRoles(colors) {
 
   colors.forEach((color, index) => {
     colorsWithRoles.push([color, null]); // null role by default
-
     if (is5ColorPalette) {
-      // 5-color palette: Triadic/Analogous pattern
-      switch (index) {
-        case 0:
-          colorsWithRoles[index][1] = ColorRole.PRIMARY;
-          break;
-        case 1:
-          colorsWithRoles[index][1] = ColorRole.SECONDARY;
-          break;
-        case 2:
-          colorsWithRoles[index][1] = ColorRole.ACCENT;
-          break;
-        case 3:
-          colorsWithRoles[index][1] = ColorRole.BACKGROUND;
-          break;
-        case 4:
-          colorsWithRoles[index][1] = ColorRole.TEXT;
-          break;
-      }
+      if (index === 0) colorsWithRoles[index][1] = ColorRole.PRIMARY;
+      else if (index === 1) colorsWithRoles[index][1] = ColorRole.SECONDARY;
+      else if (index === 2) colorsWithRoles[index][1] = ColorRole.ACCENT;
+      else if (index === 3) colorsWithRoles[index][1] = ColorRole.BACKGROUND;
+      else if (index === 4) colorsWithRoles[index][1] = ColorRole.TEXT;
+      else colorsWithRoles[index][1] = null;
     } else {
-      // 6-color palette: Complementary pattern
-      switch (index) {
-        case 0:
-          colorsWithRoles[index][1] = ColorRole.PRIMARY;
-          break;
-        case 1:
-          colorsWithRoles[index][1] = ColorRole.SECONDARY;
-          break;
-        case 4:
-          colorsWithRoles[index][1] = ColorRole.BACKGROUND;
-          break;
-        case 5:
-          colorsWithRoles[index][1] = ColorRole.TEXT;
-          break;
-      }
+      if (index === 0) colorsWithRoles[index][1] = ColorRole.PRIMARY;
+      else if (index === 1) colorsWithRoles[index][1] = ColorRole.SECONDARY;
+      else if (index === 2) colorsWithRoles[index][1] = ColorRole.ACCENT;
+      else if (index === 3) colorsWithRoles[index][1] = ColorRole.ACCENT;
+      else if (index === 4) colorsWithRoles[index][1] = ColorRole.BACKGROUND;
+      else if (index === 5) colorsWithRoles[index][1] = ColorRole.TEXT;
+      else colorsWithRoles[index][1] = null;
     }
   });
 
