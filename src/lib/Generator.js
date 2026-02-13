@@ -18,7 +18,7 @@ export class Generator {
   }
 
   /**
-   * @author Ian Timchak
+   * @author Ian Timchak, Ali Aldaghishy
    * @param {GenerationSettings} settings
    */
   applySettings(settings) {
@@ -31,7 +31,8 @@ export class Generator {
     // For prototype, this will be sufficient.
     switch (settings.harmonyType) {
       case ColorHarmony.COMPLEMENTARY:
-        this.selectedStrategy = new Complementary();
+        // You can switch between ComplementaryHSL and ComplementaryOKLCH here
+        this.selectedStrategy = new ComplementaryOKLCH();
         break;
 
       case ColorHarmony.MONOCHROMATIC:

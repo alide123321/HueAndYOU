@@ -13,6 +13,7 @@ import {HarmonyStrategy} from './HarmonyStrategy.js';
 // (from your tempColorConversionHsl.js module)
 import {rgbToHsl, hslToRgb} from '../../shared/utils/tempColorConversion.js';
 import {ColorRole} from '../../shared/utils/constants.js';
+import {mapColorsToRoles} from '../../shared/utils/paletteUtils.js';
 
 // lighten and darken helpers for HSL
 // HSL l is in [0,1]
@@ -80,8 +81,8 @@ export class Complementary extends HarmonyStrategy {
     // Generate background and text colors if specified
     if (gs.includeBgTextColors) {
       // Background + Text colors use the BASE hue.
-      // Light mode → near-white background + near-black text
-      // Dark mode → near-black background + near-white text
+      // Light mode â†’ near-white background + near-black text
+      // Dark mode â†’ near-black background + near-white text
 
       const hue = baseColorHsl.h;
       const subtleSaturation = baseColorHsl.s * 1;
@@ -126,40 +127,15 @@ export class Complementary extends HarmonyStrategy {
       }
     }
 
-    // Map HSL → RGB and return Color objects
+    // Map HSL â†’ RGB and return Color objects
     const colors = paletteHsl.map((hsl) => {
-      const rgb = hslToRgb(hsl); // { r,g,b,mode:'rgb' } with 0–255
+      const rgb = hslToRgb(hsl); // { r,g,b,mode:'rgb' } with 0â€“255
       return new Color(rgb.r, rgb.g, rgb.b);
     });
 
     // console.log(colors);
 
-    //map color objects in a Color, Role mapping
-    //JSON cant send map objects apparently, so convert to array of arrays
-    //To DO: properly deserialize maps on the api side, not priority at this moment
-    let colorsWithRoles = [];
-    colors.forEach((color, index) => {
-      colorsWithRoles.push([color, null]); // null role by default
-
-      //assign roles based on position
-      switch (index) {
-        case 0:
-          colorsWithRoles[index][1] = ColorRole.PRIMARY;
-          break;
-        case 1:
-          colorsWithRoles[index][1] = ColorRole.SECONDARY;
-          break;
-        case 4:
-          colorsWithRoles[index][1] = ColorRole.BACKGROUND;
-          break;
-        case 5:
-          colorsWithRoles[index][1] = ColorRole.TEXT;
-          break;
-      }
-    });
-
-    //Convert colorsWithRoles from 2darray to a map for Palette constructor
-    let colorMap = new Map(colorsWithRoles);
+    const colorMap = mapColorsToRoles(colors);
 
     return new Palette(colorMap);
   }

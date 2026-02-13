@@ -48,7 +48,7 @@ export const convertColor = (color, format) => {
 
   const result = toFormat(parsedColor);
 
-  // Check if converting to RGB produces out-of-gamut values
+  // If converting to RGB and out of gamut, auto-gamut-map via toGamut
   if (format === ColorFormat.RGB) {
     if (
       result.r < 0 ||
@@ -58,11 +58,56 @@ export const convertColor = (color, format) => {
       result.b < 0 ||
       result.b > 1
     ) {
-      throw new Error(
-        'Color is out of RGB gamut - the requested color cannot be represented in RGB'
-      );
+      const gamutMapped = toGamut(parsedColor);
+      return toFormat(gamutMapped);
     }
   }
 
   return result;
+};
+
+/**
+ * Ensures an OKLCH color is within RGB gamut by iteratively reducing chroma.
+ *
+ * @author Ali Aldaghishy
+ * @param {object} colorOK - An OKLCH color object with l, c, h, and mode properties.
+ * @returns {object} A gamut-mapped OKLCH color object safe for RGB conversion.
+ */
+export const toGamut = (colorOK) => {
+  const toRgb = converter('rgb');
+  let color = {...colorOK};
+
+  // Try converting to RGB
+  const rgb = toRgb(color);
+
+  // Check if in gamut
+  if (
+    rgb.r >= 0 &&
+    rgb.r <= 1 &&
+    rgb.g >= 0 &&
+    rgb.g <= 1 &&
+    rgb.b >= 0 &&
+    rgb.b <= 1
+  ) {
+    return color; // Already in gamut
+  }
+
+  // Reduce chroma until in gamut
+  const step = 0.0005;
+  while (color.c > 0) {
+    color.c = Math.max(0, color.c - step);
+    const testRgb = toRgb(color);
+    if (
+      testRgb.r >= 0 &&
+      testRgb.r <= 1 &&
+      testRgb.g >= 0 &&
+      testRgb.g <= 1 &&
+      testRgb.b >= 0 &&
+      testRgb.b <= 1
+    ) {
+      return color;
+    }
+  }
+
+  return color; // Fully desaturated
 };
