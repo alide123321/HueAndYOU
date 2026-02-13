@@ -237,7 +237,7 @@ document.querySelectorAll('.generate-btn').forEach((btn) => {
               isDarkTheme: palette.isDarkTheme,
             };
             localStorage.setItem('myPalette', JSON.stringify(transferData));
-            window.location.href = '/views/editPage.html';
+            window.location.href = '/edit';
           });
         }
 

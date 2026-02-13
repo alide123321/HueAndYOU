@@ -164,7 +164,7 @@ export function initLibrary() {
             isDarkTheme: palette.isDarkTheme,
           };
           localStorage.setItem('myPalette', JSON.stringify(transferData));
-          window.location.href = '/views/editPage.html';
+          window.location.href = '/edit';
         });
       }
 
