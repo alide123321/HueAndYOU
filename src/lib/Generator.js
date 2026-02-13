@@ -1,10 +1,11 @@
-import { GenerationSettings } from '../../shared/types/GenerationSettings.js';
-import { ColorHarmony } from '../../shared/utils/constants.js';
-import { Palette } from '../../shared/types/Palette.js';
-import { Complementary } from '../harmony/ComplementaryHSL.js';
-import { Monochromatic } from '../harmony/Monochromatic.js';
-import { Triadic } from '../harmony/Triadic.js';
-import { Analogous } from '../harmony/Analogous.js';
+import {GenerationSettings} from '../../shared/types/GenerationSettings.js';
+import {ColorHarmony} from '../../shared/utils/constants.js';
+import {Palette} from '../../shared/types/Palette.js';
+import {Complementary as ComplementaryOKLCH} from '../harmony/ComplementaryOKLCH.js';
+import {Complementary as ComplementaryHSL} from '../harmony/ComplementaryHSL.js';
+import {Monochromatic} from '../harmony/Monochromatic.js';
+import {Triadic} from '../harmony/Triadic.js';
+import {Analogous} from '../harmony/Analogous.js';
 
 /**
  * Generator class
@@ -18,7 +19,7 @@ export class Generator {
   }
 
   /**
-   * @author Ian Timchak
+   * @author Ian Timchak, Ali Aldaghishy
    * @param {GenerationSettings} settings
    */
   applySettings(settings) {
@@ -31,7 +32,8 @@ export class Generator {
     // For prototype, this will be sufficient.
     switch (settings.harmonyType) {
       case ColorHarmony.COMPLEMENTARY:
-        this.selectedStrategy = new Complementary();
+        // You can switch between ComplementaryHSL and ComplementaryOKLCH here
+        this.selectedStrategy = new ComplementaryOKLCH();
         break;
 
       case ColorHarmony.MONOCHROMATIC:
