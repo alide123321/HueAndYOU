@@ -4,6 +4,7 @@ import {Palette} from '../../shared/types/Palette.js';
 import {Complementary as ComplementaryOKLCH} from '../harmony/ComplementaryOKLCH.js';
 import {Complementary as ComplementaryHSL} from '../harmony/ComplementaryHSL.js';
 import {Monochromatic} from '../harmony/Monochromatic.js';
+import {Triadic} from '../harmony/Triadic.js';
 import {Analogous} from '../harmony/Analogous.js';
 
 /**
@@ -40,6 +41,13 @@ export class Generator {
         // Added by DeAndre Josey (CAP-23)
         console.log('CAP-23: Monochromatic strategy selected');
         this.selectedStrategy = new Monochromatic();
+        break;
+
+      case ColorHarmony.TRIADIC:
+        // Triadic harmony strategy
+        // Added by DeAndre Josey (CAP-24)
+        console.log('CAP-24: Triadic strategy selected');
+        this.selectedStrategy = new Triadic();
         break;
 
       case ColorHarmony.ANALOGOUS:
