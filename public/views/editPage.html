@@ -108,25 +108,39 @@
       <!-- Custom Color Test Section -->
       <div class="edit-section">
         <div class="edit-section-header">
-          <h3 class="edit-section-title">Custom Color Test</h3>
+          <h3 class="edit-section-title">Color on Color Test</h3>
         </div>
-        <div class="custom-color-row">
-          <input type="text" class="form-input" id="custom-color-input" placeholder="#FF5500" maxlength="7">
-          <span class="custom-color-preview" id="custom-color-preview"></span>
+        <div style="display: flex; gap: 1.5rem; align-items: center;">
+          <div style="display: flex; gap: 1rem; flex: 0 0 auto; max-width: 600px;">
+            <div style="flex: 1;">
+              <label style="display: block; margin-bottom: 0.5rem; font-size: 0.875rem; color: var(--text-secondary);">Color 1 (Background)</label>
+              <div style="display: flex; gap: 0.5rem; align-items: center;">
+                <input type="text" class="form-input" id="custom-color-input-1" placeholder="#FF5500" maxlength="7" style="flex: 1; min-width: 0;">
+                <span class="custom-color-preview" id="custom-color-preview-1"></span>
+              </div>
+            </div>
+            <div style="flex: 1;">
+              <label style="display: block; margin-bottom: 0.5rem; font-size: 0.875rem; color: var(--text-secondary);">Color 2 (Text)</label>
+              <div style="display: flex; gap: 0.5rem; align-items: center;">
+                <input type="text" class="form-input" id="custom-color-input-2" placeholder="#000000" maxlength="7" style="flex: 1; min-width: 0;">
+                <span class="custom-color-preview" id="custom-color-preview-2"></span>
+              </div>
+            </div>
+          </div>
+          <div id="custom-color-result" style="display: flex; align-items: center; gap: 1rem; padding: 1rem; background: var(--surface); border-radius: 8px; flex: 0 0 auto; visibility: hidden;">
+            <div id="custom-color-swatch" style="min-width: 120px; height: 60px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 0.875rem; border: 1px solid var(--border);">Sample</div>
+            <div style="display: flex; gap: 1.5rem; align-items: center;">
+              <div>
+                <span style="font-size: 0.75rem; color: var(--text-secondary); margin-right: 0.5rem;">Contrast:</span>
+                <span style="font-size: 0.875rem; font-weight: 600;" id="custom-contrast-ratio">-</span>
+              </div>
+              <div>
+                <span style="font-size: 0.75rem; color: var(--text-secondary); margin-right: 0.5rem;">WCAG:</span>
+                <span style="font-size: 0.875rem; font-weight: 600;" id="custom-compliance-label">-</span>
+              </div>
+            </div>
+          </div>
         </div>
-        <table class="wcag-table hidden" id="custom-wcag-table">
-          <thead>
-            <tr>
-              <th>PALETTE COLOR</th>
-              <th>CUSTOM COLOR</th>
-              <th>CONTRAST RATIO</th>
-              <th>COMPLIANCE</th>
-            </tr>
-          </thead>
-          <tbody id="custom-wcag-table-body">
-            <!-- Rows rendered by JS -->
-          </tbody>
-        </table>
       </div>
 
       <!-- Footer -->

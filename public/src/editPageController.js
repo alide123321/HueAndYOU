@@ -52,7 +52,6 @@ const colorPicker = new ColorPicker(pickerAnchor, (hexColor) => {
   renderSwatches();
   renderRoles();
   renderWCAGTable();
-  renderCustomColorTest();
   updateStatus('Palette updated');
 });
 
@@ -178,7 +177,6 @@ function renderSwatches() {
       renderSwatches();
       renderRoles();
       renderWCAGTable();
-      renderCustomColorTest();
       updateStatus('Color removed');
     });
 
@@ -211,7 +209,6 @@ function renderSwatches() {
     renderSwatches();
     renderRoles();
     renderWCAGTable();
-    renderCustomColorTest();
     updateStatus('Color added');
   });
 
@@ -391,82 +388,64 @@ function appendWCAGRow(
 }
 
 // --- Custom Color Test ---
-function renderCustomColorTest() {
-  const input = document.getElementById('custom-color-input');
-  const hexVal = input.value.trim();
-  if (!hexVal) return;
-  if (!/^#[0-9A-Fa-f]{6}$/.test(hexVal)) return;
-  computeCustomContrast(hexVal);
-}
+function computeColorOnColorContrast() {
+  const input1 = document.getElementById('custom-color-input-1');
+  const input2 = document.getElementById('custom-color-input-2');
+  const preview1 = document.getElementById('custom-color-preview-1');
+  const preview2 = document.getElementById('custom-color-preview-2');
+  const resultDiv = document.getElementById('custom-color-result');
+  const ratioDiv = document.getElementById('custom-contrast-ratio');
+  const labelDiv = document.getElementById('custom-compliance-label');
+  const swatchDiv = document.getElementById('custom-color-swatch');
 
-document.getElementById('custom-color-input').addEventListener('input', (e) => {
-  let val = e.target.value.trim();
-  const preview = document.getElementById('custom-color-preview');
-  const table = document.getElementById('custom-wcag-table');
+  const hex1 = input1.value.trim();
+  const hex2 = input2.value.trim();
 
-  if (/^#[0-9A-Fa-f]{6}$/.test(val)) {
-    preview.style.backgroundColor = val;
-    table.classList.remove('hidden');
-    computeCustomContrast(val);
+  // Validate both colors
+  const validHex = /^#[0-9A-Fa-f]{6}$/;
+  const valid1 = validHex.test(hex1);
+  const valid2 = validHex.test(hex2);
+
+  // Update preview 1
+  if (valid1) {
+    preview1.style.backgroundColor = hex1;
   } else {
-    preview.style.backgroundColor = 'transparent';
-    table.classList.add('hidden');
+    preview1.style.backgroundColor = 'transparent';
   }
-});
 
-function computeCustomContrast(hexVal) {
-  if (!currentPalette) return;
+  // Update preview 2
+  if (valid2) {
+    preview2.style.backgroundColor = hex2;
+  } else {
+    preview2.style.backgroundColor = 'transparent';
+  }
 
-  const customColor = Color.fromHex(hexVal);
-  const tbody = document.getElementById('custom-wcag-table-body');
-  tbody.innerHTML = '';
-
-  for (const [color] of currentPalette.colorMap) {
-    const paletteHex = color.getHEX().value.toUpperCase();
-    const contrast = WCAGAnalyzer.computePairContrast(color, customColor);
+  // If both valid, compute contrast
+  if (valid1 && valid2) {
+    const color1 = Color.fromHex(hex1);
+    const color2 = Color.fromHex(hex2);
+    const contrast = WCAGAnalyzer.computePairContrast(color1, color2);
     const label = WCAGAnalyzer.wcagLabel(contrast);
 
-    const tr = document.createElement('tr');
+    // Update swatch to show color1 as background with color2 as text
+    swatchDiv.style.backgroundColor = hex1;
+    swatchDiv.style.color = hex2;
 
-    // Palette color cell
-    const tdPalette = document.createElement('td');
-    const paletteCell = document.createElement('div');
-    paletteCell.className = 'wcag-color-cell';
-    const sw1 = document.createElement('span');
-    sw1.className = 'wcag-color-swatch';
-    sw1.style.backgroundColor = color.getHEX().value;
-    paletteCell.appendChild(sw1);
-    paletteCell.appendChild(document.createTextNode(paletteHex));
-    tdPalette.appendChild(paletteCell);
-
-    // Custom color cell
-    const tdCustom = document.createElement('td');
-    const customCell = document.createElement('div');
-    customCell.className = 'wcag-color-cell';
-    const sw2 = document.createElement('span');
-    sw2.className = 'wcag-color-swatch';
-    sw2.style.backgroundColor = hexVal;
-    customCell.appendChild(sw2);
-    customCell.appendChild(document.createTextNode(hexVal.toUpperCase()));
-    tdCustom.appendChild(customCell);
-
-    // Contrast
-    const tdRatio = document.createElement('td');
-    tdRatio.textContent = contrast.toFixed(2) + ':1';
-
-    // Compliance
-    const tdCompliance = document.createElement('td');
-    tdCompliance.className =
-      'wcag-compliance-cell ' + (label === 'FAIL' ? 'fail' : 'pass');
-    tdCompliance.textContent = label;
-
-    tr.appendChild(tdPalette);
-    tr.appendChild(tdCustom);
-    tr.appendChild(tdRatio);
-    tr.appendChild(tdCompliance);
-    tbody.appendChild(tr);
+    ratioDiv.textContent = contrast.toFixed(2) + ':1';
+    labelDiv.textContent = label;
+    labelDiv.style.color = label === 'FAIL' ? '#e74c3c' : '#27ae60';
+    resultDiv.style.visibility = 'visible';
+  } else {
+    resultDiv.style.visibility = 'hidden';
   }
 }
+
+document
+  .getElementById('custom-color-input-1')
+  .addEventListener('input', computeColorOnColorContrast);
+document
+  .getElementById('custom-color-input-2')
+  .addEventListener('input', computeColorOnColorContrast);
 
 // --- Shuffle Colors ---
 document.getElementById('shuffle-colors-btn').addEventListener('click', () => {
@@ -489,7 +468,6 @@ document.getElementById('shuffle-colors-btn').addEventListener('click', () => {
   renderSwatches();
   renderRoles();
   renderWCAGTable();
-  renderCustomColorTest();
   updateStatus('Colors shuffled');
 });
 
