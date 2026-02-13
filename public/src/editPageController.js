@@ -110,11 +110,31 @@ function renderSwatches() {
   const container = document.getElementById('edit-swatches-row');
   container.innerHTML = '';
 
+  const reportResults =
+    WCAGAnalyzer.analyzePalette(currentPalette).getColorResults();
+
   let index = 0;
   for (const [color, role] of currentPalette.colorMap) {
     const hexValue = color.getHEX().value;
-    const textCol = getTextColor(color);
-    const textHex = textCol.value;
+
+    // Get the color report associated with the color
+    const colorReport = reportResults.find(
+      (result) => result.getColor().getHEX().value === color.getHEX().value
+    );
+
+    // Determine target color based on bestAgainst
+    let targetColor;
+    if (!colorReport) {
+      console.error('No WCAG report found for color:', color.getHEX().value);
+      targetColor = getTextColor(color); // fallback
+    } else {
+      targetColor =
+        colorReport.bestAgainst === 'background'
+          ? currentPalette.getBackgroundColor()
+          : currentPalette.getTextColor();
+    }
+
+    const textHex = targetColor.getHEX().value;
 
     const swatch = document.createElement('div');
     swatch.className = 'edit-swatch';
