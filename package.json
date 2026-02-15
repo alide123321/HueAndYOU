@@ -9,7 +9,8 @@
     "test:record": "node ./scripts/jest-record-run.js",
     "test:clean": "node ./scripts/test-clean.js",
     "test:zip": "node ./scripts/test-zip.js",
-    "test:inventory": "node ./scripts/test-inventory.js"
+    "test:inventory": "node ./scripts/test-inventory.js",
+    "test:help": "node ./scripts/test-help.js"
   },
   "type": "module",
   "repository": {
