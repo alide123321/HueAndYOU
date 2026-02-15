@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
-    "start": "node app.js"
+    "start": "node app.js",
+    "test:record": "node ./scripts/jest-record-run.js"
   },
   "type": "module",
   "repository": {
@@ -24,6 +25,8 @@
     "express": "^5.1.0"
   },
   "devDependencies": {
-    "jest": "^30.2.0"
+    "jest": "^30.2.0",
+    "jest-html-reporters": "^3.1.7",
+    "jest-junit": "^16.0.0"
   }
 }
