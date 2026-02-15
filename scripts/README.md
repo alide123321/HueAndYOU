@@ -196,3 +196,28 @@ Use:
 * `npm run test:record` when you need evidence (HTML/JUnit/JSON + metadata)
 * `npm run test:clean -- N` to keep disk usage under control
 * `npm run test:zip -- N` to share artifacts easily
+
+
+
+---
+
+# AI USE DISCLOSURE
+
+Portions of the test workflow tooling (including helper scripts for recording, cleaning, and exporting test artifacts) were developed with assistance from an AI tool.
+
+The AI assistance was used exclusively for:
+
+* Generating and refining local automation scripts
+* Structuring test artifact output
+* Improving developer workflow and documentation
+* Drafting usage explanations and comments
+
+The AI was **not used** to:
+
+* Generate application source code
+* Implement core project logic
+* Write or modify functional requirements
+* Design system architecture
+* Complete graded algorithmic or domain-specific work
+
+These scripts exist solely to support internal testing, documentation, and evidence collection processes.
