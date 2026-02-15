@@ -6,7 +6,9 @@
   "scripts": {
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "start": "node app.js",
-    "test:record": "node ./scripts/jest-record-run.js"
+    "test:record": "node ./scripts/jest-record-run.js",
+    "test:clean": "node ./scripts/test-clean.js",
+    "test:zip": "node ./scripts/test-zip.js"
   },
   "type": "module",
   "repository": {
@@ -25,6 +27,7 @@
     "express": "^5.1.0"
   },
   "devDependencies": {
+    "archiver": "^7.0.1",
     "jest": "^30.2.0",
     "jest-html-reporters": "^3.1.7",
     "jest-junit": "^16.0.0"
