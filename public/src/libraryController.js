@@ -153,7 +153,10 @@ export function initLibrary() {
         });
       }
 
-      // EDIT HANDLER
+      /**
+       * EDIT HANDLER - Saves palette data to localStorage and navigates to Edit Page
+       * @author Ali
+       */
       if (text === 'Edit') {
         btn.addEventListener('click', () => {
           const transferData = {

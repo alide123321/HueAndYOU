@@ -62,6 +62,10 @@ const colorPicker = new ColorPicker(pickerAnchor, (hexColor) => {
 // --- Init ---
 initEditPage();
 
+/**
+ * Initializes the Edit Page by loading palette data and setting up the UI.
+ * @author Ali Aldaghishy
+ */
 function initEditPage() {
   const raw = localStorage.getItem('myPalette');
   if (!raw) {
@@ -89,22 +93,39 @@ function initEditPage() {
   }
 }
 
+/**
+ * Displays the empty state when no palette is loaded.
+ * @author Ali Aldaghishy
+ */
 function showEmptyState() {
   document.getElementById('edit-empty-state').classList.remove('hidden');
   document.getElementById('edit-container').classList.add('hidden');
   updateStatus('No palette loaded');
 }
 
+/**
+ * Shows the edit card UI for palette editing.
+ * @author Ali Aldaghishy
+ */
 function showEditCard() {
   document.getElementById('edit-empty-state').classList.add('hidden');
   document.getElementById('edit-container').classList.remove('hidden');
 }
 
+/**
+ * Updates the status bar message on the Edit Page.
+ * @param {string} msg - The status message to display.
+ * @author Ali Aldaghishy
+ */
 function updateStatus(msg) {
   document.getElementById('edit-status-bar').textContent = 'Edit Page - ' + msg;
 }
 
 // --- Render Swatches ---
+/**
+ * Renders the color swatches for the current palette.
+ * @author Ali Aldaghishy
+ */
 function renderSwatches() {
   const container = document.getElementById('edit-swatches-row');
   container.innerHTML = '';
@@ -216,6 +237,10 @@ function renderSwatches() {
 }
 
 // --- Render Roles ---
+/**
+ * Renders the role assignment grid for palette colors.
+ * @author Ali Aldaghishy
+ */
 function renderRoles() {
   const container = document.getElementById('edit-roles-grid');
   container.innerHTML = '';
@@ -292,6 +317,10 @@ function renderRoles() {
 }
 
 // --- Render WCAG Table ---
+/**
+ * Renders the WCAG compliance table for palette colors.
+ * @author Ali Aldaghishy
+ */
 function renderWCAGTable() {
   const tbody = document.getElementById('wcag-table-body');
   tbody.innerHTML = '';
@@ -337,6 +366,17 @@ function renderWCAGTable() {
   }
 }
 
+/**
+ * Appends a row to the WCAG compliance table.
+ * @author Ali Aldaghishy
+ * @param {HTMLElement} tbody - The table body element.
+ * @param {string} hexLabel - The hex label for the color.
+ * @param {string} colorHex - The hex value for the color.
+ * @param {string} testLabel - The label for the test color.
+ * @param {string} testBgHex - The hex value for the test background color.
+ * @param {number} contrast - The contrast ratio.
+ * @param {string} label - The WCAG compliance label.
+ */
 function appendWCAGRow(
   tbody,
   hexLabel,
@@ -388,6 +428,10 @@ function appendWCAGRow(
 }
 
 // --- Custom Color Test ---
+/**
+ * Computes and displays the contrast between two custom colors.
+ * @author Ali Aldaghishy
+ */
 function computeColorOnColorContrast() {
   const input1 = document.getElementById('custom-color-input-1');
   const input2 = document.getElementById('custom-color-input-2');
@@ -447,7 +491,9 @@ document
   .getElementById('custom-color-input-2')
   .addEventListener('input', computeColorOnColorContrast);
 
-// --- Shuffle Colors ---
+/** * Shuffles the colors in the current palette while keeping role assignments intact.
+ * @author Ali Aldaghishy
+ */
 document.getElementById('shuffle-colors-btn').addEventListener('click', () => {
   if (!currentPalette) return;
 
@@ -471,7 +517,9 @@ document.getElementById('shuffle-colors-btn').addEventListener('click', () => {
   updateStatus('Colors shuffled');
 });
 
-// --- Auto-assign Roles ---
+/** Auto-assigns roles to colors based on luminance (darkest = TEXT, lightest = BACKGROUND).
+ * @author Ali Aldaghishy
+ */
 document
   .getElementById('auto-assign-roles-btn')
   .addEventListener('click', () => {
