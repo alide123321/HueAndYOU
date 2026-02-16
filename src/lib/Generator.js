@@ -1,11 +1,11 @@
 import {GenerationSettings} from '../../shared/types/GenerationSettings.js';
 import {ColorHarmony} from '../../shared/utils/constants.js';
-import {Palette} from '../../shared/types/Palette.js';
 import {Complementary as ComplementaryOKLCH} from '../harmony/ComplementaryOKLCH.js';
 import {Complementary as ComplementaryHSL} from '../harmony/ComplementaryHSL.js';
 import {Monochromatic} from '../harmony/Monochromatic.js';
 import {Triadic} from '../harmony/Triadic.js';
 import {Analogous} from '../harmony/Analogous.js';
+import {Tetradic} from '../harmony/Tetradic.js';
 
 /**
  * Generator class
@@ -34,6 +34,7 @@ export class Generator {
       case ColorHarmony.COMPLEMENTARY:
         // You can switch between ComplementaryHSL and ComplementaryOKLCH here
         this.selectedStrategy = new ComplementaryOKLCH();
+        // this.selectedStrategy = new ComplementaryHSL();
         break;
 
       case ColorHarmony.MONOCHROMATIC:
@@ -56,6 +57,13 @@ export class Generator {
         this.selectedStrategy = new Analogous();
         break;
 
+      case ColorHarmony.TETRADIC:
+        // Tetradic harmony strategy
+        // Added by DeAndre Josey (CAP-25)
+        console.log('CAP-25: Tetradic strategy selected');
+        this.selectedStrategy = new Tetradic();
+        break;
+
       default:
         throw new Error(`Unsupported harmony type: ${settings.harmonyType}`);
     }
@@ -76,9 +84,7 @@ export class Generator {
     for (let i = 0; i < numberOfPalettes; i++) {
       // update seed predictably for each palette to ensure reproducibility
       this.generationSettings.seed = baseSeed + i;
-      const palette = this.selectedStrategy.buildPalette(
-        this.generationSettings
-      );
+      const palette = this.selectedStrategy.buildPalette(this.generationSettings);
       palettes.push(palette);
     }
 
