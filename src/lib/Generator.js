@@ -3,7 +3,7 @@ import {getHarmony} from '../harmony/HarmonyRegistry.js';
 
 // Harmony Strategy imports are not unused!
 // They are necessary for type annotations and registry functionality, even if not directly referenced in the code.
-import {Complementary} from '../harmony/ComplementaryOKLCH.js';
+import {Complementary} from '../harmony/Complementary.js';
 import {Monochromatic} from '../harmony/Monochromatic.js';
 import {Triadic} from '../harmony/Triadic.js';
 import {Analogous} from '../harmony/Analogous.js';
