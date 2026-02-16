@@ -1,8 +1,8 @@
-import {Complementary} from '../../../../src/harmony/ComplementaryOKLCH.js';
-import {GenerationSettings} from '../../../../shared/types/GenerationSettings.js';
-import {Color} from '../../../../shared/types/Color.js';
+import {Complementary} from '@src/harmony/Complementary.js';
+import {GenerationSettings} from '@shared/types/GenerationSettings.js';
+import {Color} from '@shared/types/Color.js';
 
-describe('ComplementaryOKLCH - Background and Text Colors', () => {
+describe('Complementary - Background and Text Colors', () => {
   test('should generate background and text colors correctly', () => {
     const gs = new GenerationSettings({
       baseColor: Color.fromHex('#3366ff'),

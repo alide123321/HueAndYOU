@@ -1,9 +1,9 @@
-import {Complementary} from '../../../../src/harmony/ComplementaryOKLCH.js';
-import {GenerationSettings} from '../../../../shared/types/GenerationSettings.js';
-import {Color} from '../../../../shared/types/Color.js';
-import {rgbToOklch} from '../../../../shared/utils/tempColorConversion.js';
+import {Complementary} from '@src/harmony/Complementary.js';
+import {GenerationSettings} from '@shared/types/GenerationSettings.js';
+import {Color} from '@shared/types/Color.js';
+import {rgbToOklch} from '@shared/utils/tempColorConversion.js';
 
-describe('ComplementaryOKLCH - Complementary Color Generation', () => {
+describe('Complementary - Complementary Color Generation', () => {
   test('should generate complementary colors correctly', () => {
     const baseColors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#3366ff'];
 

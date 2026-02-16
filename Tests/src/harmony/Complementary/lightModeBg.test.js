@@ -1,9 +1,9 @@
-import {Complementary} from '../../../../src/harmony/ComplementaryOKLCH.js';
-import {GenerationSettings} from '../../../../shared/types/GenerationSettings.js';
-import {Color} from '../../../../shared/types/Color.js';
-import {rgbToOklch} from '../../../../shared/utils/tempColorConversion.js';
+import {Complementary} from '@src/harmony/Complementary.js';
+import {GenerationSettings} from '@shared/types/GenerationSettings.js';
+import {Color} from '@shared/types/Color.js';
+import {rgbToOklch} from '@shared/utils/tempColorConversion.js';
 
-describe('ComplementaryOKLCH - Light Mode Background', () => {
+describe('Complementary - Light Mode Background', () => {
   test('should generate light-mode background correctly', () => {
     const gs = new GenerationSettings({
       baseColor: Color.fromHex('#ff0000'),

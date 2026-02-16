@@ -1,5 +1,5 @@
-import {Complementary} from '../../../../src/harmony/ComplementaryOKLCH.js';
-import {HarmonyStrategy} from '../../../../src/harmony/HarmonyStrategy.js';
+import {Complementary} from '@src/harmony/Complementary.js';
+import {HarmonyStrategy} from '@src/harmony/HarmonyStrategy.js';
 
 describe('ComplementaryOKLCH Instantiation', () => {
   test('should create multiple instances without side effects', () => {

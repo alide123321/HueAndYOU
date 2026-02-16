@@ -1,7 +1,7 @@
-import {Complementary} from '../../../../src/harmony/ComplementaryOKLCH.js';
-import {GenerationSettings} from '../../../../shared/types/GenerationSettings.js';
-import {Color} from '../../../../shared/types/Color.js';
-import {Palette} from '../../../../shared/types/Palette.js';
+import {Complementary} from '@src/harmony/Complementary.js';
+import {GenerationSettings} from '@shared/types/GenerationSettings.js';
+import {Color} from '@shared/types/Color.js';
+import {Palette} from '@shared/types/Palette.js';
 
 describe('ComplementaryOKLCH - Palette Generation', () => {
   test('should generate valid palette with correct structure', () => {
