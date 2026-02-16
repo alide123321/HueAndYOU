@@ -17,7 +17,17 @@ import * as generateAPI from '../api/generate.js';
 
 // Serve the homepage
 router.get('/', (req, res) => {
-  res.sendFile('generationPage.html', {root: root});
+  res.sendFile('GenerationPage.html', {root: root});
+});
+
+// Serve the edit page
+router.get('/edit', (req, res) => {
+  res.sendFile('editPage.html', {root: root});
+});
+
+// Serve the library page
+router.get('/library', (req, res) => {
+  res.sendFile('library.html', {root: root});
 });
 
 router.post('/generate', express.json(), generateAPI.generateBatchPalettes);

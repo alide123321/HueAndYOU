@@ -153,6 +153,24 @@ export function initLibrary() {
         });
       }
 
+      /**
+       * EDIT HANDLER - Saves palette data to localStorage and navigates to Edit Page
+       * @author Ali
+       */
+      if (text === 'Edit') {
+        btn.addEventListener('click', () => {
+          const transferData = {
+            colorMap: [...palette.colorMap.entries()].map(([c, r]) => [
+              {r: c.r, g: c.g, b: c.b},
+              r,
+            ]),
+            isDarkTheme: palette.isDarkTheme,
+          };
+          localStorage.setItem('myPalette', JSON.stringify(transferData));
+          window.location.href = '/edit';
+        });
+      }
+
       actions.appendChild(btn);
     });
     info.appendChild(actions);
