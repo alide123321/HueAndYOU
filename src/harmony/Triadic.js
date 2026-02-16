@@ -7,11 +7,16 @@
  * Author: DeAndre Tyree Josey
  * Date: 2/6/2026
  * Module: src/harmony/Triadic
+ *
+ * CAP-28: Registry lookup refactor (Ian Timchak, 2/15/2026)
+ * - Refactored to use HarmonyRegistry for strategy lookup in Generator.applySettings()
  */
 
 import {Palette} from '../../shared/types/Palette.js';
 import {Color} from '../../shared/types/Color.js';
 import {HarmonyStrategy} from './HarmonyStrategy.js';
+import {registerHarmony} from './HarmonyRegistry.js';
+import {ColorHarmony} from '../../shared/utils/constants.js';
 
 import {convertColor} from '../../shared/utils/colorConversion.js';
 import {ColorFormat} from '../../shared/utils/constants.js';
@@ -35,6 +40,9 @@ export class Triadic extends HarmonyStrategy {
   constructor() {
     super();
   }
+
+  // link this strategy with its corresponding type, for registry lookup
+  static type = ColorHarmony.TRIADIC;
 
   buildPalette(gs) {
     const baseColorRgb = {
@@ -92,3 +100,6 @@ export class Triadic extends HarmonyStrategy {
     return new Palette(colorMap);
   }
 }
+
+// Register this strategy in the HarmonyRegistry
+registerHarmony(Triadic.type, Triadic);

@@ -6,6 +6,8 @@ import {HarmonyStrategy} from './HarmonyStrategy.js';
 import {convertColor} from '../../shared/utils/colorConversion.js';
 import {ColorFormat, ColorRole} from '../../shared/utils/constants.js';
 import {mapColorsToRoles} from '../../shared/utils/paletteUtils.js';
+import {registerHarmony} from './HarmonyRegistry.js';
+import {ColorHarmony} from '../../shared/utils/constants.js';
 
 /**
  * Adjusts a color - lightens if base is dark, darkens if base is light
@@ -42,6 +44,7 @@ const adjustColor = (colorOK, amount) => {
 /**
  * ComplementaryOKLCH.js
  * Implements the Complementary color harmony strategy.
+ * 02-15-2026: Added registry connection (Ian) for lookup by type in Generator.applySettings()
  * @author Ian Timchak, Ali Aldaghishy
  * @module src/harmony/ComplementaryOKLCH
  * @extends HarmonyStrategy
@@ -50,6 +53,9 @@ export class Complementary extends HarmonyStrategy {
   constructor() {
     super();
   }
+
+  // link this strategy with its corresponding type, for registry lookup
+  static type = ColorHarmony.COMPLEMENTARY;
 
   /**
    * Generates a complementary color palette based on the provided generation settings.
@@ -145,3 +151,6 @@ export class Complementary extends HarmonyStrategy {
     return new Palette(colorMap);
   }
 }
+
+// Register this strategy in the HarmonyRegistry
+registerHarmony(Complementary.type, Complementary);
