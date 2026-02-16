@@ -1,4 +1,4 @@
-import {Generator} from '../lib/ian__generator__test.js';
+import {Generator} from '../lib/Generator.js';
 
 //debug
 import {GenerationSettings} from '../../shared/types/GenerationSettings.js';
