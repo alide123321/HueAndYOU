@@ -7,6 +7,7 @@ import {Complementary} from '../harmony/ComplementaryOKLCH.js';
 import {Monochromatic} from '../harmony/Monochromatic.js';
 import {Triadic} from '../harmony/Triadic.js';
 import {Analogous} from '../harmony/Analogous.js';
+import {Tetradic} from '../harmony/Tetradic.js';
 
 /**
  * Generator class
