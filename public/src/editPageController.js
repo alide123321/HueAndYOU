@@ -119,6 +119,9 @@ function showEditCard() {
  */
 function updateStatus(msg) {
   document.getElementById('edit-status-bar').textContent = 'Edit Page - ' + msg;
+  setTimeout(() => {
+    document.getElementById('edit-status-bar').textContent = '';
+  }, 1500);
 }
 
 // --- Render Swatches ---
@@ -159,6 +162,20 @@ function renderSwatches() {
     const swatch = document.createElement('div');
     swatch.className = 'edit-swatch';
     swatch.style.backgroundColor = hexValue;
+    swatch.title = `Click to copy ${hexValue.toUpperCase()}`;
+
+    swatch.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(hexValue.toUpperCase());
+        const originalLabel = hexLabel.textContent;
+        hexLabel.textContent = 'COPIED!';
+        setTimeout(() => {
+          hexLabel.textContent = originalLabel;
+        }, 1000);
+      } catch (err) {
+        console.error('Failed to copy color:', err);
+      }
+    });
 
     const hexLabel = document.createElement('span');
     hexLabel.className = 'edit-swatch-hex';
@@ -231,6 +248,11 @@ function renderSwatches() {
     renderRoles();
     renderWCAGTable();
     updateStatus('Color added');
+
+    // Open color picker for the newly added swatch
+    activeSwatchIndex = currentPalette.colorMap.size - 1;
+    colorPicker.setColor(newColor.getHEX().value);
+    colorPicker.open();
   });
 
   container.appendChild(addBtn);
@@ -572,7 +594,7 @@ document
   .addEventListener('click', () => share());
 
 // --- Preview Palette ---
-document.getElementById('preview-palette-btn').addEventListener('click', () => {
+document.getElementById('export-palette-btn').addEventListener('click', () => {
   if (!currentPalette) return;
 
   const transferData = {
