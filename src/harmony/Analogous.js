@@ -18,6 +18,8 @@ Accepts generation settings that include a single RGB base color and hue offsets
 import {Palette} from '../../shared/types/Palette.js';
 import {Color} from '../../shared/types/Color.js';
 import {HarmonyStrategy} from './HarmonyStrategy.js';
+import {registerHarmony} from './HarmonyRegistry.js';
+import {ColorHarmony} from '../../shared/utils/constants.js';
 
 // OKLCH conversion utilities (culori wrapper)
 import {convertColor} from '../../shared/utils/colorConversion.js';
@@ -94,6 +96,9 @@ export class Analogous extends HarmonyStrategy {
     super();
   }
 
+  // link this strategy with its corresponding type, for registry lookup
+  static type = ColorHarmony.ANALOGOUS;
+
   /**
    * buildPalette(gs: GenerationSettings): Palette
    * Generates an analogous color palette based on the provided generation settings.
@@ -119,7 +124,7 @@ export class Analogous extends HarmonyStrategy {
       b: baseColorRgb.b / 255,
     };
 
-    // An important note here is the OKLCH color space contains the entire RGB gamut, 
+    // An important note here is the OKLCH color space contains the entire RGB gamut,
     // so when converting from RGB to OKLCH, we will always get a valid OKLCH representation.
     const baseColorOklch = convertColor(baseRgb01, ColorFormat.OKLCH);
 
@@ -187,3 +192,6 @@ export class Analogous extends HarmonyStrategy {
     return new Palette(colorMap);
   }
 }
+
+// Register this strategy in the HarmonyRegistry
+registerHarmony(Analogous.type, Analogous);

@@ -28,11 +28,14 @@ const generateBatchPalettes = (req, res) => {
   for (let palette of palettes) {
     console.log('palette type:', typeof palette);
     console.log('palette keys:', Object.getOwnPropertyNames(palette));
-    console.log('palette proto:', Object.getPrototypeOf(palette)?.constructor?.name);
+    console.log(
+      'palette proto:',
+      Object.getPrototypeOf(palette)?.constructor?.name
+    );
 
     if (typeof palette?.serializeColorMap !== 'function') {
-  throw new Error('Expected Palette instance with serializeColorMap().');
-}
+      throw new Error('Expected Palette instance with serializeColorMap().');
+    }
     palette.serializeColorMap();
   }
   res.json(palettes);
