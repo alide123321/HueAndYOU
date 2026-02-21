@@ -192,7 +192,18 @@ function buildMockWebsiteHTML() {
     </div>
     <div class="preview-role-legend">
       <span class="preview-role-legend-title">Color Roles</span>
+      
       ${roleLegend}
+
+      <div class="preview-role-legend-wcag-tips" style="font-size:0.92em; margin:4px 0 8px 0;">
+      [Placeholder WCAG compliance tips and suggestions]  
+      <strong>♿ Accessibility Tips:</strong>
+        <ul style="margin:4px 0; padding-left:18px;">
+          <li>Ensure text has 4.5:1 contrast ratio for normal text</li>
+          <li>Use 3:1 contrast for large text (18pt+)</li>
+          <li>Don't rely on color alone to convey information</li>
+        </ul>
+      </div>
     </div>
   `;
 }
