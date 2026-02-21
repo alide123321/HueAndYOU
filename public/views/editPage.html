@@ -55,8 +55,78 @@
   <!-- Edit Container (hidden until palette loaded) -->
   <div class="edit-container hidden" id="edit-container">
     <div class="edit-layout">
-      <!-- Left Sidebar - Tools -->
+      <!-- Left Sidebar - Color Roles -->
       <div class="edit-layout-left">
+        <div class="edit-card">
+          <div class="edit-section-header">
+            <h3 class="edit-section-title">Color Roles</h3>
+            <button class="text-btn" id="auto-assign-roles-btn">Auto-assign</button>
+          </div>
+          <div class="edit-roles-grid" id="edit-roles-grid">
+            <!-- Roles rendered by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Center - Main Card -->
+      <div class="edit-layout-center">
+        <div class="edit-card">
+          <!-- Palette Header -->
+          <div class="edit-palette-header">
+            <div class="edit-palette-header-text">
+              <h2 class="edit-palette-name" id="edit-palette-name" contenteditable="true">Palette</h2>
+              <p class="edit-palette-description" id="edit-palette-description" contenteditable="true">Click to add a description</p>
+            </div>
+          </div>
+
+          <!-- Color Swatches Section -->
+          <div class="edit-section">
+            <div class="edit-section-header">
+              <h3 class="edit-section-title">Color Swatches</h3>
+              <button class="text-btn" id="shuffle-colors-btn">Shuffle</button>
+            </div>
+            <div class="edit-swatches-row" id="edit-swatches-row">
+              <!-- Swatches rendered by JS -->
+            </div>
+          </div>
+
+          <!-- WCAG Compliance Section -->
+          <div class="edit-section">
+            <div class="edit-section-header">
+              <h3 class="edit-section-title">WCAG Compliance</h3>
+            </div>
+            <div class="wcag-warning hidden" id="wcag-warning">No Background or Text role assigned — using theme defaults for contrast pairing.</div>
+            <div class="wcag-legend">
+              <span class="wcag-legend-item"><span class="wcag-dot wcag-compliant"></span> Compliant (AA/AAA)</span>
+              <span class="wcag-legend-item"><span class="wcag-dot wcag-noncompliant"></span> Non-Compliant (FAIL)</span>
+            </div>
+            <table class="wcag-table" id="wcag-table">
+              <thead>
+                <tr>
+                  <th>COLOR</th>
+                  <th>TEXT COLOR</th>
+                  <th>CONTRAST RATIO</th>
+                  <th>COMPLIANCE</th>
+                </tr>
+              </thead>
+              <tbody id="wcag-table-body">
+                <!-- Rows rendered by JS -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Footer -->
+          <div class="edit-footer">
+            <div class="edit-footer-actions">
+              <button class="text-btn" id="share-palette-btn">Share</button>
+              <button class="generate-btn" id="export-palette-btn" style="width:auto;padding:0.75rem 2rem;">Export</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Sidebar - Tools -->
+      <div class="edit-layout-right">
         <div class="edit-card edit-tools-card">
           <div class="edit-section-header">
             <h3 class="edit-section-title">Tools</h3>
@@ -95,78 +165,26 @@
           </div>
         </div>
       </div>
-
-      <!-- Center - Main Card -->
-      <div class="edit-layout-center">
-        <div class="edit-card">
-          <!-- Palette Header -->
-          <div class="edit-palette-header">
-            <div class="edit-palette-header-text">
-              <h2 class="edit-palette-name" id="edit-palette-name" contenteditable="true">Palette</h2>
-              <p class="edit-palette-description" id="edit-palette-description" contenteditable="true">Click to add a description</p>
-            </div>
-          </div>
-
-          <!-- Color Swatches Section -->
-          <div class="edit-section">
-            <div class="edit-section-header">
-              <h3 class="edit-section-title">Color Swatches</h3>
-              <button class="text-btn" id="shuffle-colors-btn">Shuffle</button>
-            </div>
-            <div class="edit-swatches-row" id="edit-swatches-row">
-              <!-- Swatches rendered by JS -->
-            </div>
-          </div>
-
-          <!-- WCAG Compliance Section -->
-          <div class="edit-section">
-            <div class="edit-section-header">
-              <h3 class="edit-section-title">WCAG Compliance</h3>
-            </div>
-            <div class="wcag-warning hidden" id="wcag-warning">No text color role assigned — using black (#000000) as default.</div>
-            <div class="wcag-legend">
-              <span class="wcag-legend-item"><span class="wcag-dot wcag-compliant"></span> Compliant (AA/AAA)</span>
-              <span class="wcag-legend-item"><span class="wcag-dot wcag-noncompliant"></span> Non-Compliant (FAIL)</span>
-            </div>
-            <table class="wcag-table" id="wcag-table">
-              <thead>
-                <tr>
-                  <th>COLOR</th>
-                  <th>TEXT COLOR</th>
-                  <th>CONTRAST RATIO</th>
-                  <th>COMPLIANCE</th>
-                </tr>
-              </thead>
-              <tbody id="wcag-table-body">
-                <!-- Rows rendered by JS -->
-              </tbody>
-            </table>
-          </div>
-
-          <!-- Footer -->
-          <div class="edit-footer">
-            <div class="edit-footer-actions">
-              <button class="text-btn" id="share-palette-btn">Share</button>
-              <button class="generate-btn" id="export-palette-btn" style="width:auto;padding:0.75rem 2rem;">Export</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Right Sidebar - Color Roles -->
-      <div class="edit-layout-right">
-        <div class="edit-card">
-          <div class="edit-section-header">
-            <h3 class="edit-section-title">Color Roles</h3>
-            <button class="text-btn" id="auto-assign-roles-btn">Auto-assign</button>
-          </div>
-          <div class="edit-roles-grid" id="edit-roles-grid">
-            <!-- Roles rendered by JS -->
-          </div>
-        </div>
-      </div>
     </div>
   </div>
+
+  <!-- Preview Slide-out Panel -->
+  <div class="preview-panel" id="preview-panel" aria-hidden="true">
+    <div class="preview-panel-header">
+      <h3 class="preview-panel-title">Palette Preview</h3>
+      <button class="preview-close-btn" id="preview-close-btn" aria-label="Close preview" title="Close preview">&#10005;</button>
+    </div>
+    <p class="preview-panel-subtitle">Live preview of your palette applied to a UI layout</p>
+    <div class="preview-content" id="preview-content">
+      <!-- Mock website rendered by JS -->
+    </div>
+  </div>
+
+  <!-- Preview Toggle Tab (right edge) -->
+  <button class="preview-toggle-tab hidden" id="preview-toggle-tab" aria-label="Toggle palette preview" title="Preview palette">
+    <span class="preview-tab-chevron">&#8250;</span>
+    <span class="preview-tab-label">Preview</span>
+  </button>
 
   <script type="module" src="/src/editPageController.js"></script>
 </body>
