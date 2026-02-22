@@ -1,7 +1,6 @@
 import {
   ColorHarmony,
   FilterType,
-  ColorFormat,
 } from '/shared/utils/constants.js';
 import {ColorPicker} from '/paletteModule/colorPicker.js';
 import {initializeGenerateButtons} from '/src/generateBtn.js';
@@ -9,12 +8,19 @@ import {share} from '/src/shareBtn.js';
 import {toggleTheme} from '/src/toggleThemeBtn.js';
 import {randomize} from '/src/randomizeBtn.js';
 import {generatePalette} from '/src/generateBtn.js';
-import {getTextColor} from '/shared/utils/textColorOverlay.js';
 import {WCAGAnalyzer} from '/shared/accessibility/WCAGAnalyzer.js';
 import {exportPalette} from '/src/exportBtn.js';
+import {
+  initPreviewPanel,
+  openPreviewPanel,
+} from '/src/previewPanel.js';
 
 //set page theme based on localStorage @TODO a little slow may need optimization
 if (localStorage.getItem('theme') === FilterType.DARK_MODE) toggleTheme(false);
+
+// Preview panel — tracks whichever palette the user clicked "Preview" on
+let _previewPalette = null;
+initPreviewPanel(() => _previewPalette);
 
 // Initialize color picker
 const baseColorBtn = document.getElementById('base-color');
@@ -223,6 +229,14 @@ document.querySelectorAll('.generate-btn').forEach((btn) => {
         if (text === 'Export') {
           btn.addEventListener('click', (event) => {
             exportPalette(event, palette);
+          });
+        }
+
+        // PREVIEW HANDLER
+        if (text === 'Preview') {
+          btn.addEventListener('click', () => {
+            _previewPalette = palette;
+            openPreviewPanel();
           });
         }
 

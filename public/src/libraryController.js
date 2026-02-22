@@ -1,7 +1,6 @@
 import {FilterType} from '/shared/utils/constants.js';
 import {toggleTheme} from '/src/toggleThemeBtn.js';
 import {getLibraryPalettes} from '/src/libraryPalettes.js';
-import {getTextColor} from '/shared/utils/textColorOverlay.js';
 import {WCAGAnalyzer} from '/shared/accessibility/WCAGAnalyzer.js';
 import {exportPalette} from '/src/exportBtn.js';
 

@@ -1,4 +1,4 @@
-import {ColorRole, FilterType, ColorFormat} from '/shared/utils/constants.js';
+import {ColorRole, FilterType} from '/shared/utils/constants.js';
 import {ColorPicker} from '/paletteModule/colorPicker.js';
 import {toggleTheme} from '/src/toggleThemeBtn.js';
 import {share} from '/src/shareBtn.js';
@@ -22,6 +22,7 @@ const ROLE_LIMITS = {
   [ColorRole.PRIMARY]: 1,
   [ColorRole.SECONDARY]: 1,
   [ColorRole.ACCENT]: 2,
+  [ColorRole.ALERT]: 1,
   [ColorRole.BACKGROUND]: 1,
   [ColorRole.TEXT]: 1,
 };
@@ -289,6 +290,7 @@ function renderRoles() {
     [ColorRole.PRIMARY]: 'Main brand color used for key UI elements',
     [ColorRole.SECONDARY]: 'Supporting color for secondary actions',
     [ColorRole.ACCENT]: 'Highlight color for emphasis and accents',
+    [ColorRole.ALERT]: 'Color for warnings, errors, and notifications',
     [ColorRole.BACKGROUND]: 'Base background color of the interface',
     [ColorRole.TEXT]: 'Primary text color for readability',
   };
@@ -356,6 +358,7 @@ function renderRoles() {
         newMap.set(c, i === index ? newRole : r);
       });
       currentPalette.colorMap = newMap;
+      renderSwatches();
       renderRoles();
       renderWCAGTable();
     });
