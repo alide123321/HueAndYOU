@@ -68,7 +68,7 @@ body.dark-mode .edit-status-bar {
 }
 
 .edit-layout-left {
-  width: 360px;
+  width: 330px;
   flex-shrink: 0;
   position: sticky;
   top: 90px;
@@ -685,6 +685,43 @@ body.dark-mode .edit-footer {
   display: flex;
   align-items: center;
   gap: 1rem;
+}
+
+/* ==========================================
+   Layout adjustments when preview panel is open
+   ========================================== */
+
+/* Hide the Tools sidebar when the preview panel is open */
+body.preview-panel-open .edit-layout-right {
+  display: none;
+}
+
+/* Shift the edit container to the left to make room for the 780px preview panel */
+body.preview-panel-open .edit-container {
+  margin-right: 800px; /* 780px panel + 20px breathing room */
+  margin-left: 1rem;
+  max-width: none;
+  transition: margin 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* When preview is open, stack left sidebar above center card */
+body.preview-panel-open .edit-layout {
+  flex-direction: column;
+}
+
+body.preview-panel-open .edit-layout-left {
+  width: 100%;
+  position: static;
+}
+
+body.preview-panel-open .edit-roles-grid {
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+}
+
+/* Smooth transition back when panel closes */
+.edit-container {
+  transition: margin 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Responsive */
