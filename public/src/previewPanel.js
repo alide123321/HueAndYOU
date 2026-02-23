@@ -31,7 +31,10 @@ function alertTextColor(bgColor) {
     {mode: 'rgb', r: r / 255, g: g / 255, b: b / 255},
     ColorFormat.OKLCH
   );
-  const isDark = oklch.l < 0.5;
+  // Use sRGB luminance — not OKLCH L — to decide direction. Vivid saturated
+  // colors (e.g. #344EEF) can have high OKLCH L but low sRGB luminance, so
+  // OKLCH L alone gives the wrong search direction and lands on the wrong side.
+  const isDark = WCAGAnalyzer.luminance(r, g, b) <= 0.179;
 
   // Start the search just past the background and walk toward white or black.
   let lo = isDark ? oklch.l : 0;
@@ -142,12 +145,20 @@ function togglePreviewPanel() {
     panel.setAttribute('aria-hidden', 'false');
     tab?.classList.add('panel-open');
     if (chevron) chevron.textContent = '\u2039'; // ‹ close direction
+    document.body.classList.add('preview-panel-open');
     updatePreviewPanel();
   } else {
     panel.classList.remove('open');
     panel.setAttribute('aria-hidden', 'true');
     tab?.classList.remove('panel-open');
     if (chevron) chevron.textContent = '\u203A'; // › open direction
+    document.body.classList.remove('preview-panel-open');
+    // Wait for the close transition to finish before scrolling,
+    // so the layout reflow doesn't reset the scroll position afterward.
+    setTimeout(() => {
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    }, 10);
   }
 }
 
@@ -182,13 +193,24 @@ function buildMockWebsiteHTML() {
   const onPrimary = contrastText(primaryColor || Color.fromHex(primary));
   const onSecondary = contrastText(secondaryColor || Color.fromHex(secondary));
   const onAccent = contrastText(accentColor || Color.fromHex(accent));
-  const onAlert = alertTextColor(alertColor || Color.fromHex(alert));
+
+  // Collect any roles that fell back to a default (not assigned in the palette).
+  const defaults = [
+    !primaryColor && `Primary (${primary})`,
+    !secondaryColor && `Secondary (${secondary})`,
+    !accentColor && `Accent (${accent})`,
+    !bgColor && `Background (${bg})`,
+    !textColorRole && `Text (${text})`,
+  ].filter(Boolean);
+  const onAlert = alertColor ? alertTextColor(alertColor) : null;
 
   // onAlert is a hex string, so wrap it in a Color for computePairContrast.
-  const alertContrast = WCAGAnalyzer.computePairContrast(
-    alertColor || Color.fromHex(alert),
-    Color.fromHex(onAlert)
-  ).toFixed(2);
+  const alertContrast = alertColor
+    ? WCAGAnalyzer.computePairContrast(
+        alertColor,
+        Color.fromHex(onAlert)
+      ).toFixed(2)
+    : null;
 
   const roleLegend = [
     {label: 'Primary', color: primary},
@@ -206,7 +228,8 @@ function buildMockWebsiteHTML() {
     )
     .join('');
 
-  const alertLegend = `
+  const alertLegend = alertColor
+    ? `
     <div style="margin-top:10px; padding-top:10px; border-top:1px solid rgba(128,128,128,0.2);">
       <div style="font-size:0.78em; opacity:0.55; margin-bottom:6px;">
         Alert text color is auto-generated to match the alert hue while aiming for WCAG AAA contrast.
@@ -226,7 +249,8 @@ function buildMockWebsiteHTML() {
       <div style="font-size:0.78em; opacity:0.55; margin-bottom:6px;">
         Be sure to not only rely on color to convey important information in your designs!
       </div>
-    </div>`;
+    </div>`
+    : '';
 
   return `
     <div class="mock-site">
@@ -273,20 +297,28 @@ function buildMockWebsiteHTML() {
               <div class="mock-stat-value" style="color:${secondary}">94%</div>
             </div>
           </div>
-          <div class="mock-alert-banner" style="background:${alert}; color:${onAlert}; border-radius:4px; padding:5px 10px; margin:4px 0 6px; font-size:0.82em; display:flex; align-items:center; gap:6px;">
+          ${
+            alertColor
+              ? `<div class="mock-alert-banner" style="background:${alert}; color:${onAlert}; border-radius:4px; padding:5px 10px; margin:4px 0 6px; font-size:0.82em; display:flex; align-items:center; gap:6px;">
             <span>&#9888;</span>
             <span>Scheduled maintenance Sunday at 2:00 AM</span>
-          </div>
+          </div>`
+              : ''
+          }
           <div class="mock-section-label" style="color:${text}">Recent Activity</div>
           <div class="mock-list">
             <div class="mock-list-item" style="border-left:3px solid ${primary}">
               <span class="mock-list-title" style="color:${text}">Project Alpha updated</span>
               <span class="mock-list-badge" style="background:${primary}; color:${onPrimary}">New</span>
             </div>
-            <div class="mock-list-item" style="border-left:3px solid ${alert}">
+            ${
+              alertColor
+                ? `<div class="mock-list-item" style="border-left:3px solid ${alert}">
               <span class="mock-list-title" style="color:${text}">New user registered</span>
               <span class="mock-list-badge" style="background:${alert}; color:${onAlert}">Alert</span>
-            </div>
+            </div>`
+                : ''
+            }
             <div class="mock-list-item" style="border-left:3px solid ${secondary}">
               <span class="mock-list-title" style="color:${text}">Deployment successful</span>
               <span class="mock-list-badge" style="background:${secondary}; color:${onSecondary}">Done</span>
@@ -300,6 +332,14 @@ function buildMockWebsiteHTML() {
         </div>
       </div>
     </div>
+    ${
+      defaults.length > 0
+        ? `
+    <div style="margin:8px 0 4px; padding:6px 10px; border-radius:4px; background:rgba(128,128,128,0.08); border-left:3px solid rgba(128,128,128,0.35); font-size:0.82em; opacity:0.75;">
+      <strong>Using defaults:</strong> ${defaults.join(', ')} — these colors are not part of your palette. Assign those roles to see your actual colors here.
+    </div>`
+        : ''
+    }
     <div class="preview-role-legend">
       <span class="preview-role-legend-title">Color Roles</span>
 
