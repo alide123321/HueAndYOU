@@ -5,9 +5,6 @@
   box-sizing: border-box;
 }
 
-html {
-  zoom: 0.9;
-}
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -724,3 +721,40 @@ body.dark-mode .empty-state-card {
   border-color: #555;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
 }
+
+/* Generation Page — compact overrides (~10% smaller) */
+body.generation-page .top-bar { height: 54px; }
+body.generation-page .main-container { margin-top: 54px; min-height: calc(100vh - 54px); }
+body.generation-page .top-bar-content { padding: 0 1.8rem; }
+body.generation-page .brand { font-size: 1.125rem; }
+body.generation-page .nav-menu { gap: 1.8rem; }
+body.generation-page .nav-item { font-size: 0.84rem; }
+
+body.generation-page .sidebar { padding: 1.2rem 1.35rem; gap: 1.35rem; }
+body.generation-page .card { border-radius: 10px; padding: 1.35rem; }
+body.generation-page .card-title { font-size: 1rem; margin-bottom: 1.125rem; }
+body.generation-page .form-group { margin-bottom: 1.125rem; }
+body.generation-page .form-label { font-size: 0.79rem; margin-bottom: 0.45rem; }
+body.generation-page .form-select { padding: 0.5625rem 0.79rem; font-size: 0.84rem; border-radius: 7px; }
+body.generation-page .color-swatch-btn { height: 54px; }
+
+body.generation-page .stepper-btn { width: 32px; height: 32px; font-size: 1rem; }
+body.generation-page .stepper-input { width: 54px; font-size: 0.84rem; }
+body.generation-page .icon-btn { width: 36px; height: 36px; }
+body.generation-page .icon-text { font-size: 1.125rem; }
+body.generation-page .generate-btn { padding: 0.79rem 1.35rem; font-size: 0.9rem; border-radius: 7px; }
+
+body.generation-page .main-content { padding: 1.2rem 1.8rem; }
+body.generation-page .empty-state { min-height: calc(100vh - 54px - 3.6rem); }
+body.generation-page .empty-state-card { padding: 3.6rem 2.7rem; border-radius: 14px; }
+body.generation-page .empty-state-title { font-size: 1.8rem; }
+body.generation-page .empty-state-text { margin-bottom: 1.8rem; }
+body.generation-page .palettes-grid { gap: 1.35rem; }
+body.generation-page .palette-card { border-radius: 10px; }
+body.generation-page .palette-colors { height: 108px; }
+body.generation-page .palette-color { width: 108px; height: 108px; }
+body.generation-page .color-bold-label { font-size: 0.675rem; }
+body.generation-page .color-normal-label { font-size: 0.63rem; }
+body.generation-page .palette-info { padding: 0.9rem 1.125rem; }
+body.generation-page .palette-label { font-size: 0.84rem; }
+body.generation-page .text-btn { font-size: 0.79rem; }

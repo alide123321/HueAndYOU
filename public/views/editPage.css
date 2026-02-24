@@ -790,3 +790,7 @@ body.preview-panel-open .edit-roles-grid {
     flex-direction: column;
   }
 }
+
+html {
+  zoom: 0.9;
+}

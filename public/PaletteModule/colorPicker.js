@@ -113,11 +113,6 @@ export class ColorPicker {
     // Open picker
     this.button.addEventListener('click', () => this.open());
 
-    // Close on overlay click
-    this.overlay.addEventListener('click', (e) => {
-      if (e.target === this.overlay) this.close();
-    });
-
     // Cancel button
     this.overlay
       .querySelector('#cancel-btn')
@@ -197,16 +192,19 @@ export class ColorPicker {
 
   updateFromCanvas(e) {
     const rect = this.canvasElement.getBoundingClientRect();
-    let x = e.clientX - rect.left;
-    let y = e.clientY - rect.top;
+    const cssWidth = this.canvasElement.offsetWidth;
+    const cssHeight = this.canvasElement.offsetHeight;
+    const zoom = cssWidth > 0 ? rect.width / cssWidth : 1;
+    let x = (e.clientX - rect.left) / zoom + 0.5;
+    let y = (e.clientY - rect.top) / zoom + 0.5;
 
     // Clamp values
-    x = Math.max(0, Math.min(x, rect.width));
-    y = Math.max(0, Math.min(y, rect.height));
+    x = Math.max(0, Math.min(x, cssWidth));
+    y = Math.max(0, Math.min(y, cssHeight));
 
     // Convert to saturation and lightness (0-100)
-    const xRatio = x / rect.width;
-    const yRatio = y / rect.height;
+    const xRatio = x / cssWidth;
+    const yRatio = y / cssHeight;
 
     // Saturation: 0% (left) to 100% (right)
     this.currentSaturation = xRatio * 100;
@@ -225,13 +223,15 @@ export class ColorPicker {
 
   updateFromHueSlider(e) {
     const rect = this.hueSlider.getBoundingClientRect();
-    let x = e.clientX - rect.left;
+    const cssWidth = this.hueSlider.offsetWidth;
+    const zoom = cssWidth > 0 ? rect.width / cssWidth : 1;
+    let x = (e.clientX - rect.left) / zoom;
 
     // Clamp value
-    x = Math.max(0, Math.min(x, rect.width));
+    x = Math.max(0, Math.min(x, cssWidth));
 
     // Convert to hue (0-360)
-    this.currentHue = (x / rect.width) * 360;
+    this.currentHue = (x / cssWidth) * 360;
 
     this.drawCanvas();
     this.updateColor();
@@ -449,12 +449,14 @@ export class ColorPicker {
    * @author Ali Aldaghishy
    */
   updateThumbPositions() {
-    // Update canvas cursor position
-    const rect = this.canvasElement.getBoundingClientRect();
+    // Use offsetWidth/offsetHeight (CSS pixels) for positioning,
+    // since cursor left/top are set in CSS pixels
+    const cssWidth = this.canvasElement.offsetWidth;
+    const cssHeight = this.canvasElement.offsetHeight;
 
     // X position is straightforward - based on saturation (0% left to 100% right)
-    const x = (this.currentSaturation / 100) * rect.width;
-    const xRatio = x / rect.width;
+    const x = (this.currentSaturation / 100) * cssWidth;
+    const xRatio = x / cssWidth;
 
     // Y position: solve for y from lightness equation
     // currentLightness = topLightness * (1 - yRatio)
@@ -462,13 +464,13 @@ export class ColorPicker {
     const topLightness = 100 - xRatio * 50;
     const yRatio =
       topLightness > 0 ? 1 - this.currentLightness / topLightness : 1;
-    const y = yRatio * rect.height;
+    const y = yRatio * cssHeight;
 
     this.canvasCursor.style.left = x + 'px';
     this.canvasCursor.style.top = y + 'px';
     // Update hue thumb position
-    const hueRect = this.hueSlider.getBoundingClientRect();
-    const hueX = (this.currentHue / 360) * hueRect.width;
+    const hueCssWidth = this.hueSlider.offsetWidth;
+    const hueX = (this.currentHue / 360) * hueCssWidth;
     this.hueThumb.style.left = hueX + 'px';
   }
 
