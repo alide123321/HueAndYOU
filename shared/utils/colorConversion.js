@@ -29,7 +29,16 @@ export const convertColor = (color, format) => {
   // Otherwise, parse the string
   let parsedColor;
   if (typeof color === 'string' || color?.mode === 'hex') {
-    parsedColor = parse(color);
+    // Normalise oklch / oklab comma-separated input to CSS Level 4 space syntax
+    let colorStr = typeof color === 'string' ? color : color;
+    if (typeof colorStr === 'string') {
+      colorStr = colorStr.replace(
+        /\b(oklch|oklab)\(\s*([^)]+)\)/i,
+        (_, fn, args) =>
+          `${fn}(${args.replace(/,/g, ' ').replace(/°/g, '').replace(/%/g, '').replace(/\s+/g, ' ').trim()})`
+      );
+    }
+    parsedColor = parse(colorStr);
   } else {
     // If it's an object, ensure it has a mode property
     if (color.mode) {

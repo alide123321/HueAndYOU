@@ -150,7 +150,7 @@
                 </div>
               </div>
             </div>
-            <div id="custom-color-result" class="color-test-result" style="visibility: hidden;">
+            <div id="custom-color-result" class="color-test-result" style="display: none;">
               <div id="custom-color-swatch" class="color-test-swatch">Sample</div>
               <div class="color-test-metrics">
                 <div>
@@ -162,6 +162,24 @@
                   <span class="color-test-metric-value" id="custom-compliance-label">-</span>
                 </div>
               </div>
+            </div>
+          </div>
+
+          <!-- Color Format Converter -->
+          <h4 class="edit-tools-subtitle" style="margin-top:1.25rem;">Color Converter</h4>
+          <div class="color-converter-container">
+            <div class="color-converter-row">
+              <input type="text" class="form-input" id="converter-color-input" placeholder="#3399FF, rgb(51,153,255), hsl(…)">
+              <select class="edit-role-select" id="converter-format-select">
+                <option value="hex">HEX</option>
+                <option value="rgb">RGB</option>
+                <option value="hsl">HSL</option>
+                <option value="oklch">OKLCH</option>
+              </select>
+            </div>
+            <div class="color-converter-result" id="converter-result">
+              <span class="color-converter-preview" id="converter-preview"></span>
+              <span class="color-converter-value" id="converter-value">Enter a color value</span>
             </div>
           </div>
         </div>
