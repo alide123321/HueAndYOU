@@ -52,6 +52,7 @@ export const ColorRole = Object.freeze({
   PRIMARY: 'primary',
   SECONDARY: 'secondary',
   ACCENT: 'accent',
+  ALERT: 'alert',
   BACKGROUND: 'background',
   TEXT: 'text',
 });

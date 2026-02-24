@@ -5,14 +5,16 @@
   left: 0;
   right: 0;
   bottom: 0;
-  width: 100vw;
-  height: 100vh;
   background-color: rgba(0, 0, 0, 0.5);
   display: none;
   justify-content: center;
   align-items: center;
   z-index: 9999;
   overflow: auto;
+}
+
+body.edit-page .color-picker-overlay {
+  zoom: calc(1 / 0.9);
 }
 
 .color-picker-overlay.active {

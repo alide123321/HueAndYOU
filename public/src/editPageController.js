@@ -1,4 +1,4 @@
-import {ColorRole, FilterType, ColorFormat} from '/shared/utils/constants.js';
+import {ColorRole, FilterType} from '/shared/utils/constants.js';
 import {ColorPicker} from '/paletteModule/colorPicker.js';
 import {toggleTheme} from '/src/toggleThemeBtn.js';
 import {share} from '/src/shareBtn.js';
@@ -6,10 +6,26 @@ import {WCAGAnalyzer} from '/shared/accessibility/WCAGAnalyzer.js';
 import {getTextColor} from '/shared/utils/textColorOverlay.js';
 import {Palette} from '/shared/types/Palette.js';
 import {Color} from '/shared/types/Color.js';
+import {
+  initPreviewPanel,
+  updatePreviewPanel,
+  showPreviewTab,
+  hidePreviewTab,
+} from '/src/previewPanel.js';
 
 // --- Module state ---
 let currentPalette = null;
 let activeSwatchIndex = -1;
+
+// Maximum number of times each role may be assigned across the palette.
+const ROLE_LIMITS = {
+  [ColorRole.PRIMARY]: 1,
+  [ColorRole.SECONDARY]: 1,
+  [ColorRole.ACCENT]: 2,
+  [ColorRole.ALERT]: 1,
+  [ColorRole.BACKGROUND]: 1,
+  [ColorRole.TEXT]: 1,
+};
 
 // --- Theme ---
 if (localStorage.getItem('theme') === FilterType.DARK_MODE) toggleTheme(false);
@@ -60,6 +76,7 @@ const colorPicker = new ColorPicker(pickerAnchor, (hexColor) => {
 // via pencil icon clicks on each swatch.
 
 // --- Init ---
+initPreviewPanel(() => currentPalette);
 initEditPage();
 
 /**
@@ -100,6 +117,7 @@ function initEditPage() {
 function showEmptyState() {
   document.getElementById('edit-empty-state').classList.remove('hidden');
   document.getElementById('edit-container').classList.add('hidden');
+  hidePreviewTab();
   updateStatus('No palette loaded');
 }
 
@@ -110,6 +128,7 @@ function showEmptyState() {
 function showEditCard() {
   document.getElementById('edit-empty-state').classList.add('hidden');
   document.getElementById('edit-container').classList.remove('hidden');
+  showPreviewTab();
 }
 
 /**
@@ -271,11 +290,18 @@ function renderRoles() {
     [ColorRole.PRIMARY]: 'Main brand color used for key UI elements',
     [ColorRole.SECONDARY]: 'Supporting color for secondary actions',
     [ColorRole.ACCENT]: 'Highlight color for emphasis and accents',
+    [ColorRole.ALERT]: 'Color for warnings, errors, and notifications',
     [ColorRole.BACKGROUND]: 'Base background color of the interface',
     [ColorRole.TEXT]: 'Primary text color for readability',
   };
 
   const entries = [...currentPalette.colorMap.entries()];
+
+  // Count how many colors already have each role assigned (across all entries).
+  const roleCounts = {};
+  for (const [, r] of entries) {
+    if (r) roleCounts[r] = (roleCounts[r] || 0) + 1;
+  }
 
   entries.forEach(([color, role], index) => {
     const item = document.createElement('div');
@@ -313,6 +339,12 @@ function renderRoles() {
       opt.value = r;
       opt.textContent = r.charAt(0).toUpperCase() + r.slice(1);
       if (r === role) opt.selected = true;
+
+      // Disable the option if the role is already at its limit and this color
+      // does not currently hold that role (so it can always re-select its own).
+      const usedElsewhere = (roleCounts[r] || 0) - (role === r ? 1 : 0);
+      if (usedElsewhere >= ROLE_LIMITS[r]) opt.disabled = true;
+
       select.appendChild(opt);
     });
 
@@ -320,13 +352,13 @@ function renderRoles() {
 
     select.addEventListener('change', () => {
       const newRole = select.value || null;
-      // Update the Map entry
       const allEntries = [...currentPalette.colorMap.entries()];
       const newMap = new Map();
       allEntries.forEach(([c, r], i) => {
         newMap.set(c, i === index ? newRole : r);
       });
       currentPalette.colorMap = newMap;
+      renderSwatches();
       renderRoles();
       renderWCAGTable();
     });
@@ -341,6 +373,8 @@ function renderRoles() {
 // --- Render WCAG Table ---
 /**
  * Renders the WCAG compliance table for palette colors.
+ * Each color is paired with whichever of the Background or Text role color
+ * gives the better contrast, using the same bestAgainst logic as renderSwatches.
  * @author Ali Aldaghishy
  */
 function renderWCAGTable() {
@@ -349,43 +383,53 @@ function renderWCAGTable() {
 
   const warning = document.getElementById('wcag-warning');
 
-  // Find the color assigned to the TEXT role
-  let textColor = null;
-  for (const [color, role] of currentPalette.colorMap) {
-    if (role === ColorRole.TEXT) {
-      textColor = color;
-      break;
-    }
-  }
-
-  // Show/hide warning based on whether a text role exists
-  if (!textColor) {
-    textColor = new Color(0, 0, 0); // default to black
+  // Show warning when neither TEXT nor BACKGROUND role is explicitly assigned
+  const roles = [...currentPalette.colorMap.values()];
+  const hasText = roles.includes(ColorRole.TEXT);
+  const hasBg = roles.includes(ColorRole.BACKGROUND);
+  if (!hasText || !hasBg) {
     warning.classList.remove('hidden');
   } else {
     warning.classList.add('hidden');
   }
 
-  const textHex = textColor.getHEX().value.toUpperCase();
+  // Use the same analysis renderSwatches uses to determine bestAgainst per color
+  const reportResults =
+    WCAGAnalyzer.analyzePalette(currentPalette).getColorResults();
 
-  for (const [color, role] of currentPalette.colorMap) {
-    // Skip the text color itself — no point testing it against itself
-    if (role === ColorRole.TEXT) continue;
-
+  for (const [color] of currentPalette.colorMap) {
     const hexValue = color.getHEX().value.toUpperCase();
 
-    const contrast = WCAGAnalyzer.computePairContrast(color, textColor);
+    const colorReport = reportResults.find(
+      (result) => result.getColor().getHEX().value === color.getHEX().value
+    );
+
+    // Mirror the renderSwatches logic: use bestAgainst to pick background or text
+    const pairedColor =
+      colorReport && colorReport.bestAgainst === 'background'
+        ? currentPalette.getBackgroundColor()
+        : currentPalette.getTextColor();
+
+    // Skip if the color would be tested against itself
+    if (pairedColor.getHEX().value === color.getHEX().value) continue;
+
+    const pairedHex = pairedColor.getHEX().value.toUpperCase();
+    const contrast = WCAGAnalyzer.computePairContrast(color, pairedColor);
     const label = WCAGAnalyzer.wcagLabel(contrast);
+
     appendWCAGRow(
       tbody,
       hexValue,
       color.getHEX().value,
-      textHex,
-      textColor.getHEX().value,
+      pairedHex,
+      pairedColor.getHEX().value,
       contrast,
       label
     );
   }
+
+  updatePreviewPanel();
+  savePalette();
 }
 
 /**
@@ -593,10 +637,13 @@ document
   .getElementById('share-palette-btn')
   .addEventListener('click', () => share());
 
-// --- Preview Palette ---
-document.getElementById('export-palette-btn').addEventListener('click', () => {
+// --- Save Palette ---
+/**
+ * Persists the current palette to localStorage so all changes are retained.
+ * @author Ali Aldaghishy
+ */
+function savePalette() {
   if (!currentPalette) return;
-
   const transferData = {
     colorMap: [...currentPalette.colorMap.entries()].map(([c, r]) => [
       {r: c.r, g: c.g, b: c.b},
@@ -604,7 +651,11 @@ document.getElementById('export-palette-btn').addEventListener('click', () => {
     ]),
     isDarkTheme: currentPalette.isDarkTheme,
   };
-
   localStorage.setItem('myPalette', JSON.stringify(transferData));
-  updateStatus('Palette saved for preview');
+}
+
+// --- Export Palette ---
+document.getElementById('export-palette-btn').addEventListener('click', () => {
+  savePalette();
+  updateStatus('Palette saved');
 });

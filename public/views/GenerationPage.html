@@ -8,6 +8,7 @@
   <title>Hue & YOU - Color Palette Generator</title>
   <link rel="stylesheet" href="/views/style.css">
   <link rel="stylesheet" href="/views/colorpicker.css" />
+  <link rel="stylesheet" href="/views/previewPanel.css" />
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
   <script type="importmap">
     {
@@ -20,7 +21,7 @@
 
 </head>
 
-<body>
+<body class="generation-page">
   <!-- Top Bar -->
   <header class="top-bar">
     <div class="top-bar-content">
@@ -119,6 +120,18 @@
     </main>
   </div>
   
+
+  <!-- Preview Slide-out Panel -->
+  <div class="preview-panel" id="preview-panel" aria-hidden="true">
+    <div class="preview-panel-header">
+      <h3 class="preview-panel-title">Palette Preview</h3>
+      <button class="preview-close-btn" id="preview-close-btn" aria-label="Close preview" title="Close preview">&#10005;</button>
+    </div>
+    <p class="preview-panel-subtitle">Live preview of your palette applied to a UI layout</p>
+    <div class="preview-content" id="preview-content">
+      <!-- Mock website rendered by JS -->
+    </div>
+  </div>
 
   <!-- Main page controller -->
   <script type="module" src="/src/generationPageController.js"></script>

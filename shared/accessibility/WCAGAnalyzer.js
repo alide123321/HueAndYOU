@@ -22,9 +22,9 @@ export class WCAGAnalyzer {
     r = r / 255;
     g = g / 255;
     b = b / 255;
-    const Rnorm = r <= 0.04505 ? r / 12.92 : Math.pow((r + 0.055) / 1.055, 2.4);
-    const Gnorm = g <= 0.04505 ? g / 12.92 : Math.pow((g + 0.055) / 1.055, 2.4);
-    const Bnorm = b <= 0.04505 ? b / 12.92 : Math.pow((b + 0.055) / 1.055, 2.4);
+    const Rnorm = r <= 0.04045 ? r / 12.92 : Math.pow((r + 0.055) / 1.055, 2.4);
+    const Gnorm = g <= 0.04045 ? g / 12.92 : Math.pow((g + 0.055) / 1.055, 2.4);
+    const Bnorm = b <= 0.04045 ? b / 12.92 : Math.pow((b + 0.055) / 1.055, 2.4);
 
     //calculation
     const luminance = 0.2126 * Rnorm + 0.7152 * Gnorm + 0.0722 * Bnorm;
