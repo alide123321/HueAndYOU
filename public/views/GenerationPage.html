@@ -26,12 +26,17 @@
   <header class="top-bar">
     <div class="top-bar-content">
       <div class="brand">Hue & YOU</div>
-      <nav class="nav-menu">
-        <a href="/" class="nav-item active">Generate</a>
-        <a href="/edit" class="nav-item">Edit</a>
-        <a href="/library" class="nav-item">Library</a>
-        <a href="/#about" class="nav-item">About WCAG</a>
-      </nav>
+      <div class="top-bar-right">
+        <nav class="nav-menu">
+          <a href="/" class="nav-item active">Generate</a>
+          <a href="/edit" class="nav-item">Edit</a>
+          <a href="/library" class="nav-item">Library</a>
+          <a href="/#about" class="nav-item">About WCAG</a>
+        </nav>
+        <button class="icon-btn theme-toggle-sm" id="gen-theme-toggle" aria-label="Toggle theme" title="Toggle theme">
+          <span class="icon-text">&#9728;</span>
+        </button>
+      </div>
     </div>
   </header>
 
@@ -85,16 +90,9 @@
 
       <!-- Actions Area (Bottom Left)-->
       <div class="actions-area">
-        <div class="icon-buttons">
-          <button class="icon-btn" aria-label="Share" title="Share">
-            <span class="icon-text">⎘</span>
-          </button>
-          <button class="icon-btn" aria-label="Randomize" title="Randomize">
-            <span class="icon-text">⤨</span>
-          </button>
-          <button class="icon-btn" aria-label="Toggle theme" title="Toggle theme">
-            <span class="icon-text">☀</span>
-          </button>
+        <div class="action-buttons-row">
+          <button class="action-btn" aria-label="Share">Share</button>
+          <button class="action-btn" aria-label="Randomize">Randomize</button>
         </div>
         <button class="generate-btn">Generate palettes</button>
       </div>
