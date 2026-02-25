@@ -1,4 +1,5 @@
-import {ColorRole, FilterType} from '/shared/utils/constants.js';
+import {ColorRole, FilterType, ColorFormat} from '/shared/utils/constants.js';
+import {convertColor} from '/shared/utils/colorConversion.js';
 import {ColorPicker} from '/paletteModule/colorPicker.js';
 import {toggleTheme} from '/src/toggleThemeBtn.js';
 import {share} from '/src/shareBtn.js';
@@ -544,9 +545,9 @@ function computeColorOnColorContrast() {
     ratioDiv.textContent = contrast.toFixed(2) + ':1';
     labelDiv.textContent = label;
     labelDiv.style.color = label === 'FAIL' ? '#e74c3c' : '#27ae60';
-    resultDiv.style.visibility = 'visible';
+    resultDiv.style.display = '';
   } else {
-    resultDiv.style.visibility = 'hidden';
+    resultDiv.style.display = 'none';
   }
 }
 
@@ -556,6 +557,81 @@ document
 document
   .getElementById('custom-color-input-2')
   .addEventListener('input', computeColorOnColorContrast);
+
+// --- Color Converter ---
+/**
+ * Converts a color in any supported format (HEX, RGB, HSL, OKLCH) to the
+ * selected output format and displays the result.
+ * @author Ali Aldaghishy
+ */
+function convertColorInput() {
+  const input = document.getElementById('converter-color-input');
+  const formatSelect = document.getElementById('converter-format-select');
+  const preview = document.getElementById('converter-preview');
+  const valueEl = document.getElementById('converter-value');
+
+  const raw = input.value.trim();
+  if (!raw) {
+    preview.classList.remove('visible');
+    preview.style.backgroundColor = '';
+    valueEl.textContent = 'Enter a color value';
+    return;
+  }
+
+  // Try to obtain a hex representation for the preview swatch.
+  // convertColor → HEX will work for any parseable input.
+  let previewHex;
+  try {
+    previewHex = convertColor(raw, ColorFormat.HEX).value;
+  } catch {
+    preview.classList.remove('visible');
+    preview.style.backgroundColor = '';
+    valueEl.textContent = 'Unrecognised color';
+    return;
+  }
+
+  preview.classList.add('visible');
+  preview.style.backgroundColor = previewHex;
+
+  const format = formatSelect.value;
+  try {
+    if (format === ColorFormat.HEX) {
+      valueEl.textContent = previewHex.toUpperCase();
+      return;
+    }
+
+    const result = convertColor(raw, format);
+    let display;
+    if (format === ColorFormat.RGB) {
+      const r = Math.round(result.r * 255);
+      const g = Math.round(result.g * 255);
+      const b = Math.round(result.b * 255);
+      display = `rgb(${r}, ${g}, ${b})`;
+    } else if (format === ColorFormat.HSL) {
+      const h = Math.round((result.h || 0) * 10) / 10;
+      const s = Math.round((result.s || 0) * 1000) / 10;
+      const l = Math.round((result.l || 0) * 1000) / 10;
+      display = `hsl(${h}°, ${s}%, ${l}%)`;
+    } else if (format === ColorFormat.OKLCH) {
+      const L = Math.round((result.l || 0) * 1000) / 1000;
+      const c = Math.round((result.c || 0) * 1000) / 1000;
+      const h = Math.round((result.h || 0) * 10) / 10;
+      display = `oklch(${L}, ${c}, ${h})`;
+    } else {
+      display = JSON.stringify(result);
+    }
+    valueEl.textContent = display;
+  } catch (e) {
+    valueEl.textContent = 'Conversion error';
+  }
+}
+
+document
+  .getElementById('converter-color-input')
+  .addEventListener('input', convertColorInput);
+document
+  .getElementById('converter-format-select')
+  .addEventListener('change', convertColorInput);
 
 /** * Shuffles the colors in the current palette while keeping role assignments intact.
  * @author Ali Aldaghishy
