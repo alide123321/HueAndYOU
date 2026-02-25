@@ -5,6 +5,7 @@ import {toggleTheme} from '/src/toggleThemeBtn.js';
 import {share} from '/src/shareBtn.js';
 import {WCAGAnalyzer} from '/shared/accessibility/WCAGAnalyzer.js';
 import {getTextColor} from '/shared/utils/textColorOverlay.js';
+import {exportPalette} from '/src/exportBtn.js';
 import {Palette} from '/shared/types/Palette.js';
 import {Color} from '/shared/types/Color.js';
 import {
@@ -731,7 +732,9 @@ function savePalette() {
 }
 
 // --- Export Palette ---
-document.getElementById('export-palette-btn').addEventListener('click', () => {
-  savePalette();
-  updateStatus('Palette saved');
-});
+document
+  .getElementById('export-palette-btn')
+  .addEventListener('click', (event) => {
+    if (!currentPalette) return;
+    exportPalette(event, currentPalette);
+  });
