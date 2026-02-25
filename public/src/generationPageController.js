@@ -273,11 +273,11 @@ document.querySelectorAll('.generate-btn').forEach((btn) => {
   });
 });
 document
-  .querySelector('.icon-btn[aria-label="Toggle theme"]')
+  .getElementById('gen-theme-toggle')
   .addEventListener('click', () => toggleTheme(true));
 document
-  .querySelector('.icon-btn[aria-label="Share"]')
+  .querySelector('.action-btn[aria-label="Share"]')
   .addEventListener('click', () => share());
 document
-  .querySelector('.icon-btn[aria-label="Randomize"]')
+  .querySelector('.action-btn[aria-label="Randomize"]')
   .addEventListener('click', () => randomize(colorPicker));

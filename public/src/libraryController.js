@@ -9,9 +9,9 @@ export function initLibrary() {
   if (localStorage.getItem('theme') === FilterType.DARK_MODE)
     toggleTheme(false);
 
-  // Event listener for theme toggle button (guard for absence)
-  const toggleBtn = document.querySelector('.icon-btn[title="Toggle theme"]');
-  if (toggleBtn) toggleBtn.addEventListener('click', () => toggleTheme());
+  // Event listener for theme toggle button
+  document.getElementById('lib-theme-toggle')
+    .addEventListener('click', () => toggleTheme());
 
   const paletteList = getLibraryPalettes();
 
