@@ -5,14 +5,14 @@ import {FilterType} from '/shared/utils/constants.js';
  * @author Ali Aldaghishy
  * @param {object} colorPickerInstance - Instance of the ColorPicker class
  * @param {boolean} [changeHarmonyType=true] - Whether to change the harmony type           |
- * @param {boolean} [changeNumOfSwatches=true] - Whether to change the number of swatches   |   To allow reusability of the function
+ * @param {boolean} [changeNumOfSwatches=false] - Whether to change the number of swatches  |   To allow reusability of the function
  * @param {boolean} [changeFilterType=true] - Whether to change the filter type             |
  * @returns {void} | Directly changes the values of various elements in the document
  */
 export function randomize(
   colorPickerInstance,
   changeHarmonyType = true,
-  changeNumOfSwatches = true,
+  changeNumOfSwatches = false,
   changeFilterType = true
 ) {
   const body = document.body;
