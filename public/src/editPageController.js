@@ -660,55 +660,6 @@ document.getElementById('shuffle-colors-btn').addEventListener('click', () => {
   updateStatus('Colors shuffled');
 });
 
-/** Auto-assigns roles to colors based on luminance (darkest = TEXT, lightest = BACKGROUND).
- * @author Ali Aldaghishy
- */
-document
-  .getElementById('auto-assign-roles-btn')
-  .addEventListener('click', () => {
-    if (!currentPalette) return;
-
-    const entries = [...currentPalette.colorMap.entries()];
-
-    // Sort by luminance
-    const sorted = entries
-      .map(([color, role], originalIndex) => ({
-        color,
-        role,
-        originalIndex,
-        luminance: WCAGAnalyzer.luminance(color.r, color.g, color.b),
-      }))
-      .sort((a, b) => a.luminance - b.luminance);
-
-    // Assign roles based on luminance
-    // Darkest → TEXT, Lightest → BACKGROUND, Middle → PRIMARY, etc.
-    const roleOrder = [
-      ColorRole.TEXT,
-      ColorRole.SECONDARY,
-      ColorRole.PRIMARY,
-      ColorRole.ACCENT,
-      ColorRole.BACKGROUND,
-    ];
-
-    const assignments = new Array(entries.length).fill(null);
-    sorted.forEach((item, sortedIdx) => {
-      if (sortedIdx < roleOrder.length) {
-        assignments[item.originalIndex] = roleOrder[sortedIdx];
-      }
-    });
-
-    const newMap = new Map();
-    entries.forEach(([color], i) => {
-      newMap.set(color, assignments[i]);
-    });
-    currentPalette.colorMap = newMap;
-
-    renderSwatches();
-    renderRoles();
-    renderWCAGTable();
-    updateStatus('Roles auto-assigned');
-  });
-
 // --- Share ---
 document
   .getElementById('share-palette-btn')

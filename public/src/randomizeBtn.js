@@ -12,7 +12,7 @@ import {FilterType} from '/shared/utils/constants.js';
 export function randomize(
   colorPickerInstance,
   changeHarmonyType = true,
-  changeNumOfSwatches = true,
+  changeNumOfSwatches = false,
   changeFilterType = true
 ) {
   const body = document.body;
