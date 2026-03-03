@@ -55,6 +55,21 @@ export class WCAGReport {
     return this.results;
   }
 
+  /**
+   * Finds the WCAGColorResult for a specific Color within this report.
+   * @author Ali Aldaghishy
+   * @param {Color} color
+   * @returns {WCAGColorResult|null}
+   */
+  findResultForColor(color) {
+    const targetHex = color.getHEX().value;
+    return (
+      this.results.find(
+        (result) => result.getColor().getHEX().value === targetHex
+      ) ?? null
+    );
+  }
+
   //logical operations
   /**
    * passes()
@@ -62,6 +77,6 @@ export class WCAGReport {
    * @returns true: no fails || false: > 0 fails.
    */
   passes() {
-    return fail == 0;
+    return this.summary.fail === 0;
   }
 }

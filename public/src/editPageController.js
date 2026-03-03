@@ -6,6 +6,8 @@ import {share} from '/src/shareBtn.js';
 import {WCAGAnalyzer} from '/shared/accessibility/WCAGAnalyzer.js';
 import {getTextColor} from '/shared/utils/textColorOverlay.js';
 import {exportPalette} from '/src/exportBtn.js';
+import {savePaletteToStorage} from '/shared/utils/paletteUtils.js';
+import {addCopyListener} from '/shared/utils/clipboardUtils.js';
 import {Palette} from '/shared/types/Palette.js';
 import {Color} from '/shared/types/Color.js';
 import {
@@ -154,17 +156,14 @@ function renderSwatches() {
   const container = document.getElementById('edit-swatches-row');
   container.innerHTML = '';
 
-  const reportResults =
-    WCAGAnalyzer.analyzePalette(currentPalette).getColorResults();
+  const report = WCAGAnalyzer.analyzePalette(currentPalette);
 
   let index = 0;
   for (const [color, role] of currentPalette.colorMap) {
     const hexValue = color.getHEX().value;
 
     // Get the color report associated with the color
-    const colorReport = reportResults.find(
-      (result) => result.getColor().getHEX().value === color.getHEX().value
-    );
+    const colorReport = report.findResultForColor(color);
 
     // Determine target color based on bestAgainst
     let targetColor;
@@ -173,7 +172,7 @@ function renderSwatches() {
       targetColor = getTextColor(color); // fallback
     } else {
       targetColor =
-        colorReport.bestAgainst === 'background'
+        colorReport.getBestAgainst() === ColorRole.BACKGROUND
           ? currentPalette.getBackgroundColor()
           : currentPalette.getTextColor();
     }
@@ -185,20 +184,8 @@ function renderSwatches() {
     swatch.style.backgroundColor = hexValue;
     swatch.title = `Click to copy ${hexValue.toUpperCase()}`;
 
-    swatch.addEventListener('click', async () => {
-      try {
-        await navigator.clipboard.writeText(hexValue.toUpperCase());
-        const originalLabel = hexLabel.textContent;
-        hexLabel.textContent = 'COPIED!';
-        setTimeout(() => {
-          hexLabel.textContent = originalLabel;
-        }, 1000);
-      } catch (err) {
-        console.error('Failed to copy color:', err);
-      }
-    });
-
     const hexLabel = document.createElement('span');
+    addCopyListener(swatch, hexValue.toUpperCase(), hexLabel);
     hexLabel.className = 'edit-swatch-hex';
     hexLabel.textContent = hexValue.toUpperCase();
     hexLabel.style.color = textHex;
@@ -396,19 +383,16 @@ function renderWCAGTable() {
   }
 
   // Use the same analysis renderSwatches uses to determine bestAgainst per color
-  const reportResults =
-    WCAGAnalyzer.analyzePalette(currentPalette).getColorResults();
+  const report = WCAGAnalyzer.analyzePalette(currentPalette);
 
   for (const [color] of currentPalette.colorMap) {
     const hexValue = color.getHEX().value.toUpperCase();
 
-    const colorReport = reportResults.find(
-      (result) => result.getColor().getHEX().value === color.getHEX().value
-    );
+    const colorReport = report.findResultForColor(color);
 
     // Mirror the renderSwatches logic: use bestAgainst to pick background or text
     const pairedColor =
-      colorReport && colorReport.bestAgainst === 'background'
+      colorReport && colorReport.getBestAgainst() === ColorRole.BACKGROUND
         ? currentPalette.getBackgroundColor()
         : currentPalette.getTextColor();
 
@@ -672,20 +656,13 @@ document
  */
 function savePalette() {
   if (!currentPalette) return;
-  const transferData = {
-    colorMap: [...currentPalette.colorMap.entries()].map(([c, r]) => [
-      {r: c.r, g: c.g, b: c.b},
-      r,
-    ]),
-    isDarkTheme: currentPalette.isDarkTheme,
-  };
-  localStorage.setItem('myPalette', JSON.stringify(transferData));
+  savePaletteToStorage(currentPalette);
 }
 
 // --- Export Palette ---
 document
   .getElementById('export-palette-btn')
-  .addEventListener('click', (event) => {
+  .addEventListener('click', () => {
     if (!currentPalette) return;
-    exportPalette(event, currentPalette);
+    exportPalette(currentPalette);
   });
