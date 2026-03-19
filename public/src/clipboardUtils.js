@@ -2,7 +2,6 @@
  * Adds a click listener to `element` that copies `text` to the clipboard.
  * On success, temporarily replaces `labelEl.textContent` with 'COPIED!' for 1 second.
  * @author Ali Aldaghishy
- * @warning This function is browser-only and must NOT be imported or executed in a server-side (Node.js) context.
  *
  * @param {HTMLElement} element - The element to attach the click listener to
  * @param {string} text - The text to copy to the clipboard

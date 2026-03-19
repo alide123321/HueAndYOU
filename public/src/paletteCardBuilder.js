@@ -2,7 +2,7 @@ import {WCAGAnalyzer} from '/shared/accessibility/WCAGAnalyzer.js';
 import {ColorRole} from '/shared/utils/constants.js';
 import {exportPalette} from '/src/exportBtn.js';
 import {savePaletteToStorage} from '/shared/utils/paletteUtils.js';
-import {addCopyListener} from '/shared/utils/clipboardUtils.js';
+import {addCopyListener} from '/src/clipboardUtils.js';
 
 /**
  * Builds and returns a palette card DOM element.

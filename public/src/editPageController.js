@@ -7,7 +7,7 @@ import {WCAGAnalyzer} from '/shared/accessibility/WCAGAnalyzer.js';
 import {getTextColor} from '/shared/utils/textColorOverlay.js';
 import {exportPalette} from '/src/exportBtn.js';
 import {savePaletteToStorage} from '/shared/utils/paletteUtils.js';
-import {addCopyListener} from '/shared/utils/clipboardUtils.js';
+import {addCopyListener} from '/src/clipboardUtils.js';
 import {Palette} from '/shared/types/Palette.js';
 import {Color} from '/shared/types/Color.js';
 import {
@@ -660,9 +660,7 @@ function savePalette() {
 }
 
 // --- Export Palette ---
-document
-  .getElementById('export-palette-btn')
-  .addEventListener('click', () => {
-    if (!currentPalette) return;
-    exportPalette(currentPalette);
-  });
+document.getElementById('export-palette-btn').addEventListener('click', () => {
+  if (!currentPalette) return;
+  exportPalette(currentPalette);
+});
