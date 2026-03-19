@@ -39,3 +39,22 @@ export function mapColorsToRoles(colors) {
   //Convert colorsWithRoles from 2D array to a map for Palette constructor
   return new Map(colorsWithRoles);
 }
+
+/**
+ * Serializes a Palette to localStorage under the key 'myPalette'.
+ * Used to pass palette data between pages (e.g., Library/Generation → Edit page).
+ * @author Ali Aldaghishy
+ * @warning This function is browser-only and must NOT be imported or executed in a server-side (Node.js) context.
+ *
+ * @param {Palette} palette
+ */
+export function savePaletteToStorage(palette) {
+  const transferData = {
+    colorMap: [...palette.colorMap.entries()].map(([c, r]) => [
+      {r: c.r, g: c.g, b: c.b},
+      r,
+    ]),
+    isDarkTheme: palette.isDarkTheme,
+  };
+  localStorage.setItem('myPalette', JSON.stringify(transferData));
+}

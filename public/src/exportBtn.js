@@ -1,4 +1,4 @@
-export function exportPalette(event, palette) {
+export function exportPalette(palette) {
   // Convert palette.colorMap into a clean export structure
   const exportObj = {};
 
@@ -20,6 +20,6 @@ export function exportPalette(event, palette) {
   link.download = filename;
   link.click();
 
-  // Cleanup
-  URL.revokeObjectURL(link.href);
+  // Cleanup — deferred so the browser can finish consuming the object URL
+  setTimeout(() => URL.revokeObjectURL(link.href), 0);
 }

@@ -1,7 +1,8 @@
 import {Complementary} from '@src/harmony/Complementary.js';
 import {GenerationSettings} from '@shared/types/GenerationSettings.js';
 import {Color} from '@shared/types/Color.js';
-import {rgbToOklch} from '@shared/utils/tempColorConversion.js';
+import {convertColor} from '@shared/utils/colorConversion.js';
+import {ColorFormat} from '@shared/utils/constants.js';
 
 describe('Complementary - Dark Mode Background', () => {
   test('should generate dark-mode background correctly', () => {
@@ -16,12 +17,20 @@ describe('Complementary - Dark Mode Background', () => {
 
     const colorsArray = Array.from(palette.colorMap.keys());
     const bg = colorsArray[4];
-    const bgOK = rgbToOklch({...bg.getRGB(), mode: 'rgb'});
+    const bgRGB = bg.getRGB();
+    const bgOK = convertColor(
+      {r: bgRGB.r / 255, g: bgRGB.g / 255, b: bgRGB.b / 255, mode: 'rgb'},
+      ColorFormat.OKLCH
+    );
     expect(bgOK.l).toBeLessThan(0.15);
     expect(bgOK.c).toBeLessThan(0.1);
 
     const base = Color.fromHex('#3366ff');
-    const baseOK = rgbToOklch({...base.getRGB(), mode: 'rgb'});
+    const baseRGB = base.getRGB();
+    const baseOK = convertColor(
+      {r: baseRGB.r / 255, g: baseRGB.g / 255, b: baseRGB.b / 255, mode: 'rgb'},
+      ColorFormat.OKLCH
+    );
     const hueDiff = Math.abs(bgOK.h - baseOK.h);
     expect(hueDiff).toBeLessThan(20);
 
@@ -43,7 +52,11 @@ describe('Complementary - Dark Mode Background', () => {
       const palette = strat.buildPalette(gs);
       const colors = Array.from(palette.colorMap.keys());
       const bg = colors[4];
-      const bgOK = rgbToOklch({...bg.getRGB(), mode: 'rgb'});
+      const bgRGB2 = bg.getRGB();
+      const bgOK = convertColor(
+        {r: bgRGB2.r / 255, g: bgRGB2.g / 255, b: bgRGB2.b / 255, mode: 'rgb'},
+        ColorFormat.OKLCH
+      );
       expect(bgOK.l).toBeLessThan(0.15);
       expect(bgOK.c).toBeLessThan(0.1);
     });

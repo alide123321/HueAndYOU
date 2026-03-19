@@ -12,7 +12,7 @@ const generateBatchPalettes = (req, res) => {
 
   //temporarily use a default setting for testing
   const gs = new GenerationSettings({
-    harmonyType: settings.harmonyType || ColorHarmony.COMPLEMENTARY,
+    harmonyType: settings.harmonyType || ColorHarmony.MONOCHROMATIC,
     baseColor: Color.fromRGBString(settings.baseColor),
     includeBgTextColors: true,
     isLightMode: true,

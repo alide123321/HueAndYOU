@@ -1,7 +1,8 @@
 import {Complementary} from '@src/harmony/Complementary.js';
 import {GenerationSettings} from '@shared/types/GenerationSettings.js';
 import {Color} from '@shared/types/Color.js';
-import {rgbToOklch} from '@shared/utils/tempColorConversion.js';
+import {convertColor} from '@shared/utils/colorConversion.js';
+import {ColorFormat} from '@shared/utils/constants.js';
 
 describe('Complementary - Complementary Color Generation', () => {
   test('should generate complementary colors correctly', () => {
@@ -18,9 +19,27 @@ describe('Complementary - Complementary Color Generation', () => {
       const palette = strat.buildPalette(gs);
 
       const colorsArray = Array.from(palette.colorMap.keys());
-      const baseOK = rgbToOklch({...base.getRGB(), mode: 'rgb'});
+      const baseRGB = base.getRGB();
+      const baseOK = convertColor(
+        {
+          r: baseRGB.r / 255,
+          g: baseRGB.g / 255,
+          b: baseRGB.b / 255,
+          mode: 'rgb',
+        },
+        ColorFormat.OKLCH
+      );
       const complement = colorsArray[1];
-      const complementOK = rgbToOklch({...complement.getRGB(), mode: 'rgb'});
+      const complementRGB = complement.getRGB();
+      const complementOK = convertColor(
+        {
+          r: complementRGB.r / 255,
+          g: complementRGB.g / 255,
+          b: complementRGB.b / 255,
+          mode: 'rgb',
+        },
+        ColorFormat.OKLCH
+      );
 
       const expectedHue = (baseOK.h + 180) % 360;
       const diff = Math.abs(complementOK.h - expectedHue);
