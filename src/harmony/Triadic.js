@@ -60,9 +60,10 @@ export class Triadic extends HarmonyStrategy {
 
     const baseOklch = convertColor(baseRgb01, ColorFormat.OKLCH);
 
-    // Triadic: 0°, +120°, +240°
-    const triad2 = shiftHue(baseOklch, 120);
-    const triad3 = shiftHue(baseOklch, 240);
+    // Triadic: configurable rotation offset (default 120°)
+    const offset = gs.opts.rotationOffset || 120;
+    const triad2 = shiftHue(baseOklch, offset);
+    const triad3 = shiftHue(baseOklch, 360 - offset);
 
     // Core triadic palette (OKLCH) — exactly 3 colors
     const paletteOklch = [baseOklch, triad2, triad3];

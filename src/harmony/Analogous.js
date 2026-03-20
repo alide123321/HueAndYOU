@@ -23,7 +23,8 @@ import {ColorHarmony} from '../../shared/utils/constants.js';
 
 // OKLCH conversion utilities (culori wrapper)
 import {convertColor} from '../../shared/utils/colorConversion.js';
-import {ColorFormat, ColorRole} from '../../shared/utils/constants.js';
+import {ColorFormat} from '../../shared/utils/constants.js';
+import {mapColorsToRoles} from '../../shared/utils/paletteUtils.js';
 
 // OKLCH helpers
 // OKLCH lightness (l) is in [0,1]
@@ -80,7 +81,7 @@ const safeOklchToRgb = (oklch) => {
 /**
  * Analogous.js
  * Implements the Analogous color harmony strategy using OKLCH.
- * @author Ian Timchak
+ * @author Ian Timchak, Ali Aldaghishy
  * @module src/harmony/Analogous
  * @extends HarmonyStrategy
  */
@@ -104,7 +105,7 @@ export class Analogous extends HarmonyStrategy {
    * Generates an analogous color palette based on the provided generation settings.
    * Uses RGB -> OKLCH -> RGB via the shared conversion module.
    * Varies hue while keeping lightness and chroma constant.
-   * @author Ian Timchak
+   * @author Ian Timchak, Ali Aldaghishy
    * @param {GenerationSettings} gs - The generation settings.
    * @returns {Palette} The generated analogous color palette.
    */
@@ -129,9 +130,12 @@ export class Analogous extends HarmonyStrategy {
     const baseColorOklch = convertColor(baseRgb01, ColorFormat.OKLCH);
 
     // Generate analogous colors by shifting hue
-    const rightOffset = shiftHue(baseColorOklch, offset);
-    const leftOffset = shiftHue(baseColorOklch, -offset);
-    const paletteOklch = [baseColorOklch, rightOffset, leftOffset];
+    const symmetric = gs.opts.symmetricSpread !== false; // default true
+    const color2 = shiftHue(baseColorOklch, offset);
+    const color3 = symmetric
+      ? shiftHue(baseColorOklch, -offset)
+      : shiftHue(baseColorOklch, offset * 2);
+    const paletteOklch = [baseColorOklch, color2, color3];
 
     // Generate background and text colors if specified
     if (gs.includeBgTextColors) {
@@ -163,32 +167,7 @@ export class Analogous extends HarmonyStrategy {
       );
     });
 
-    // Map color objects into [Color, Role] pairs
-    const colorsWithRoles = [];
-    colors.forEach((color, index) => {
-      colorsWithRoles.push([color, null]);
-
-      // Assign roles based on position
-      switch (index) {
-        case 0:
-          colorsWithRoles[index][1] = ColorRole.PRIMARY;
-          break;
-        case 1:
-          colorsWithRoles[index][1] = ColorRole.SECONDARY;
-          break;
-        case 2:
-          colorsWithRoles[index][1] = ColorRole.ACCENT;
-          break;
-        case 3:
-          colorsWithRoles[index][1] = ColorRole.BACKGROUND;
-          break;
-        case 4:
-          colorsWithRoles[index][1] = ColorRole.TEXT;
-          break;
-      }
-    });
-
-    const colorMap = new Map(colorsWithRoles);
+    const colorMap = mapColorsToRoles(colors);
     return new Palette(colorMap);
   }
 }

@@ -25,6 +25,7 @@ export function randomize(
     );
     harmonyTypeSelect.value =
       harmonyTypes[Math.floor(Math.random() * harmonyTypes.length)];
+    harmonyTypeSelect.dispatchEvent(new Event('change'));
   }
 
   // pick a random base color
@@ -33,7 +34,7 @@ export function randomize(
     typeof colorPickerInstance.setColor === 'function'
   ) {
     const baseColorBtn = document.getElementById('base-color');
-    const randomColor = `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+    const randomColor = `#${Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0')}`;
     console.log('Random Color:', randomColor);
     document.querySelector('.color-preview').style.backgroundColor =
       randomColor;
