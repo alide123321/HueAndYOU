@@ -724,6 +724,24 @@ body.dark-mode .palette-label {
   color: #ffffff;
 }
 
+.palette-varied-icon {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 0.5em;
+  margin-bottom: 0.2em;
+  vertical-align: middle;
+  opacity: 0.5;
+  cursor: help;
+}
+.palette-varied-icon:hover {
+  opacity: 0.8;
+}
+.palette-varied-icon svg {
+  width: 1.35em;
+  height: 1.35em;
+  fill: currentColor;
+}
+
 .palette-actions {
   display: flex;
   gap: 1rem;

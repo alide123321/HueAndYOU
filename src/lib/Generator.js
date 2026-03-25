@@ -149,6 +149,7 @@ export class Generator {
         const palette = this.selectedStrategy.buildPalette(
           this.generationSettings
         );
+        palette.varied = deltaL !== 0 || chromaScale !== 1.0;
         palettes.push(palette);
       }
     } finally {
