@@ -81,8 +81,13 @@ export class Complementary extends HarmonyStrategy {
       h: (baseColorOK.h + 180) % 360,
     };
 
-    const baseAdjustedOK = adjustColor(baseColorOK, 0.2);
-    const complementaryAdjustedOK = adjustColor(complementaryOK, 0.2);
+    // paletteIndex varies the adjustment so palettes with the same base color
+    // produce different accent/alert swatches (range 0.15–0.30)
+    const paletteIndex = gs.opts?.paletteIndex ?? 0;
+    const adjustAmount =
+      0.15 + (((paletteIndex * 11) % 23) / 23) * 0.15;
+    const baseAdjustedOK = adjustColor(baseColorOK, adjustAmount);
+    const complementaryAdjustedOK = adjustColor(complementaryOK, adjustAmount);
 
     // Background + Text colors use the BASE hue.
     // Light mode â†’ near-white background + near-black text

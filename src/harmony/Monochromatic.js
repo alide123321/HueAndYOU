@@ -77,7 +77,10 @@ export class Monochromatic extends HarmonyStrategy {
     };
     const baseColorOklch = convertColor(baseRgb01, ColorFormat.OKLCH);
 
-    // N evenly-spaced lightness variants across [-0.4, +0.4], base color first
+    // N evenly-spaced lightness variants across [-0.4, +0.4], base color first.
+    // paletteIndex adds a small deterministic jitter so palettes with the same
+    // base color produce visibly distinct secondary/accent swatches.
+    const paletteIndex = gs.opts?.paletteIndex ?? 0;
     const numSwatches = gs.numberOfColors || 4;
     const paletteOklch = [baseColorOklch];
 
@@ -85,7 +88,9 @@ export class Monochromatic extends HarmonyStrategy {
       const count = numSwatches - 1;
       for (let j = 0; j < count; j++) {
         const t = (j + 1) / (count + 1); // (0, 1) exclusive — evenly spaces variants while skipping endpoints to avoid duplicating the base color
-        const delta = -0.4 + t * 0.8;
+        const jitter =
+          (((paletteIndex * 7 + j * 13) % 37) / 37 - 0.5) * 0.12;
+        const delta = -0.4 + t * 0.8 + jitter;
         paletteOklch.push(shiftLightness(baseColorOklch, delta));
       }
     }

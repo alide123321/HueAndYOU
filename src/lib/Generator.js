@@ -82,7 +82,6 @@ export class Generator {
     }
 
     const numberOfPalettes = this.generationSettings.numberOfPalettes || 1;
-    const baseSeed = this.generationSettings.seed;
     const originalBaseColor = this.generationSettings.baseColor;
     const originalOpts = {...this.generationSettings.opts};
     const harmonyType = this.generationSettings.harmonyType;
@@ -104,8 +103,6 @@ export class Generator {
     // try to generate palettes with varied base colors and harmony options
     try {
       for (let i = 0; i < numberOfPalettes; i++) {
-        this.generationSettings.seed = baseSeed + i;
-
         const [deltaL, chromaScale] = computeLCVariation(i, numberOfPalettes);
 
         const variedL = Math.min(
@@ -138,13 +135,15 @@ export class Generator {
         );
 
         // Palette 0 keeps original opts; palettes 1–N get diverged offset angles
+        // paletteIndex is always passed so strategies can vary non-primary swatches
         if (offsetCfg && i > 0 && i - 1 < divergedOffsets.length) {
           this.generationSettings.opts = {
             ...originalOpts,
+            paletteIndex: i,
             [offsetCfg.key]: divergedOffsets[i - 1],
           };
         } else {
-          this.generationSettings.opts = {...originalOpts};
+          this.generationSettings.opts = {...originalOpts, paletteIndex: i};
         }
 
         const palette = this.selectedStrategy.buildPalette(
