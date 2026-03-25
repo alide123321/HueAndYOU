@@ -73,8 +73,8 @@ export const OFFSET_CONFIG = Object.freeze({
   }),
   [ColorHarmony.TRIADIC]: Object.freeze({
     key: 'rotationOffset',
-    min: 90,
-    max: 150,
+    min: 105,
+    max: 135,
     default: 120,
   }),
   [ColorHarmony.TETRADIC]: Object.freeze({
