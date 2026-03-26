@@ -3,6 +3,7 @@ import path from 'path';
 import {fileURLToPath} from 'url';
 import {dirname} from 'path';
 import routeIndex from './src/routes/routeIndex.js';
+import {startConnection} from './src/data/MongoClient.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -24,6 +25,10 @@ app.use('/shared', express.static(path.join(__dirname, 'shared')))
 app.use('/', routeIndex);
 app.use('/api', routeIndex);
 
-app.listen(port, () => {
+app.listen(port, async () => {
+  //initialize mongo connection
+  await startConnection();
+
+  //listening
   console.log(`Hue & YOU server listening on http://localhost:${port}`);
 });
