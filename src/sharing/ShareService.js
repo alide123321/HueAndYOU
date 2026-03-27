@@ -1,28 +1,28 @@
-import { ShareType } from './ShareType.js';
-import { customAlphabet } from 'nanoid';
-import { ShareRepository } from './ShareRepository.js';
+import {ShareType} from './ShareType.js';
+import {customAlphabet} from 'nanoid';
+import {ShareRepository} from './ShareRepository.js';
 
+//nanoid config
+const alphabet =
+  '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+const nanoid = customAlphabet(alphabet, 8);
 export class ShareService {
-
   constructor(repo = new ShareRepository()) {
     this.repo = repo;
   }
 
   async createEditorShare(editorPayload) {
-    const record = this.#buildRecord(
-      ShareType.EDITOR_PALETTE,
-      editorPayload
-    );
+    const record = this.#buildRecord(ShareType.EDITOR_PALETTE, editorPayload);
 
     try {
-        const code = await this.repo.save(record); //returns the inserted ID of the database listing
-        return code;
+      const code = await this.repo.save(record); //returns the inserted ID of the database listing
+      return code;
     } catch (err) {
-        //in the case of a collision, DB will throw 11000 error
-        if (err.code == 11000) {
-            return this.createEditorShare(editorPayload);
-        }
-        throw err;
+      //in the case of a collision, DB will throw 11000 error
+      if (err.code == 11000) {
+        return this.createEditorShare(editorPayload);
+      }
+      throw err;
     }
   }
 
@@ -33,20 +33,20 @@ export class ShareService {
     );
 
     try {
-        const code = await this.repo.save(record); //returns the inserted ID of the database listing
-        return code;
+      const code = await this.repo.save(record); //returns the inserted ID of the database listing
+      return code;
     } catch (err) {
-        //in the case of a collision, DB will throw 11000 error
-        if (err.code == 11000) {
-            return this.createGenerationShare(genSettingsPayload);
-        }
-        throw err;
+      //in the case of a collision, DB will throw 11000 error
+      if (err.code == 11000) {
+        return this.createGenerationShare(genSettingsPayload);
+      }
+      throw err;
     }
   }
 
- async resolve(code) {
+  async resolve(code) {
     const record = await this.repo.findById(code);
- 
+
     if (!this.isUsable(record)) {
       if (record) {
         // Record exists but is expired — clean it up
@@ -54,16 +54,15 @@ export class ShareService {
       }
       return null;
     }
- 
+
     return record;
   }
- 
-   // Returns true if the record exists and has not expired.
+
+  // Returns true if the record exists and has not expired.
   isUsable(record, now = new Date()) {
     if (!record) return false;
     return !record.expiresAt || record.expiresAt > now;
   }
-
 
   #buildRecord(type, payload) {
     return {
@@ -71,13 +70,12 @@ export class ShareService {
       type,
       payload,
       createdAt: new Date(),
-      expiresAt: this.#buildExpiryDate(90)
+      expiresAt: this.#buildExpiryDate(90),
     };
   }
 
-  #generateCode(length = 8) {
-    const alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-    return customAlphabet(alphabet, 8); //chars, code size (8)
+  #generateCode() {
+    return nanoid(); //chars, code size (8)
   }
 
   #buildExpiryDate(days) {
