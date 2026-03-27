@@ -21,4 +21,8 @@ export class ShareRepository {
   async findById(id) {
     return await this.collection.findOne({ _id: id });
   }
+  // removes a record by its ID
+    async deleteById(id) {
+    return await this.collection.deleteOne({ _id: id });
+  }
 }

@@ -14,6 +14,7 @@ const root = path.join(__dirname, '../../public/views');
 // api paths
 const apiRoot = path.join(__dirname, '../api');
 import * as generateAPI from '../api/generate.js';
+import * as ShareController from '../sharing/ShareController.js';
 
 // Serve the homepage
 router.get('/', (req, res) => {
@@ -31,5 +32,7 @@ router.get('/library', (req, res) => {
 });
 
 router.post('/generate', express.json(), generateAPI.generateBatchPalettes);
-
+router.post('/share/editor',     express.json(), (req, res) => shareController.createEditorShare(req, res));
+router.post('/share/generation', express.json(), (req, res) => shareController.createGenerationShare(req, res));
+router.get('/share/:code',                       (req, res) => shareController.resolve(req, res));
 export default router;

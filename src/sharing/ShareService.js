@@ -1,11 +1,11 @@
-import { ShareType } from '../dto/ShareType.js';
+import { ShareType } from './ShareType.js';
 import { customAlphabet } from 'nanoid';
 import { ShareRepository } from './ShareRepository.js';
 
 export class ShareService {
 
-  constructor() {
-    this.repo = new ShareRepository();
+  constructor(repo = new ShareRepository()) {
+    this.repo = repo;
   }
 
   async createEditorShare(editorPayload) {
@@ -20,7 +20,7 @@ export class ShareService {
     } catch (err) {
         //in the case of a collision, DB will throw 11000 error
         if (err.code == 11000) {
-            return this.createEditorShare(genSettingsPayload);
+            return this.createEditorShare(editorPayload);
         }
         throw err;
     }
@@ -44,19 +44,27 @@ export class ShareService {
     }
   }
 
-  resolve(code) {
-    return this.repo.findById(code);
+ async resolve(code) {
+    const record = await this.repo.findById(code);
+ 
+    if (!this.isUsable(record)) {
+      if (record) {
+        // Record exists but is expired — clean it up
+        await this.repo.deleteById(code);
+      }
+      return null;
+    }
+ 
+    return record;
   }
-
+ 
+   // Returns true if the record exists and has not expired.
   isUsable(record, now = new Date()) {
     if (!record) return false;
     return !record.expiresAt || record.expiresAt > now;
   }
 
-  /*
-  * put DTO shape here
-  *
-  */
+
   #buildRecord(type, payload) {
     return {
       _id: this.#generateCode(),
@@ -67,7 +75,7 @@ export class ShareService {
     };
   }
 
-  #generateCode(length = 6) {
+  #generateCode(length = 8) {
     const alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
     return customAlphabet(alphabet, 8); //chars, code size (8)
   }
