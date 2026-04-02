@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hue & YOU - About WCAG</title>
+  <title>Hue & YOU - About</title>
   <link rel="stylesheet" href="/views/style.css">
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
 </head>
 
-<body class="generation-page">
+<body class="generation-page light-mode">
   <header class="top-bar">
     <div class="top-bar-content">
       <div class="brand">Hue & YOU</div>
@@ -17,9 +17,13 @@
           <a href="/" class="nav-item">Generate</a>
           <a href="/edit" class="nav-item">Edit</a>
           <a href="/library" class="nav-item">Library</a>
-          <a href="/about-wcag" class="nav-item active">About WCAG</a>
+          <a href="/about-wcag" class="nav-item active">About</a>
         </nav>
-        <button class="icon-btn theme-toggle-sm" aria-label="Toggle theme" title="Toggle theme">
+        <button
+          class="icon-btn theme-toggle-sm"
+          id="about-theme-toggle"
+          aria-label="Toggle theme"
+          title="Toggle theme">
           <span class="icon-text">&#9728;</span>
         </button>
       </div>
@@ -28,15 +32,52 @@
 
   <div class="main-container">
     <main class="main-content">
-      <div class="empty-state">
-        <div class="empty-state-card">
-          <h1 class="empty-state-title">About WCAG</h1>
-          <p class="empty-state-text">
-            This page will contain information about WCAG, accessibility, and how Hue & YOU supports accessible color design.
+      <section style="display: flex; justify-content: center; padding: 3rem 1.5rem;">
+        <div class="card" style="width: 100%; max-width: 900px; padding: 2rem;">
+          <h1 class="card-title" style="margin-bottom: 1rem;">About Hue & YOU</h1>
+
+          <p class="empty-state-text" style="text-align: left; margin-bottom: 1.5rem;">
+            Hue & YOU is a color palette generation tool designed to help users create and explore color harmonies
+            for interface and visual design. The system allows users to generate palettes, preview them, and work
+            with structured color relationships in a more intentional way.
+          </p>
+
+          <h2 class="card-title" style="margin-top: 1.5rem;">How to use the tool</h2>
+          <p class="empty-state-text" style="text-align: left; margin-bottom: 1.5rem;">
+            Users can select a base color, choose a harmony type, and generate palettes based on that input.
+            The application also supports editing, previewing, and managing palettes through different pages
+            within the system.
+          </p>
+
+          <h2 class="card-title" style="margin-top: 1.5rem;">Accessibility and WCAG</h2>
+          <p class="empty-state-text" style="text-align: left;">
+            Accessibility is an important part of color design. Hue & YOU is intended to support more thoughtful
+            palette creation by helping users consider readability, contrast, and usability. WCAG, or the Web Content
+            Accessibility Guidelines, provides standards for making digital content more accessible, especially for
+            users with visual impairments or color vision deficiencies.
           </p>
         </div>
-      </div>
+      </section>
     </main>
   </div>
+
+  <script type="module">
+    import { toggleTheme } from '/src/toggleThemeBtn.js';
+
+    const themeToggleBtn = document.getElementById('about-theme-toggle');
+
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark-mode') {
+      document.body.classList.add('dark-mode');
+      document.body.classList.remove('light-mode');
+    } else {
+      document.body.classList.add('light-mode');
+      document.body.classList.remove('dark-mode');
+    }
+
+    themeToggleBtn.addEventListener('click', () => {
+      toggleTheme(true);
+    });
+  </script>
 </body>
 </html>
