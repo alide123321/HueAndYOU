@@ -30,6 +30,11 @@ router.get('/library', (req, res) => {
   res.sendFile('library.html', {root: root});
 });
 
+// Serve the About WCAG page
+router.get('/about-wcag', (req, res) => {
+  res.sendFile('AboutWCAG.html', { root: root });
+});
+
 router.post('/generate', express.json(), generateAPI.generateBatchPalettes);
 
 export default router;
