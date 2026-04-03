@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hue & YOU - About</title>
+  <link rel="stylesheet" href="/views/style.css">
+  <link rel="stylesheet" href="/views/about.css">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+</head>
+
+<body class="about-page light-mode">
+  <header class="top-bar">
+    <div class="top-bar-content">
+      <div class="brand">Hue & YOU</div>
+      <div class="top-bar-right">
+        <nav class="nav-menu">
+          <a href="/" class="nav-item">Generate</a>
+          <a href="/edit" class="nav-item">Edit</a>
+          <a href="/library" class="nav-item">Library</a>
+          <a href="/about" class="nav-item active">About</a>
+        </nav>
+        <button
+          class="icon-btn theme-toggle-sm"
+          id="about-theme-toggle"
+          aria-label="Toggle theme"
+          title="Toggle theme">
+          <span class="icon-text">&#9728;</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="about-main">
+    <section class="about-section">
+      <div class="card about-card">
+        <h1 class="card-title about-title">About Hue & YOU</h1>
+
+        <p class="empty-state-text about-text">
+          Hue & YOU is a color palette generation tool designed to help users create and explore color harmonies
+          for interface and visual design. The system allows users to generate palettes, preview them, and work
+          with structured color relationships in a more intentional way.
+        </p>
+
+        <h2 class="card-title about-subheading">How to use the tool</h2>
+        <p class="empty-state-text about-text">
+          Users can select a base color, choose a harmony type, and generate palettes based on that input.
+          The application also supports editing, previewing, and managing palettes through different pages
+          within the system.
+        </p>
+
+        <h2 class="card-title about-subheading">Accessibility and WCAG</h2>
+        <p class="empty-state-text about-text">
+          Accessibility is an important part of color design. Hue & YOU is intended to support more thoughtful
+          palette creation by helping users consider readability, contrast, and usability. WCAG, or the Web Content
+          Accessibility Guidelines, provides standards for making digital content more accessible, especially for
+          users with visual impairments or color vision deficiencies.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="/src/about.js"></script>
+</body>
+</html>

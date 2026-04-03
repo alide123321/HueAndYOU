@@ -1,0 +1,37 @@
+.about-page {
+  min-height: 100vh;
+}
+
+.about-main {
+  padding: 4rem 2rem 2.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.about-section {
+  width: 100%;
+  max-width: 1100px;
+}
+
+.about-card {
+  width: 100%;
+  padding: 2rem;
+}
+
+.about-title {
+  margin-bottom: 1rem;
+  font-size: 1.8rem;
+}
+
+.about-subheading {
+  margin-top: 1.5rem;
+}
+
+.about-text {
+  text-align: left;
+  margin-bottom: 1.5rem;
+}
+
+.about-text:last-child {
+  margin-bottom: 0;
+}
