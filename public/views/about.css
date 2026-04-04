@@ -49,3 +49,49 @@
 body.dark-mode .about-footer {
   color: #b0b0b5;
 }
+
+.about-list {
+  margin: 1rem 0 1.5rem;
+  padding-left: 1.2rem;
+  color: var(--text-secondary);
+}
+
+.about-list li {
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+}
+
+.palette-preview {
+  margin: 1.5rem 0 2rem;
+}
+
+.palette-card {
+  display: flex;
+  border-radius: 10px;
+  overflow: hidden;
+  height: 70px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.color-block {
+  flex: 1;
+}
+
+.palette-card:hover {
+  transform: scale(1.01);
+  transition: transform 0.2s ease;
+}
+
+.about-card a {
+  color: #8ab4ff;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.about-card a:hover {
+  color: #a9c7ff;
+}
+
+.about-card a:visited {
+  color: #b39ddb;
+}
