@@ -1,6 +1,15 @@
 import {convertColor} from '/shared/utils/colorConversion.js';
 import {ColorFormat} from '/shared/utils/constants.js';
 
+/**
+ * createExportModal(): { open: Function, close: Function, setActiveTab: Function }
+ * Sets up the export modal by caching its DOM elements, wiring up events,
+ * and returning the public controls used by the page.
+ * Handles tab switching, CSS export generation, copy/download actions,
+ * and basic open/close modal behavior.
+ * @author Ian Timchak
+ * @returns {{open: Function, close: Function, setActiveTab: Function}} The modal control methods.
+ */
 export function createExportModal() {
   const overlay = document.getElementById('export-modal-overlay');
   const closeBtn = document.getElementById('export-modal-close-btn');
@@ -10,18 +19,26 @@ export function createExportModal() {
   const subtitle = document.getElementById('export-modal-subtitle');
   const palettePreview = document.getElementById('export-palette-preview');
   const cssFormatSelect = document.getElementById('export-css-format-select');
+  const cssOutput = document.getElementById('export-output-css');
 
   const tabButtons = Array.from(document.querySelectorAll('[data-export-tab]'));
   const tabPanels = Array.from(
     document.querySelectorAll('[data-export-panel]')
   );
 
-  const cssOutput = document.getElementById('export-output-css');
-
   let selectedPalette = null;
   let activeTab = 'css';
   let cssColorFormat = 'hex';
 
+  /**
+   * open(palette: object, defaultTab: string = 'css'): void
+   * Opens the export modal for the provided palette.
+   * Updates the subtitle, preview, CSS output, and selected tab.
+   * @author Ian Timchak
+   * @param {object} palette - Export-ready palette data.
+   * @param {string} defaultTab - The tab to open first.
+   * @returns {void}
+   */
   function open(palette, defaultTab = 'css') {
     selectedPalette = palette || null;
 
@@ -41,11 +58,25 @@ export function createExportModal() {
     overlay.setAttribute('aria-hidden', 'false');
   }
 
+  /**
+   * close(): void
+   * Closes the export modal.
+   * @author Ian Timchak
+   * @returns {void}
+   */
   function close() {
     overlay.classList.remove('active');
     overlay.setAttribute('aria-hidden', 'true');
   }
 
+  /**
+   * setActiveTab(tabName: string): void
+   * Switches the active export tab and its matching panel.
+   * Also refreshes which action buttons should be enabled.
+   * @author Ian Timchak
+   * @param {string} tabName - The tab identifier to activate.
+   * @returns {void}
+   */
   function setActiveTab(tabName) {
     activeTab = tabName;
 
@@ -64,13 +95,25 @@ export function createExportModal() {
     syncActionButtons();
   }
 
+  /**
+   * syncActionButtons(): void
+   * Enables copy and download only on the CSS tab.
+   * @author Ian Timchak
+   * @returns {void}
+   */
   function syncActionButtons() {
     const isCssTab = activeTab === 'css';
-
     copyBtn.disabled = !isCssTab;
     downloadBtn.disabled = !isCssTab;
   }
 
+  /**
+   * renderPalettePreview(): void
+   * Renders the compact swatch preview for the selected palette.
+   * Falls back to Color # labels when no role or label is present.
+   * @author Ian Timchak
+   * @returns {void}
+   */
   function renderPalettePreview() {
     if (!selectedPalette || !Array.isArray(selectedPalette.colors)) {
       palettePreview.innerHTML = '';
@@ -94,6 +137,12 @@ export function createExportModal() {
       .join('');
   }
 
+  /**
+   * renderCssOutput(): void
+   * Regenerates the CSS export for the current palette and color format.
+   * @author Ian Timchak
+   * @returns {void}
+   */
   function renderCssOutput() {
     if (!cssOutput) return;
 
@@ -105,17 +154,31 @@ export function createExportModal() {
     cssOutput.value = buildCssExport(selectedPalette, cssColorFormat);
   }
 
+  /**
+   * buildCssExport(palette: object, format: string): string
+   * Builds the CSS custom property output for the selected palette.
+   * Uses role names when present, otherwise falls back to color-# by palette position.
+   * Keeps token names unique if the same role appears more than once.
+   * @author Ian Timchak
+   * @param {object} palette - Export-ready palette data.
+   * @param {string} format - The color representation to use.
+   * @returns {string} The generated CSS block.
+   */
   function buildCssExport(palette, format) {
     const colors = Array.isArray(palette.colors) ? palette.colors : [];
+    const usedTokenNames = new Set();
 
     const lines = colors.map((color, index) => {
       const rawHex = typeof color === 'string' ? color : color.hex;
-      const rawName =
-        typeof color === 'string'
-          ? `color-${index + 1}`
-          : color.role || color.label || `color-${index + 1}`;
+      const rawRole =
+        typeof color === 'string' ? '' : color.role || color.label || '';
 
-      const tokenName = normalizeTokenName(rawName);
+      const baseTokenName =
+        rawRole && String(rawRole).trim()
+          ? normalizeTokenName(rawRole)
+          : `color-${index + 1}`;
+
+      const tokenName = makeUniqueTokenName(baseTokenName, usedTokenNames);
       const formattedValue = formatColorForCss(rawHex, format);
 
       return `  --${tokenName}: ${formattedValue};`;
@@ -124,6 +187,54 @@ export function createExportModal() {
     return `:root {\n${lines.join('\n')}\n}`;
   }
 
+  /**
+   * makeUniqueTokenName(baseName: string, usedTokenNames: Set<string>): string
+   * Makes sure each exported CSS variable name is unique.
+   * Adds -2, -3, and so on when needed.
+   * @author Ian Timchak
+   * @param {string} baseName - The preferred token name.
+   * @param {Set<string>} usedTokenNames - Names already used in this export.
+   * @returns {string} A unique token name.
+   */
+  function makeUniqueTokenName(baseName, usedTokenNames) {
+    let candidate = baseName;
+    let suffix = 2;
+
+    while (usedTokenNames.has(candidate)) {
+      candidate = `${baseName}-${suffix}`;
+      suffix += 1;
+    }
+
+    usedTokenNames.add(candidate);
+    return candidate;
+  }
+
+  /**
+   * normalizeTokenName(name: string): string
+   * Normalizes a role or label into a CSS-safe token name.
+   * @author Ian Timchak
+   * @param {string} name - The raw role or label.
+   * @returns {string} A normalized token name.
+   */
+  function normalizeTokenName(name) {
+    const normalized = String(name)
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-');
+
+    return normalized || 'color';
+  }
+
+  /**
+   * formatColorForCss(colorValue: string, format: string): string
+   * Converts a color into the selected CSS representation.
+   * Supports HEX, RGB, HSL, and OKLCH.
+   * @author Ian Timchak
+   * @param {string} colorValue - The source color value, usually HEX.
+   * @param {string} format - The output format to use.
+   * @returns {string} A CSS-ready color string.
+   */
   function formatColorForCss(colorValue, format) {
     switch (format) {
       case 'hex':
@@ -158,14 +269,13 @@ export function createExportModal() {
     }
   }
 
-  function normalizeTokenName(name) {
-    return String(name)
-      .trim()
-      .toLowerCase()
-      .replace(/[^a-z0-9\s-]/g, '')
-      .replace(/\s+/g, '-');
-  }
-
+  /**
+   * escapeHtml(value: string): string
+   * Escapes label text before it is inserted into the preview markup.
+   * @author Ian Timchak
+   * @param {string} value - The raw text value.
+   * @returns {string} Escaped HTML-safe text.
+   */
   function escapeHtml(value) {
     return String(value)
       .replaceAll('&', '&amp;')
@@ -175,6 +285,13 @@ export function createExportModal() {
       .replaceAll("'", '&#039;');
   }
 
+  /**
+   * copyCurrentOutput(): Promise<void>
+   * Copies the current CSS export text to the clipboard.
+   * Temporarily changes the button label after a successful copy.
+   * @author Ian Timchak
+   * @returns {Promise<void>}
+   */
   async function copyCurrentOutput() {
     if (activeTab !== 'css' || !cssOutput?.value) return;
 
@@ -190,6 +307,12 @@ export function createExportModal() {
     }
   }
 
+  /**
+   * downloadCurrentExport(): void
+   * Downloads the current CSS export as a .css file.
+   * @author Ian Timchak
+   * @returns {void}
+   */
   function downloadCurrentExport() {
     if (activeTab !== 'css' || !selectedPalette) return;
 

@@ -11,6 +11,7 @@ const samplePalette = new Palette(
     [new Color(220, 231, 243), ColorRole.SECONDARY],
     [new Color(64, 107, 160), ColorRole.PRIMARY],
     [new Color(127, 179, 213), ColorRole.ACCENT],
+    [new Color(127, 179, 123), null],
   ]),
   false
 );
@@ -20,7 +21,7 @@ function paletteToExportModalData(palette, name = 'Ocean Balance') {
 
   for (const [color, role] of palette.colorMap.entries()) {
     colors.push({
-      role: role ?? 'unassigned',
+      role: role,
       hex: color.getHEX().value.toUpperCase(),
     });
   }
