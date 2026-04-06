@@ -39,96 +39,195 @@
   </header>
 
   <main class="about-main">
-    <section class="about-section">
-      <div class="card about-card">
-        <h1 class="card-title about-title">About Hue & YOU</h1>
 
-        <p class="empty-state-text about-text">
-          Hue & YOU is a color palette generation tool designed to help users create and explore color harmonies
-          for interface and visual design. The system allows users to generate palettes, preview them, and work
-          with structured color relationships in a more intentional way.
-        </p>
+    <!-- HERO -->
+    <section class="about-section about-hero" data-reveal>
+      <div class="about-section-inner">
+        <h1 class="about-display">Hue & <span class="brand-accent">YOU</span></h1>
+        <p class="about-lead">Color palettes built on perceptual harmony, not guesswork.</p>
+        <div class="hero-swatches" id="hero-swatches"></div>
+      </div>
+    </section>
 
-        <h2 class="card-title about-subheading">How it works</h2>
+    <!-- HOW IT WORKS — TABBED -->
+    <section class="about-section about-how" data-reveal>
+      <div class="about-section-inner">
+        <span class="about-eyebrow">How It Works</span>
+        <h2 class="about-heading">From one color to an entire palette</h2>
+        <p class="about-body">Pick a base color. Choose a harmony type. Hue &amp; YOU calculates offsets in the OKLCH color space and produces a structured palette with assigned roles.</p>
 
-        <p class="empty-state-text about-text">
-          Hue & YOU generates color palettes based on a base color and a selected harmony strategy.
-          Each setting on the generator page influences how your palette is created.
-        </p>
+        <div class="about-tabs" role="tablist" aria-label="How it works steps">
+          <button class="about-tab active" role="tab" id="tab-btn-base" aria-selected="true" aria-controls="tab-base" data-tab="tab-base" tabindex="0">Base Color</button>
+          <button class="about-tab" role="tab" id="tab-btn-harmony" aria-selected="false" aria-controls="tab-harmony" data-tab="tab-harmony" tabindex="-1">Harmony Type</button>
+          <button class="about-tab" role="tab" id="tab-btn-offsets" aria-selected="false" aria-controls="tab-offsets" data-tab="tab-offsets" tabindex="-1">Offsets</button>
+          <button class="about-tab" role="tab" id="tab-btn-palette" aria-selected="false" aria-controls="tab-palette" data-tab="tab-palette" tabindex="-1">Palette</button>
+        </div>
 
-        <ul class="about-list">
-          <li><strong>Base Color:</strong> The starting color used to generate the palette.</li>
-          <li><strong>Harmony Type:</strong> Defines how colors are spaced (Analogous, Triadic, Tetradic, etc.).</li>
-          <li><strong>Number of Swatches:</strong> Controls how many colors appear in the palette.</li>
-          <li><strong>Generate:</strong> Produces multiple palette variations based on your selections.</li>
-          <li><strong>Preview &amp; Edit:</strong> View palettes in context and refine individual colors in the editor.</li>
-        </ul>
+        <div class="about-tab-panels">
+          <div class="about-tab-panel active" id="tab-base" role="tabpanel" aria-labelledby="tab-btn-base">
+            <p class="about-body">Everything starts with a single color. Pick any hue, and the system converts it into the OKLCH color space for perceptually accurate calculations.</p>
+            <div class="tab-visual" id="tab-base-visual"></div>
+          </div>
 
-        <h2 class="card-title about-subheading">Example Palette</h2>
+          <div class="about-tab-panel" id="tab-harmony" role="tabpanel" aria-labelledby="tab-btn-harmony">
+            <p class="about-body">The harmony type determines how additional colors are distributed around the color wheel. Each strategy produces a different character.</p>
+            <div class="tab-visual" id="tab-harmony-visual"></div>
+          </div>
 
-        <p class="empty-state-text about-text">
-          Below is an example of a generated palette. Each color is derived from a base color using a harmony strategy.
-        </p>
+          <div class="about-tab-panel" id="tab-offsets" role="tabpanel" aria-labelledby="tab-btn-offsets">
+            <p class="about-body">Harmony strategies translate into specific degree offsets from the base hue. The system computes each resulting hue, then assigns lightness and chroma values to create visual hierarchy.</p>
+            <div class="tab-offset-diagram" id="tab-offsets-visual"></div>
+          </div>
 
+          <div class="about-tab-panel" id="tab-palette" role="tabpanel" aria-labelledby="tab-btn-palette">
+            <p class="about-body">The final palette assigns each color a role: Primary, Secondary, Accent, Background, and Text. These roles map to common interface patterns.</p>
+            <div class="tab-visual" id="tab-palette-visual"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HARMONY TYPES + WHEEL -->
+    <section class="about-section about-harmonies" data-reveal>
+      <div class="about-section-inner">
+        <span class="about-eyebrow">Harmony Types</span>
+        <h2 class="about-heading">Five ways to relate color</h2>
+
+        <div class="harmony-layout">
+          <div class="harmony-wheel-container">
+            <canvas id="harmony-wheel" width="640" height="640" role="img" aria-label="Color harmony wheel diagram showing harmony offset angles"></canvas>
+          </div>
+
+          <div class="harmony-cards">
+            <button class="harmony-card active" data-harmony="analogous">
+              <div class="harmony-card-swatches" id="swatch-analogous"></div>
+              <div class="harmony-card-text">
+                <strong>Analogous</strong>
+                <span>Adjacent hues, +/- 45 degrees</span>
+              </div>
+            </button>
+            <button class="harmony-card" data-harmony="complementary">
+              <div class="harmony-card-swatches" id="swatch-complementary"></div>
+              <div class="harmony-card-text">
+                <strong>Complementary</strong>
+                <span>Opposite hues, 180 degrees apart</span>
+              </div>
+            </button>
+            <button class="harmony-card" data-harmony="triadic">
+              <div class="harmony-card-swatches" id="swatch-triadic"></div>
+              <div class="harmony-card-text">
+                <strong>Triadic</strong>
+                <span>Three equidistant hues, 120 degrees apart</span>
+              </div>
+            </button>
+            <button class="harmony-card" data-harmony="tetradic">
+              <div class="harmony-card-swatches" id="swatch-tetradic"></div>
+              <div class="harmony-card-text">
+                <strong>Tetradic</strong>
+                <span>Four hues at 90-degree intervals</span>
+              </div>
+            </button>
+            <button class="harmony-card" data-harmony="monochromatic">
+              <div class="harmony-card-swatches" id="swatch-monochromatic"></div>
+              <div class="harmony-card-text">
+                <strong>Monochromatic</strong>
+                <span>Same hue, varied lightness and chroma</span>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- OKLCH COLOR SPACE -->
+    <section class="about-section about-oklch" data-reveal>
+      <div class="about-section-inner">
+        <span class="about-eyebrow">Color Science</span>
+        <h2 class="about-heading">Why OKLCH?</h2>
+
+        <div class="oklch-layout">
+          <div class="oklch-text">
+            <p class="about-body">OKLCH is a perceptually uniform color space. Unlike HSL, equal numeric steps produce equal visual steps. Harmonies calculated in OKLCH actually look harmonious.</p>
+            <p class="about-body">Each color is defined by three values:</p>
+            <dl class="oklch-definitions">
+              <div class="oklch-def">
+                <dt>L - Lightness</dt>
+                <dd>0 (black) to 1 (white). Perceptually linear.</dd>
+              </div>
+              <div class="oklch-def">
+                <dt>C - Chroma</dt>
+                <dd>Color intensity. Higher values are more vivid.</dd>
+              </div>
+              <div class="oklch-def">
+                <dt>H - Hue</dt>
+                <dd>The angle on the color wheel, 0-360 degrees.</dd>
+              </div>
+            </dl>
+          </div>
+          <div class="oklch-visual" id="oklch-visual"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXAMPLE PALETTE -->
+    <section class="about-section about-example" data-reveal>
+      <div class="about-section-inner">
+        <span class="about-eyebrow">In Practice</span>
+        <h2 class="about-heading">Example output</h2>
+        <p class="about-body">A generated palette with assigned roles. Each swatch shows its hex value, WCAG contrast rating, and contrast ratio against background and text colors. Click any swatch to copy its hex value.</p>
         <div class="palettes-grid" id="example-palette"></div>
+        <p class="about-body about-muted">The buttons below the palette are disabled on this page. On the Generate page, <strong>Export</strong> downloads the palette as a JSON file, <strong>Preview</strong> shows the colors applied to a sample UI page, and <strong>Edit</strong> opens the palette in the editor for fine-tuning.</p>
+      </div>
+    </section>
 
-        <h2 class="card-title about-subheading">Generated Variants</h2>
-
-        <p class="empty-state-text about-text">
-          Hue & YOU can generate multiple palette variants from the same starting color and harmony type.
-          These variants help users explore different interpretations of the same palette structure rather than
-          being limited to a single output.
-        </p>
-
-        <p class="empty-state-text about-text">
-          Variants may differ through adjustments such as:
-        </p>
-
-        <ul class="about-list">
-          <li><strong>Lightness:</strong> Produces lighter or darker palette versions</li>
-          <li><strong>Chroma:</strong> Adjusts how vivid or muted the colors appear</li>
-          <li><strong>Hue Spacing:</strong> Changes the distance between colors in the harmony</li>
-        </ul>
-
-        <p class="empty-state-text about-text">
-          In some cases, the number of generated palettes may vary depending on the selected settings and the type
-          of harmony being used. This is because different harmony strategies and adjustments can produce different
-          ranges of useful palette outputs.
-        </p>
-
-        <h2 class="card-title about-subheading">Editing and Preview</h2>
-
-        <p class="empty-state-text about-text">
-          After generating a palette, users can move to the editor to refine and explore their colors in more detail.
-        </p>
-
-        <ul class="about-list">
-          <li><strong>Adjust Swatches:</strong> Modify individual colors within a palette to better fit your needs.</li>
-          <li><strong>Rename Palettes:</strong> Organize and identify palettes by giving them meaningful names.</li>
-          <li><strong>Preview Panel:</strong> View your palette applied to a sample interface to evaluate contrast and usability.</li>
-        </ul>
-
-        <p class="empty-state-text about-text">
-          The preview helps users understand how colors will appear in real-world UI scenarios, making it easier to
-          create palettes that are both visually appealing and accessible.
-        </p>
-
-        <h2 class="card-title about-subheading">Accessibility and WCAG</h2>
-
-        <p class="empty-state-text about-text">
-          Accessibility is an important part of color design. Hue & YOU encourages users to consider contrast,
-          readability, and usability when creating palettes. The Web Content Accessibility Guidelines (WCAG)
-          provide standards for making digital content more accessible, especially for users with visual impairments.
-        </p>
-
-        <p class="empty-state-text about-text">
-          Learn more in the
-          <a href="https://www.w3.org/WAI/standards-guidelines/wcag/" target="_blank" rel="noopener noreferrer">
-            official WCAG guidelines
-          </a>.
+    <!-- VARIANTS -->
+    <section class="about-section about-variants" data-reveal>
+      <div class="about-section-inner">
+        <span class="about-eyebrow">Exploration</span>
+        <h2 class="about-heading">Generated variants</h2>
+        <p class="about-body">Multiple palette variations from the same inputs. Variants differ by lightness, chroma, or hue spacing to help you explore different interpretations.</p>
+        <div class="variant-cards" id="variant-cards"></div>
+        <p class="about-body about-muted variant-note">
+          <span class="variant-icon"><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 22C6.49 22 2 17.51 2 12S6.49 2 12 2s10 4.04 10 9c0 3.31-2.69 6-6 6h-1.77a1 1 0 0 0-.73 1.69c.47.47.73 1.1.73 1.75 0 .95-.68 1.56-1.23 1.56zm0-18a8 8 0 0 0 0 16c.01-.01.22-.01.22-.44 0-.15-.07-.3-.18-.42a3 3 0 0 1-.05-4.22A3 3 0 0 1 14.23 14H16c2.21 0 4-1.79 4-4 0-3.86-3.59-7-8-7zM6.5 13a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm3-4a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm3 4a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/></svg></span>
+          Palettes marked with this icon are variations. The primary color has been slightly adjusted from your original input to increase palette diversity. This gives you more options to compare without having to pick a new base color each time.
         </p>
       </div>
     </section>
+
+    <!-- WCAG / ACCESSIBILITY -->
+    <section class="about-section about-wcag" data-reveal>
+      <div class="about-section-inner">
+        <span class="about-eyebrow">Accessibility</span>
+        <h2 class="about-heading">Contrast that meets the standard</h2>
+        <p class="about-body">Every swatch is checked against WCAG 2.1 contrast requirements. Colors are compared against both background and text, and the best ratio is displayed.</p>
+        <div class="wcag-demo" id="wcag-demo"></div>
+        <p class="about-body">
+          <a href="https://www.w3.org/WAI/standards-guidelines/wcag/" target="_blank" rel="noopener noreferrer">Read the official WCAG guidelines</a>
+        </p>
+      </div>
+    </section>
+
+    <!-- EDITOR + LIBRARY -->
+    <section class="about-section about-tools" data-reveal>
+      <div class="about-section-inner about-tools-grid">
+        <div class="about-tool-card">
+          <h3 class="about-subheading">The Generator</h3>
+          <p class="about-body">Pick a base color and harmony type to generate a full palette with assigned roles, contrast ratings, and multiple variants.</p>
+          <a href="/" class="about-cta">Open Generator</a>
+        </div>
+        <div class="about-tool-card">
+          <h3 class="about-subheading">The Editor</h3>
+          <p class="about-body">Refine individual swatches, rename palettes, and preview colors applied to a sample interface to evaluate real-world usability.</p>
+          <a href="/edit" class="about-cta">Open Editor</a>
+        </div>
+        <div class="about-tool-card">
+          <h3 class="about-subheading">The Library</h3>
+          <p class="about-body">Saved palettes persist in your browser. Browse, load, and manage your collection across sessions.</p>
+          <a href="/library" class="about-cta">Open Library</a>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <footer class="about-footer" aria-label="Project authors">
