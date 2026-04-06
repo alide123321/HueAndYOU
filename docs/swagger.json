@@ -1,0 +1,350 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Hue & YOU Share API",
+    "version": "1.0.0",
+    "description": "API endpoints for sharing palettes and generation settings via short links."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Local development server"
+    }
+  ],
+  "paths": {
+    "/share/editor": {
+      "post": {
+        "summary": "Create an editor share link",
+        "description": "Stores the current palette state and returns an 8-character short code for sharing.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditorShareRequest"
+              },
+              "example": {
+                "colorMap": [
+                  [{"r": 255, "g": 87, "b": 51}, "primary"],
+                  [{"r": 255, "g": 255, "b": 255}, "background"],
+                  [{"r": 0, "g": 0, "b": 0}, "text"]
+                ],
+                "isDarkTheme": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Share link created successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShareCodeResponse"
+                },
+                "example": {
+                  "code": "Ab3xK9mQ"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request body.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "error": "Invalid editor share payload."
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "error": "Failed to create share link."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/share/generation": {
+      "post": {
+        "summary": "Create a generation share link",
+        "description": "Stores the current generation settings and returns an 8-character short code for sharing.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenerationShareRequest"
+              },
+              "example": {
+                "harmonyType": "complementary",
+                "baseColor": "rgb(52, 152, 219)",
+                "numberOfColors": 5,
+                "numberOfPalettes": 1,
+                "filters": {},
+                "isLightMode": true,
+                "includeBgTextColors": false,
+                "opts": {}
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Share link created successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShareCodeResponse"
+                },
+                "example": {
+                  "code": "Zp7wR2nL"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request body.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "error": "Invalid generation share payload."
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "error": "Failed to create share link."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/share/{code}": {
+      "get": {
+        "summary": "Resolve a share link",
+        "description": "Looks up the short code and returns the stored record. Expired records are deleted and return 404.",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "description": "8-character share code.",
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9A-Za-z]{8}$",
+              "example": "Ab3xK9mQ"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Share link resolved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShareRecord"
+                },
+                "example": {
+                  "_id": "Ab3xK9mQ",
+                  "type": "editor_palette",
+                  "payload": {
+                    "colorMap": [
+                      [{"r": 255, "g": 87, "b": 51}, "primary"],
+                      [{"r": 255, "g": 255, "b": 255}, "background"]
+                    ],
+                    "isDarkTheme": false,
+                    "version": 1
+                  },
+                  "createdAt": "2026-04-05T12:00:00.000Z",
+                  "expiresAt": "2026-07-04T12:00:00.000Z"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid share code format.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "error": "Invalid share code format."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Share link not found or has expired.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "error": "Share link not found or has expired."
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "error": "Failed to resolve share link."
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Color": {
+        "type": "object",
+        "description": "RGB color with values 0-255.",
+        "properties": {
+          "r": {"type": "integer", "minimum": 0, "maximum": 255},
+          "g": {"type": "integer", "minimum": 0, "maximum": 255},
+          "b": {"type": "integer", "minimum": 0, "maximum": 255}
+        },
+        "required": ["r", "g", "b"]
+      },
+      "ColorMapEntry": {
+        "type": "array",
+        "description": "A [Color, role] pair from the serialized palette.",
+        "items": {},
+        "minItems": 2,
+        "maxItems": 2,
+        "example": [{"r": 255, "g": 87, "b": 51}, "primary"]
+      },
+      "EditorShareRequest": {
+        "type": "object",
+        "description": "Serialized palette data from the editor page.",
+        "properties": {
+          "colorMap": {
+            "type": "array",
+            "items": {"$ref": "#/components/schemas/ColorMapEntry"},
+            "minItems": 1
+          },
+          "isDarkTheme": {
+            "type": "boolean"
+          }
+        },
+        "required": ["colorMap"]
+      },
+      "GenerationShareRequest": {
+        "type": "object",
+        "description": "Generation settings from the generation page.",
+        "properties": {
+          "harmonyType": {
+            "type": "string",
+            "enum": ["complementary", "analogous", "triadic", "tetradic", "monochromatic"]
+          },
+          "baseColor": {
+            "type": "string",
+            "description": "Base color as an RGB string."
+          },
+          "numberOfColors": {
+            "type": "integer",
+            "default": 5
+          },
+          "numberOfPalettes": {
+            "type": "integer",
+            "default": 1
+          },
+          "filters": {
+            "type": "object"
+          },
+          "isLightMode": {
+            "type": "boolean"
+          },
+          "includeBgTextColors": {
+            "type": "boolean"
+          },
+          "opts": {
+            "type": "object"
+          }
+        },
+        "required": ["harmonyType"]
+      },
+      "ShareCodeResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "8-character alphanumeric share code.",
+            "pattern": "^[0-9A-Za-z]{8}$"
+          }
+        }
+      },
+      "ShareRecord": {
+        "type": "object",
+        "description": "Full record as stored in MongoDB.",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "The 8-character share code."
+          },
+          "type": {
+            "type": "string",
+            "enum": ["editor_palette", "generation_session"],
+            "description": "Indicates whether this is a palette or generation settings share."
+          },
+          "payload": {
+            "type": "object",
+            "description": "The stored palette or generation settings data."
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Record is auto-cleaned after this date (90 days from creation)."
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

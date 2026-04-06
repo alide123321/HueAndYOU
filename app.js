@@ -2,8 +2,13 @@ import express from 'express';
 import path from 'path';
 import {fileURLToPath} from 'url';
 import {dirname} from 'path';
+import {createRequire} from 'module';
+import swaggerUi from 'swagger-ui-express';
 import routeIndex from './src/routes/routeIndex.js';
 import {startConnection} from './src/data/MongoClient.js';
+
+const require = createRequire(import.meta.url);
+const swaggerDoc = require('./docs/swagger.json');
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -24,6 +29,8 @@ app.use('/shared', express.static(path.join(__dirname, 'shared')))
 // home default route
 app.use('/', routeIndex);
 app.use('/api', routeIndex);
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 
 app.listen(port, async () => {
   //initialize mongo connection

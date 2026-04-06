@@ -18,7 +18,6 @@ describe('ShareService.createGenerationShare() Integration Test (With MongoClien
             includeBgTextColors: false,
             opts:                {},
         },
-        results: [],
     };
 
     beforeAll(async () => {

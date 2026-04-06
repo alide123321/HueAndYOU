@@ -32,12 +32,17 @@ router.get('/library', (req, res) => {
   res.sendFile('library.html', {root: root});
 });
 
+// Serve the share link for the editor palette 
 router.post('/generate', express.json(), generateAPI.generateBatchPalettes);
 router.post('/share/editor', express.json(), (req, res) =>
   shareController.createEditorShare(req, res)
 );
+
+// Serve the share link for the generation settings
 router.post('/share/generation', express.json(), (req, res) =>
   shareController.createGenerationShare(req, res)
 );
+
+//Serve the share code and returns stored record
 router.get('/share/:code', (req, res) => shareController.resolve(req, res));
 export default router;
