@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Export Modal</title>
+
+    <link rel="stylesheet" href="/views/style.css">
+    <link rel="stylesheet" href="/sandbox/exportModal.css">
+
+    <script type="importmap">
+    {
+      "imports": {
+        "culori": "https://cdn.jsdelivr.net/npm/culori@4.0.2/+esm"
+      }
+    }
+    </script>
+</head>
+
+<body>
+    <!--
+         Sandbox test-page controls
+    -->
+    <div class="export-sandbox-toolbar">
+        <button class="text-btn export-btn" type="button">Export</button>
+
+        <button class="export-sandbox-theme-btn" id="sandbox-theme-toggle" type="button"
+            aria-label="Toggle test page theme" title="Toggle test page theme">
+            Toggle Theme
+        </button>
+    </div>
+
+    <!--
+         Export modal overlay + shell
+    -->
+    <div class="export-modal-overlay" id="export-modal-overlay" aria-hidden="true">
+        <div class="export-modal" id="export-modal" role="dialog" aria-modal="true"
+            aria-labelledby="export-modal-title">
+
+            <!--
+                 Modal header
+            -->
+            <div class="export-modal-header">
+                <div>
+                    <h3 class="export-modal-title" id="export-modal-title">Export Palette</h3>
+                    <p class="export-modal-subtitle" id="export-modal-subtitle">
+                        Choose an export format.
+                    </p>
+                </div>
+
+                <button class="export-modal-close-btn" id="export-modal-close-btn" type="button"
+                    aria-label="Close export modal" title="Close export modal">
+                    &#10005;
+                </button>
+            </div>
+
+            <!--
+                 Modal body
+            -->
+            <div class="export-modal-body">
+
+                <!--
+                     Export format tabs
+                     Keep data-export-tab values in sync with
+                     the corresponding data-export-panel values below.
+                -->
+                <div class="export-tabs" role="tablist" aria-label="Export formats">
+                    <button class="export-tab active" type="button" role="tab" aria-selected="true"
+                        data-export-tab="css">
+                        CSS
+                    </button>
+
+                    <button class="export-tab" type="button" role="tab" aria-selected="false" data-export-tab="json">
+                        JSON
+                    </button>
+
+                    <button class="export-tab" type="button" role="tab" aria-selected="false" data-export-tab="png">
+                        PNG + TXT ZIP
+                    </button>
+
+                    <button class="export-tab" type="button" role="tab" aria-selected="false"
+                        data-export-tab="contrast-grid">
+                        Contrast Grid
+                    </button>
+
+                    <button class="export-tab" type="button" role="tab" aria-selected="false"
+                        data-export-tab="document">
+                        Document PDF
+                    </button>
+                </div>
+
+                <!--
+                     Tab panel container
+                     Only one .export-tab-panel should be active at a time.
+                -->
+                <div class="export-tab-panels">
+
+                    <!--
+                         CSS tab panel
+                         Functional now
+                    -->
+                    <section class="export-tab-panel active" id="export-panel-css" role="tabpanel"
+                        data-export-panel="css">
+
+                        <!-- Panel heading -->
+                        <div class="export-panel-header">
+                            <h4 class="export-panel-title">CSS Export</h4>
+                            <p class="export-panel-description">
+                                Generate CSS custom properties for the selected palette.
+                            </p>
+                        </div>
+
+                        <!-- Compact palette preview -->
+                        <div class="export-panel-preview-block">
+                            <div class="export-panel-preview-label">Palette</div>
+                            <div class="export-palette-preview" id="export-palette-preview">
+                                <!-- palette preview swatches inserted by JS -->
+                            </div>
+                        </div>
+
+                        <!-- CSS export options -->
+                        <div class="export-css-options-row">
+                            <div class="export-css-option">
+                                <label class="form-label" for="export-css-format-select">
+                                    Color format
+                                </label>
+                                <select id="export-css-format-select" class="form-select export-css-format-select">
+                                    <option value="hex">HEX</option>
+                                    <option value="rgb">RGB</option>
+                                    <option value="hsl">HSL</option>
+                                    <option value="oklch">OKLCH</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Generated CSS output -->
+                        <div class="export-output-block">
+                            <div class="export-output-block-header">
+                                <label class="form-label export-output-label" for="export-output-css">
+                                    Generated CSS
+                                </label>
+
+                                <button class="export-inline-copy-btn" id="export-copy-btn" type="button">
+                                    Copy
+                                </button>
+                            </div>
+
+                            <textarea id="export-output-css" class="export-output" readonly
+                                spellcheck="false"></textarea>
+                        </div>
+                    </section>
+
+                    <!--
+                         JSON tab panel
+                         Stub for later ticket
+                    -->
+                    <section class="export-tab-panel" id="export-panel-json" role="tabpanel" data-export-panel="json"
+                        hidden>
+
+                        <div class="export-panel-header">
+                            <h4 class="export-panel-title">JSON Export</h4>
+                            <p class="export-panel-description">
+                                Structured palette export stub.
+                            </p>
+                        </div>
+
+                        <div class="export-stub-card">
+                            <p class="export-stub-title">Reserved for future implementation</p>
+                            <p class="export-stub-text">
+                                This panel will hold JSON export content and controls.
+                            </p>
+                        </div>
+                    </section>
+
+                    <!--
+                         PNG + TXT ZIP tab panel
+                         Stub for later ticket
+                    -->
+                    <section class="export-tab-panel" id="export-panel-png" role="tabpanel" data-export-panel="png"
+                        hidden>
+
+                        <div class="export-panel-header">
+                            <h4 class="export-panel-title">PNG + TXT ZIP Export</h4>
+                            <p class="export-panel-description">
+                                Image-and-text ZIP export stub.
+                            </p>
+                        </div>
+
+                        <div class="export-stub-card">
+                            <p class="export-stub-title">Reserved for future implementation</p>
+                            <p class="export-stub-text">
+                                This panel will hold PNG preview, TXT summary, and ZIP controls.
+                            </p>
+                        </div>
+                    </section>
+
+                    <!--
+                         Contrast Grid tab panel
+                         Stub for later
+                    -->
+                    <section class="export-tab-panel" id="export-panel-contrast-grid" role="tabpanel"
+                        data-export-panel="contrast-grid" hidden>
+
+                        <div class="export-panel-header">
+                            <h4 class="export-panel-title">Contrast Grid Export</h4>
+                            <p class="export-panel-description">
+                                Contrast matrix export stub.
+                            </p>
+                        </div>
+
+                        <div class="export-stub-card">
+                            <p class="export-stub-title">Reserved for future implementation</p>
+                            <p class="export-stub-text">
+                                This panel will hold grid preview and image export controls.
+                            </p>
+                        </div>
+                    </section>
+
+                    <!--
+                         Document PDF tab panel
+                         Stub for later
+                    -->
+                    <section class="export-tab-panel" id="export-panel-document" role="tabpanel"
+                        data-export-panel="document" hidden>
+
+                        <div class="export-panel-header">
+                            <h4 class="export-panel-title">Document PDF Export</h4>
+                            <p class="export-panel-description">
+                                PDF export stub.
+                            </p>
+                        </div>
+
+                        <div class="export-stub-card">
+                            <p class="export-stub-title">Reserved for future implementation</p>
+                            <p class="export-stub-text">
+                                This panel will hold document options and PDF generation controls.
+                            </p>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <!--
+                 Modal footer actions
+            -->
+            <div class="export-modal-actions">
+                <button class="export-modal-btn export-modal-btn-secondary" id="export-cancel-btn" type="button">
+                    Cancel
+                </button>
+
+                <button class="export-modal-btn export-modal-btn-primary" id="export-download-btn" type="button">
+                    Download
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="/sandbox/testController.js"></script>
+</body>
+
+</html>

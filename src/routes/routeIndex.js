@@ -30,6 +30,11 @@ router.get('/library', (req, res) => {
   res.sendFile('library.html', {root: root});
 });
 
+// CAP-30: Exporter testing routes - these can be removed once the exporter is integrated into the UI
+router.get('/exporter', (req, res) => {
+  res.redirect('/sandbox/exportModal.html');
+});
+
 router.post('/generate', express.json(), generateAPI.generateBatchPalettes);
 
 export default router;
