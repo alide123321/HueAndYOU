@@ -49,8 +49,84 @@
       </div>
     </section>
 
+        <!-- PAGE NAVIGATION -->
+    <section class="about-section about-page-nav-section">
+      <div class="about-section-inner">
+        <nav class="about-page-nav" aria-label="About page sections">
+          <a href="#why" class="about-page-nav-link">Why</a>
+          <a href="#how-it-works" class="about-page-nav-link">How It Works</a>
+          <a href="#harmony-types" class="about-page-nav-link">Harmony</a>
+          <a href="#color-science" class="about-page-nav-link">Color Science</a>
+          <a href="#example-output" class="about-page-nav-link">Example</a>
+          <a href="#generated-variants" class="about-page-nav-link">Variants</a>
+          <a href="#accessibility" class="about-page-nav-link">Accessibility</a>
+          <a href="#tools" class="about-page-nav-link">Tools</a>
+        </nav>
+      </div>
+    </section>
+
+    <!-- WHY THIS EXISTS -->
+    <section class="about-section about-why" id="why" data-reveal>
+      <div class="about-section-inner">
+        <span class="about-eyebrow">Why This Exists</span>
+        <h2 class="about-heading">Built for real accessibility needs, not color guesswork</h2>
+
+        <div class="about-why-layout">
+          <div class="about-why-text">
+            <p class="about-body">
+              Hue &amp; YOU was created to help solve a real design problem: generating color palettes
+              that are both visually harmonious and accessible for real users.
+            </p>
+
+            <p class="about-body">
+              For teams working on digital and educational products,
+              color decisions directly affect readability, clarity, and usability. A palette may look appealing
+              at first glance, but still fail contrast standards or create inconsistent visual hierarchy
+              in real use.
+            </p>
+
+            <p class="about-body">
+              Many traditional color tools rely on trial and error or non-perceptual color models,
+              which makes it harder to consistently produce palettes that feel balanced and also meet
+              WCAG accessibility expectations.
+            </p>
+
+            <p class="about-body">
+              Hue &amp; YOU addresses that problem by combining perceptual color science through OKLCH,
+              structured harmony strategies, and built-in accessibility checks. The goal is to give
+              designers and developers a more reliable way to explore, evaluate, and refine palettes
+              for practical use.
+            </p>
+          </div>
+
+          <div class="about-why-points">
+            <div class="about-why-card">
+              <h3 class="about-subheading">The Problem</h3>
+              <p class="about-body about-muted">
+                Accessible palettes are difficult to build consistently with trial-and-error tools.
+              </p>
+            </div>
+
+            <div class="about-why-card">
+              <h3 class="about-subheading">The Need</h3>
+              <p class="about-body about-muted">
+                Teams need palettes that support harmony, role structure, and WCAG-aware contrast.
+              </p>
+            </div>
+
+            <div class="about-why-card">
+              <h3 class="about-subheading">Our Approach</h3>
+              <p class="about-body about-muted">
+                Use OKLCH, harmony logic, and accessibility validation to support better decisions.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- HOW IT WORKS — TABBED -->
-    <section class="about-section about-how" data-reveal>
+    <section class="about-section about-how" id="how-it-works" data-reveal>
       <div class="about-section-inner">
         <span class="about-eyebrow">How It Works</span>
         <h2 class="about-heading">From one color to an entire palette</h2>
@@ -88,7 +164,7 @@
     </section>
 
     <!-- HARMONY TYPES + WHEEL -->
-    <section class="about-section about-harmonies" data-reveal>
+    <section class="about-section about-harmonies" id="harmony-types" data-reveal>
       <div class="about-section-inner">
         <span class="about-eyebrow">Harmony Types</span>
         <h2 class="about-heading">Five ways to relate color</h2>
@@ -140,7 +216,7 @@
     </section>
 
     <!-- OKLCH COLOR SPACE -->
-    <section class="about-section about-oklch" data-reveal>
+    <section class="about-section about-oklch" id="color-science" data-reveal>
       <div class="about-section-inner">
         <span class="about-eyebrow">Color Science</span>
         <h2 class="about-heading">Why OKLCH?</h2>
@@ -170,10 +246,10 @@
     </section>
 
     <!-- EXAMPLE PALETTE -->
-    <section class="about-section about-example" data-reveal>
+    <section class="about-section about-example" id="example-output" data-reveal>
       <div class="about-section-inner">
         <span class="about-eyebrow">In Practice</span>
-        <h2 class="about-heading">Example output</h2>
+        <h2 class="about-heading">Example Output</h2>
         <p class="about-body">A generated palette with assigned roles. Each swatch shows its hex value, WCAG contrast rating, and contrast ratio against background and text colors. Click any swatch to copy its hex value.</p>
         <div class="palettes-grid" id="example-palette"></div>
         <p class="about-body about-muted">The buttons below the palette are disabled on this page. On the Generate page, <strong>Export</strong> downloads the palette as a JSON file, <strong>Preview</strong> shows the colors applied to a sample UI page, and <strong>Edit</strong> opens the palette in the editor for fine-tuning.</p>
@@ -181,10 +257,10 @@
     </section>
 
     <!-- VARIANTS -->
-    <section class="about-section about-variants" data-reveal>
+    <section class="about-section about-variants" id="generated-variants" data-reveal>
       <div class="about-section-inner">
         <span class="about-eyebrow">Exploration</span>
-        <h2 class="about-heading">Generated variants</h2>
+        <h2 class="about-heading">Generated Variants</h2>
         <p class="about-body">Multiple palette variations from the same inputs. Variants differ by lightness, chroma, or hue spacing to help you explore different interpretations.</p>
         <div class="variant-cards" id="variant-cards"></div>
         <p class="about-body about-muted variant-note">
@@ -195,7 +271,7 @@
     </section>
 
     <!-- WCAG / ACCESSIBILITY -->
-    <section class="about-section about-wcag" data-reveal>
+    <section class="about-section about-wcag" id="accessibility" data-reveal>
       <div class="about-section-inner">
         <span class="about-eyebrow">Accessibility</span>
         <h2 class="about-heading">Contrast that meets the standard</h2>
@@ -208,25 +284,33 @@
     </section>
 
     <!-- EDITOR + LIBRARY -->
-    <section class="about-section about-tools" data-reveal>
-      <div class="about-section-inner about-tools-grid">
+    <section class="about-section about-tools" id="tools" data-reveal>
+      <div class="about-section-inner">
+        <span class="about-eyebrow">Tools</span>
+        <h2 class="about-heading">Continue Exploring Hue &amp; YOU</h2>
+        <p class="about-body">Move from understanding the system to using it. Generate palettes, refine them in the editor, and manage saved work in your library.</p>
+        <div class="about-tools-grid">
+
         <div class="about-tool-card">
           <h3 class="about-subheading">The Generator</h3>
           <p class="about-body">Pick a base color and harmony type to generate a full palette with assigned roles, contrast ratings, and multiple variants.</p>
           <a href="/" class="about-cta">Open Generator</a>
         </div>
+
         <div class="about-tool-card">
           <h3 class="about-subheading">The Editor</h3>
           <p class="about-body">Refine individual swatches, rename palettes, and preview colors applied to a sample interface to evaluate real-world usability.</p>
           <a href="/edit" class="about-cta">Open Editor</a>
         </div>
+
         <div class="about-tool-card">
           <h3 class="about-subheading">The Library</h3>
           <p class="about-body">Saved palettes persist in your browser. Browse, load, and manage your collection across sessions.</p>
           <a href="/library" class="about-cta">Open Library</a>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
   </main>
 
