@@ -723,3 +723,73 @@ drawHarmonyWheel(currentHarmony, baseHue);
     container.appendChild(card);
   });
 })();
+
+/* ============================================================
+   SIDE NAVIGATION ACTIVE SECTION TRACKING
+   ============================================================ */
+
+const sideNavLinks = Array.from(
+  document.querySelectorAll('.about-side-nav-link')
+);
+
+const trackedSections = sideNavLinks
+  .map((link) => {
+    const href = link.getAttribute('href');
+    if (!href || !href.startsWith('#')) return null;
+
+    const section = document.querySelector(href);
+    if (!section) return null;
+
+    return {link, section};
+  })
+  .filter(Boolean);
+
+function setActiveSideNavLink(activeId) {
+  trackedSections.forEach(({link, section}) => {
+    const isActive = section.id === activeId;
+    link.classList.toggle('active', isActive);
+  });
+}
+
+function updateActiveSection() {
+  if (trackedSections.length === 0) return;
+
+  const headerOffset = 110;
+  let closestSection = trackedSections[0];
+  let closestDistance = Infinity;
+
+  trackedSections.forEach(({link, section}) => {
+    const rect = section.getBoundingClientRect();
+    const distance = Math.abs(rect.top - headerOffset);
+
+    if (distance < closestDistance) {
+      closestDistance = distance;
+      closestSection = {link, section};
+    }
+  });
+
+  setActiveSideNavLink(closestSection.section.id);
+}
+
+if (trackedSections.length > 0) {
+  sideNavLinks.forEach((link) => {
+    link.addEventListener('click', () => {
+      const href = link.getAttribute('href');
+      if (!href) return;
+
+      const targetSection = document.querySelector(href);
+      if (!targetSection) return;
+
+      setActiveSideNavLink(targetSection.id);
+
+      window.requestAnimationFrame(() => {
+        window.setTimeout(updateActiveSection, 100);
+      });
+    });
+  });
+
+  window.addEventListener('scroll', updateActiveSection, {passive: true});
+  window.addEventListener('load', updateActiveSection);
+  window.addEventListener('resize', updateActiveSection);
+  updateActiveSection();
+}
