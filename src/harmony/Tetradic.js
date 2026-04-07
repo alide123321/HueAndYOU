@@ -94,10 +94,11 @@ export class Tetradic extends HarmonyStrategy {
 
     const baseOklch = convertColor(baseRgb01, ColorFormat.OKLCH);
 
-    // Tetradic: 0°, +90°, +180°, +270°
-    const tet2 = shiftHue(baseOklch, 90);
+    // Tetradic: configurable rotation offset (default 90°)
+    const offset = gs.opts.rotationOffset || 90;
+    const tet2 = shiftHue(baseOklch, offset);
     const tet3 = shiftHue(baseOklch, 180);
-    const tet4 = shiftHue(baseOklch, 270);
+    const tet4 = shiftHue(baseOklch, 180 + offset);
 
     // Core tetradic palette (OKLCH) — exactly 4 colors
     const paletteOklch = [baseOklch, tet2, tet3, tet4];

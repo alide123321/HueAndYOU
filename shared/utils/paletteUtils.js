@@ -1,42 +1,33 @@
 import {ColorRole} from './constants.js';
 
 /**
- * Maps an array of Color objects to a Map with ColorRole assignments
- * Supports both 5-color palettes (Triadic/Analogous) and 6-color palettes (Complementary)
+ * Maps an array of Color objects to a Map with ColorRole assignments.
+ * Works with any palette size: first 3 core colors get PRIMARY, SECONDARY, ACCENT;
+ * additional core colors get ACCENT; last 2 get BACKGROUND and TEXT when hasBgText is true.
  * @author Ali Aldaghishy, DeAndre Tyree Josey
  * @param {Color[]} colors - Array of Color objects to map
+ * @param {boolean} [hasBgText=true] - Whether the last two colors are background/text
  * @returns {Map<Color, ColorRole>} Map of colors with assigned roles
  */
-export function mapColorsToRoles(colors) {
-  //map color objects in a Color, Role mapping
-  //JSON cant send map objects apparently, so convert to array of arrays
-  //To DO: properly deserialize maps on the api side, not priority at this moment
-  let colorsWithRoles = [];
+export function mapColorsToRoles(colors, hasBgText = true) {
+  const coreRoles = [ColorRole.PRIMARY, ColorRole.SECONDARY, ColorRole.ACCENT];
+  const bgIndex = hasBgText ? colors.length - 2 : -1;
+  const textIndex = hasBgText ? colors.length - 1 : -1;
 
-  // Determine mapping based on array length
-  const is5ColorPalette = colors.length === 5;
-
-  colors.forEach((color, index) => {
-    colorsWithRoles.push([color, null]); // null role by default
-    if (is5ColorPalette) {
-      if (index === 0) colorsWithRoles[index][1] = ColorRole.PRIMARY;
-      else if (index === 1) colorsWithRoles[index][1] = ColorRole.SECONDARY;
-      else if (index === 2) colorsWithRoles[index][1] = ColorRole.ACCENT;
-      else if (index === 3) colorsWithRoles[index][1] = ColorRole.BACKGROUND;
-      else if (index === 4) colorsWithRoles[index][1] = ColorRole.TEXT;
-      else colorsWithRoles[index][1] = null;
+  const colorsWithRoles = colors.map((color, index) => {
+    let role;
+    if (index === bgIndex) {
+      role = ColorRole.BACKGROUND;
+    } else if (index === textIndex) {
+      role = ColorRole.TEXT;
+    } else if (index < coreRoles.length) {
+      role = coreRoles[index];
     } else {
-      if (index === 0) colorsWithRoles[index][1] = ColorRole.PRIMARY;
-      else if (index === 1) colorsWithRoles[index][1] = ColorRole.SECONDARY;
-      else if (index === 2) colorsWithRoles[index][1] = ColorRole.ACCENT;
-      else if (index === 3) colorsWithRoles[index][1] = ColorRole.ACCENT;
-      else if (index === 4) colorsWithRoles[index][1] = ColorRole.BACKGROUND;
-      else if (index === 5) colorsWithRoles[index][1] = ColorRole.TEXT;
-      else colorsWithRoles[index][1] = null;
+      role = ColorRole.ACCENT;
     }
+    return [color, role];
   });
 
-  //Convert colorsWithRoles from 2D array to a map for Palette constructor
   return new Map(colorsWithRoles);
 }
 

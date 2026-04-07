@@ -5,12 +5,14 @@ export class Palette {
   /**
    * @param {Map<Color, string>} colorMap - A map of color objects to their roles.
    * @param {boolean} isDarkTheme - Indicates if the palette is for a dark theme.
+   * @param {boolean} varied - Whether the primary color was adjusted from the user's input.
    *
    * @author Ali Aldaghishy
    */
-  constructor(colorMap, isDarkTheme = false) {
+  constructor(colorMap, isDarkTheme = false, varied = false) {
     this.colorMap = colorMap;
     this.isDarkTheme = isDarkTheme;
+    this.varied = varied;
   }
 
   /**
