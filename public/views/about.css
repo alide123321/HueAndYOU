@@ -278,17 +278,11 @@ body.dark-mode .about-tab:hover:not(.active)  { color: #ccc; }
 /* ============================================================
    WHY SECTION
    ============================================================ */
-.about-why-layout {
-  display: grid;
-  grid-template-columns: 1.4fr 1fr;
-  gap: 2rem;
-  align-items: start;
-  margin-top: 1.5rem;
-}
-
 .about-why-points {
   display: grid;
-  gap: 1rem;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  margin-top: 1.5rem;
 }
 
 .about-why-card {
@@ -683,7 +677,7 @@ body.dark-mode .about-footer  { color: #666; }
   .about-tools-grid {
     grid-template-columns: 1fr;
   }
-  .about-why-layout {
+  .about-why-points {
     grid-template-columns: 1fr;
   }
 }
