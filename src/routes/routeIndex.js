@@ -30,6 +30,11 @@ router.get('/library', (req, res) => {
   res.sendFile('library.html', {root: root});
 });
 
+// Serve the About page
+router.get('/about', (req, res) => {
+  res.sendFile('about.html', { root: root });
+});
+
 router.post('/generate', express.json(), generateAPI.generateBatchPalettes);
 
 export default router;
