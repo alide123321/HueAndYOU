@@ -40,7 +40,7 @@ export function initializeGenerateButtons(
  * @todo Fetches generate api from server and returns list of Palette objects.
  *
  * @param {GenerationSettings} generationSettings
- * @author Ian Timchak
+ * @author Ian Timchak, Ali Aldaghishy
  * @returns List of Palette Objects
  */
 export async function generatePalette(generationSettings) {
@@ -56,7 +56,11 @@ export async function generatePalette(generationSettings) {
     .then((data) => {
       //rehydrate the palette objects
       const paletteList = data.map((p) => {
-        const palette = new Palette(p.colorMap, p.isDarkTheme);
+        const palette = new Palette(
+          p.colorMap,
+          p.isDarkTheme,
+          p.varied ?? false
+        );
         palette.rehydrateColorMap();
         return palette;
       });

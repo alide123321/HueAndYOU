@@ -56,3 +56,31 @@ export const ColorRole = Object.freeze({
   BACKGROUND: 'background',
   TEXT: 'text',
 });
+
+/**
+ * Per-harmony offset config: which opts key to vary, and its valid range.
+ * Shared between server (Generator) and client (UI sliders).
+ * @author Ali Aldaghishy
+ * @enum {Object}
+ * @readonly
+ */
+export const OFFSET_CONFIG = Object.freeze({
+  [ColorHarmony.ANALOGOUS]: Object.freeze({
+    key: 'hueOffset',
+    min: 10,
+    max: 90,
+    default: 45,
+  }),
+  [ColorHarmony.TRIADIC]: Object.freeze({
+    key: 'rotationOffset',
+    min: 105,
+    max: 135,
+    default: 120,
+  }),
+  [ColorHarmony.TETRADIC]: Object.freeze({
+    key: 'rotationOffset',
+    min: 45,
+    max: 135,
+    default: 90,
+  }),
+});

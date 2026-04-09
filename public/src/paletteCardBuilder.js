@@ -92,6 +92,15 @@ export function buildPaletteCard(palette, paletteNumber, onPreview) {
   const label = document.createElement('span');
   label.className = 'palette-label';
   label.textContent = `Palette ${paletteNumber}`;
+  if (palette.varied) {
+    const icon = document.createElement('span');
+    icon.className = 'palette-varied-icon';
+    icon.title =
+      'Variation: Primary color adjusted from your input to increase palette diversity';
+    icon.innerHTML =
+      '<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 22C6.49 22 2 17.51 2 12S6.49 2 12 2s10 4.04 10 9c0 3.31-2.69 6-6 6h-1.77a1 1 0 0 0-.73 1.69c.47.47.73 1.1.73 1.75 0 .95-.68 1.56-1.23 1.56zm0-18a8 8 0 0 0 0 16c.01-.01.22-.01.22-.44 0-.15-.07-.3-.18-.42a3 3 0 0 1-.05-4.22A3 3 0 0 1 14.23 14H16c2.21 0 4-1.79 4-4 0-3.86-3.59-7-8-7zM6.5 13a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm3-4a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm3 4a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/></svg>';
+    label.appendChild(icon);
+  }
   info.appendChild(label);
 
   const actions = document.createElement('div');
