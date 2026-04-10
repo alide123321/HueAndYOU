@@ -11,17 +11,136 @@ import {Palette} from '../shared/types/Palette.js';
 import {WCAGAnalyzer} from '../shared/accessibility/WCAGAnalyzer.js';
 import {convertColor} from '../shared/utils/colorConversion.js';
 
+let demoPromptModal = null;
+
+function ensureDemoPromptModal() {
+  if (demoPromptModal) return demoPromptModal;
+
+  if (!document.getElementById('full-demo-modal-styles')) {
+    const style = document.createElement('style');
+    style.id = 'full-demo-modal-styles';
+    style.textContent = `
+      .full-demo-modal {
+        position: fixed;
+        inset: 0;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 3000;
+        background: rgba(10, 14, 20, 0.62);
+        backdrop-filter: blur(2px);
+        padding: 1rem;
+      }
+
+      .full-demo-modal.open {
+        display: flex;
+      }
+
+      .full-demo-modal-card {
+        width: min(34rem, 100%);
+        border-radius: 14px;
+        padding: 1.25rem 1.1rem;
+        background: #0f141d;
+        color: #eaf0fb;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow: 0 14px 40px rgba(0, 0, 0, 0.45);
+      }
+
+      .full-demo-modal-title {
+        margin: 0 0 0.55rem;
+        font-size: 1.2rem;
+        font-weight: 700;
+      }
+
+      .full-demo-modal-body {
+        margin: 0;
+        line-height: 1.55;
+        color: #c9d6ee;
+      }
+
+      .full-demo-modal-actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 1rem;
+      }
+
+      .full-demo-modal-close {
+        border: 0;
+        border-radius: 999px;
+        padding: 0.55rem 0.95rem;
+        background: #5b93de;
+        color: #fff;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .full-demo-modal-close:hover {
+        background: #4b83cd;
+      }
+
+      body.light-mode .full-demo-modal-card {
+        background: #ffffff;
+        color: #131a25;
+        border: 1px solid rgba(0, 0, 0, 0.08);
+      }
+
+      body.light-mode .full-demo-modal-body {
+        color: #394252;
+      }
+    `;
+
+    document.head.appendChild(style);
+  }
+
+  const modal = document.createElement('div');
+  modal.className = 'full-demo-modal';
+  modal.setAttribute('aria-hidden', 'true');
+  modal.innerHTML = `
+    <div class="full-demo-modal-card" role="dialog" aria-modal="true" aria-label="Full demo contact">
+      <h3 class="full-demo-modal-title">Full Demo Access</h3>
+      <p class="full-demo-modal-body">Please contact me for a full demo of the complete app experience.</p>
+      <div class="full-demo-modal-actions">
+        <button type="button" class="full-demo-modal-close">Got it</button>
+      </div>
+    </div>
+  `;
+
+  const closeButton = modal.querySelector('.full-demo-modal-close');
+
+  function closeModal() {
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+  }
+
+  closeButton.addEventListener('click', closeModal);
+  modal.addEventListener('click', (event) => {
+    if (event.target === modal) closeModal();
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') closeModal();
+  });
+
+  document.body.appendChild(modal);
+  demoPromptModal = modal;
+  return demoPromptModal;
+}
+
 function showFullDemoPrompt() {
-  window.alert('Please contact me for a full demo.');
+  const modal = ensureDemoPromptModal();
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden', 'false');
+  const closeButton = modal.querySelector('.full-demo-modal-close');
+  closeButton?.focus();
 }
 
 function enableDemoOnlyNavigationPrompt() {
-  const crossScreenLinks = Array.from(document.querySelectorAll('a[href]')).filter(
-    (link) => {
-      const href = link.getAttribute('href') || '';
-      return /GenerationPage\.html|editPage\.html|library\.html/i.test(href);
-    }
-  );
+  const crossScreenLinks = Array.from(
+    document.querySelectorAll('a[href]')
+  ).filter((link) => {
+    const href = link.getAttribute('href') || '';
+    return /GenerationPage\.html|editPage\.html|library\.html/i.test(href);
+  });
 
   crossScreenLinks.forEach((link) => {
     link.addEventListener('click', (event) => {
