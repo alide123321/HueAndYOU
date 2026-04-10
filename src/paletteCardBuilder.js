@@ -113,7 +113,7 @@ export function buildPaletteCard(palette, paletteNumber, onPreview) {
       label: 'Edit',
       handler: () => {
         savePaletteToStorage(palette);
-        window.location.href = '/edit';
+        window.location.href = './editPage.html';
       },
     },
   ];
