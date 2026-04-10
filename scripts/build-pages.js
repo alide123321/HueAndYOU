@@ -28,12 +28,12 @@ const indexHtml = `<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta http-equiv="refresh" content="0; url=./views/GenerationPage.html" />
+  <meta http-equiv="refresh" content="0; url=./views/about.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Hue & YOU</title>
 </head>
 <body>
-  <p>Redirecting to <a href="./views/GenerationPage.html">Hue & YOU</a>...</p>
+  <p>Redirecting to <a href="./views/about.html">Hue & YOU</a>...</p>
 </body>
 </html>
 `;
