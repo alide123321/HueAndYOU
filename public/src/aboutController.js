@@ -11,6 +11,28 @@ import {Palette} from '../shared/types/Palette.js';
 import {WCAGAnalyzer} from '../shared/accessibility/WCAGAnalyzer.js';
 import {convertColor} from '../shared/utils/colorConversion.js';
 
+function showFullDemoPrompt() {
+  window.alert('Please contact me for a full demo.');
+}
+
+function enableDemoOnlyNavigationPrompt() {
+  const crossScreenLinks = Array.from(document.querySelectorAll('a[href]')).filter(
+    (link) => {
+      const href = link.getAttribute('href') || '';
+      return /GenerationPage\.html|editPage\.html|library\.html/i.test(href);
+    }
+  );
+
+  crossScreenLinks.forEach((link) => {
+    link.addEventListener('click', (event) => {
+      event.preventDefault();
+      showFullDemoPrompt();
+    });
+  });
+}
+
+enableDemoOnlyNavigationPrompt();
+
 // init theme
 const themeToggleBtn = document.getElementById('about-theme-toggle');
 const examplePaletteContainer = document.getElementById('example-palette');

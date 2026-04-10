@@ -23,6 +23,16 @@ fs.cpSync(path.join(projectRoot, 'src'), path.join(buildDir, 'runtime-src'), {
   recursive: true,
 });
 
+// Only publish the About page; remove other view pages from the deployment bundle.
+const viewsDir = path.join(buildDir, 'views');
+const viewFilesToRemove = ['GenerationPage.html', 'editPage.html', 'library.html'];
+for (const fileName of viewFilesToRemove) {
+  const filePath = path.join(viewsDir, fileName);
+  if (fs.existsSync(filePath)) {
+    fs.rmSync(filePath, {force: true});
+  }
+}
+
 // Root entry for GitHub Pages.
 const indexHtml = `<!doctype html>
 <html lang="en">
