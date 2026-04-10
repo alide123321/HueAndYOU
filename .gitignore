@@ -1,0 +1,6 @@
+.env
+node_modules/
+
+# Ignore test results and coverage reports
+test-results/
+coverage/

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Hue & YOU - Color Palette Generator</title>
+  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./colorpicker.css" />
+  <link rel="stylesheet" href="./previewPanel.css" />
+  <link rel="icon" href="../favicon.ico" type="image/x-icon">
+  <script type="importmap">
+    {
+      "imports": {
+        "culori": "https://cdn.jsdelivr.net/npm/culori@4.0.2/+esm"
+      }
+    }
+  </script>
+
+
+</head>
+
+<body class="generation-page">
+  <!-- Top Bar -->
+  <header class="top-bar">
+    <div class="top-bar-content">
+      <div class="brand">Hue & YOU</div>
+      <div class="top-bar-right">
+        <nav class="nav-menu">
+          <a href="./GenerationPage.html" class="nav-item active">Generate</a>
+          <a href="./editPage.html" class="nav-item">Edit</a>
+          <a href="./library.html" class="nav-item">Library</a>
+          <a href="./about.html" class="nav-item">About</a>
+        </nav>
+        <button class="icon-btn theme-toggle-sm" id="gen-theme-toggle" aria-label="Toggle theme" title="Toggle theme">
+          <span class="icon-text">&#9728;</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <div class="main-container">
+    <!-- Left Sidebar -->
+    <aside class="sidebar">
+      <!-- Color Card -->
+      <div class="card">
+        <h2 class="card-title">Color</h2>
+        
+        <div class="form-group">
+          <label for="harmony-type" class="form-label">Harmony type</label>
+          <select id="harmony-type" class="form-select">
+            <!-- Options populated from constants.js -->
+          </select>
+          <div id="harmony-settings" class="harmony-settings" aria-live="polite"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="base-color" class="form-label">Base color</label>
+          <button id="base-color" class="color-swatch-btn" aria-label="Select base color">
+            <span id="selected-color" class="color-preview" style="background-color: #406ba0;"></span>
+          </button>
+        </div>
+
+        <div class="form-group">
+          <label for="num-swatches" class="form-label">Number of swatches</label>
+          <div class="stepper">
+            <button class="stepper-btn" aria-label="Decrease">−</button>
+            <input type="text" id="num-swatches" class="stepper-input" value="-" readonly>
+            <button class="stepper-btn" aria-label="Increase">+</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filters Card -->
+      <div class="card">
+        <h2 class="card-title">Filters</h2>
+        
+        <div class="form-group">
+          <label for="filter-type" class="form-label">Colorblind mode</label>
+          <select id="filter-type" class="form-select">
+            <option value="none">None</option>
+            <!-- Colorblind options populated from constants.js -->
+          </select>
+        </div>
+
+
+        <button class="add-filter-btn">+ Add filter</button>
+      </div>
+
+      <!-- Actions Area (Bottom Left)-->
+      <div class="actions-area">
+        <div class="action-buttons-row">
+          <button class="action-btn" aria-label="Share">Share</button>
+          <button class="action-btn" aria-label="Randomize">Randomize</button>
+        </div>
+        <button class="generate-btn">Generate palettes</button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area (Right Side) -->
+    <main class="main-content">
+      <!-- Empty State (Initially shown) -->
+      <div class="empty-state" id="empty-state">
+        <div class="empty-state-card">
+          <h1 class="empty-state-title">No palettes yet</h1>
+          <p class="empty-state-text">Adjust the settings on the left, then generate your first palette.</p>
+          <button class="generate-btn">Generate palettes</button>
+        </div>
+      </div>
+
+      <!-- Palettes Grid (Hidden initially) -->
+      <!-- Placeholder palettes for demonstration -->
+
+      <div class="palettes-grid hidden" id="palettes-grid">
+        <!-- Generated palettes will be inserted here -->
+      </div>
+    </main>
+  </div>
+  
+
+  <!-- Preview Slide-out Panel -->
+  <div class="preview-panel" id="preview-panel" aria-hidden="true">
+    <div class="preview-panel-header">
+      <h3 class="preview-panel-title">Palette Preview</h3>
+      <button class="preview-close-btn" id="preview-close-btn" aria-label="Close preview" title="Close preview">&#10005;</button>
+    </div>
+    <p class="preview-panel-subtitle">Live preview of your palette applied to a UI layout</p>
+    <div class="preview-content" id="preview-content">
+      <!-- Mock website rendered by JS -->
+    </div>
+  </div>
+
+  <!-- Main page controller -->
+  <script type="module" src="../src/generationPageController.js"></script>
+</body>
+</html>

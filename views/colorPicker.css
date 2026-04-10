@@ -1,0 +1,271 @@
+/* Color Picker Modal */
+.color-picker-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  overflow: auto;
+}
+
+body.edit-page .color-picker-overlay {
+  zoom: calc(1 / 0.9);
+}
+
+.color-picker-overlay.active {
+  display: flex !important;
+}
+
+.color-picker-modal {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+body.dark-mode .color-picker-modal {
+  background: #1e1e1e;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+}
+
+.color-picker-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 320px;
+}
+
+/* Gradient Canvas */
+.color-canvas {
+  width: 100%;
+  height: 300px;
+  border-radius: 8px;
+  cursor: crosshair;
+  position: relative;
+  overflow: hidden;
+}
+
+.color-canvas canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+}
+
+.color-canvas-cursor {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 3px solid white;
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Hue Slider */
+.hue-slider-container {
+  width: 100%;
+  position: relative;
+}
+
+.hue-slider {
+  width: 100%;
+  height: 16px;
+  border-radius: 8px;
+  background: linear-gradient(to right, 
+    #ff0000 0%, 
+    #ffff00 17%, 
+    #00ff00 33%, 
+    #00ffff 50%, 
+    #0000ff 67%, 
+    #ff00ff 83%, 
+    #ff0000 100%);
+  cursor: pointer;
+  position: relative;
+}
+
+.hue-slider-thumb {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 3px solid white;
+  border-radius: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.2);
+  background-color: currentColor;
+}
+
+/* Color Info */
+.color-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px;
+  background: #f5f5f5;
+  border-radius: 8px;
+}
+
+body.dark-mode .color-info {
+  background: #2c2c2c;
+}
+
+.color-preview-large {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  border: 2px solid #e0e0e0;
+  flex-shrink: 0;
+}
+
+body.dark-mode .color-preview-large {
+  border-color: #444;
+}
+
+.color-values {
+  display: flex;
+  gap: 12px;
+  flex: 1;
+}
+
+.color-value {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.color-value-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+}
+
+body.dark-mode .color-value-label {
+  color: #bbbbbb;
+}
+
+.color-value-number {
+  font-size: 18px;
+  font-weight: 700;
+  color: #333;
+}
+
+body.dark-mode .color-value-number {
+  color: #ffffff;
+}
+
+/* Format Selector */
+.format-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.format-selector select {
+  padding: 8px 32px 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: white;
+  font-size: 14px;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%23666' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+}
+
+body.dark-mode .format-selector select {
+  background: #2c2c2c;
+  color: #ffffff;
+  border-color: #444;
+}
+
+/* Action Buttons */
+.color-picker-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.color-picker-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.color-picker-btn-cancel {
+  background: #f5f5f5;
+  color: #666;
+}
+
+body.dark-mode .color-picker-btn-cancel {
+  background: #2c2c2c;
+  color: #bbbbbb;
+}
+
+.color-picker-btn-cancel:hover {
+  background: #e0e0e0;
+}
+
+body.dark-mode .color-picker-btn-cancel:hover {
+  background: #3a3a3a;
+}
+
+.color-picker-btn-select {
+  background: #4A90E2;
+  color: white;
+}
+
+body.dark-mode .color-picker-btn-select {
+  background: #4A90E2;
+  color: #ffffff;
+}
+
+.color-picker-btn-select:hover {
+  background: #3a7bc8;
+}
+
+body.dark-mode .color-picker-btn-select:hover {
+  background: #3a7bc8;
+}
+
+.copy-btn {
+  padding: 8px 12px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+body.dark-mode .copy-btn {
+  background: #2c2c2c;
+  border-color: #444;
+  color: #bbbbbb;
+}
+
+.copy-btn:hover {
+  background: #f5f5f5;
+}
+
+body.dark-mode .copy-btn:hover {
+  background: #3a3a3a;
+}
