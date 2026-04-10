@@ -4,5 +4,5 @@
  * TODO: Implement actual share functionality.
  */
 export function share() {
-  console.log('Share functionality not implemented yet.');
+  window.alert("Sorry, this isn't done yet, but it will be done soon.");
 }
