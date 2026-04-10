@@ -18,14 +18,14 @@
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/alide123321/Hue-YOU.github.io.git"
+    "url": "git+https://github.com/alide123321/HueAndYOU.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/alide123321/Hue-YOU.github.io/issues"
+    "url": "https://github.com/alide123321/HueAndYOU/issues"
   },
-  "homepage": "https://alide123321.github.io/Hue-YOU.github.io/",
+  "homepage": "https://alide123321.github.io/HueAndYOU/",
   "dependencies": {
     "culori": "^4.0.2",
     "dotenv": "^17.2.3",
