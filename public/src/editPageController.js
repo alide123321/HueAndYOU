@@ -1,21 +1,21 @@
-import {ColorRole, FilterType, ColorFormat} from '/shared/utils/constants.js';
-import {convertColor} from '/shared/utils/colorConversion.js';
-import {ColorPicker} from '/paletteModule/colorPicker.js';
-import {toggleTheme} from '/src/toggleThemeBtn.js';
-import {share} from '/src/shareBtn.js';
-import {WCAGAnalyzer} from '/shared/accessibility/WCAGAnalyzer.js';
-import {getTextColor} from '/shared/utils/textColorOverlay.js';
-import {exportPalette} from '/src/exportBtn.js';
-import {savePaletteToStorage} from '/shared/utils/paletteUtils.js';
-import {addCopyListener} from '/src/clipboardUtils.js';
-import {Palette} from '/shared/types/Palette.js';
-import {Color} from '/shared/types/Color.js';
+import {ColorRole, FilterType, ColorFormat} from '../shared/utils/constants.js';
+import {convertColor} from '../shared/utils/colorConversion.js';
+import {ColorPicker} from '../PaletteModule/colorPicker.js';
+import {toggleTheme} from './toggleThemeBtn.js';
+import {share} from './shareBtn.js';
+import {WCAGAnalyzer} from '../shared/accessibility/WCAGAnalyzer.js';
+import {getTextColor} from '../shared/utils/textColorOverlay.js';
+import {exportPalette} from './exportBtn.js';
+import {savePaletteToStorage} from '../shared/utils/paletteUtils.js';
+import {addCopyListener} from './clipboardUtils.js';
+import {Palette} from '../shared/types/Palette.js';
+import {Color} from '../shared/types/Color.js';
 import {
   initPreviewPanel,
   updatePreviewPanel,
   showPreviewTab,
   hidePreviewTab,
-} from '/src/previewPanel.js';
+} from './previewPanel.js';
 
 // --- Module state ---
 let currentPalette = null;

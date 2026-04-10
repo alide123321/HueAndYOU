@@ -15,7 +15,8 @@ app.use(express.json());
 
 // Serve static files from the public and shared directories
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/shared', express.static(path.join(__dirname, 'shared')))
+app.use('/shared', express.static(path.join(__dirname, 'shared')));
+app.use('/runtime-src', express.static(path.join(__dirname, 'src')));
 
 // routing
 // branches into controllers (if necessary)

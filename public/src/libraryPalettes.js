@@ -1,6 +1,6 @@
-import {Color} from '/shared/types/Color.js';
-import {ColorRole} from '/shared/utils/constants.js';
-import {Palette} from '/shared/types/Palette.js';
+import {Color} from '../shared/types/Color.js';
+import {ColorRole} from '../shared/utils/constants.js';
+import {Palette} from '../shared/types/Palette.js';
 
 /**
  * Creates a palette from an array of color definitions.

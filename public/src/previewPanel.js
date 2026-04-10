@@ -1,7 +1,7 @@
-import {ColorRole, ColorFormat} from '/shared/utils/constants.js';
-import {Color} from '/shared/types/Color.js';
-import {convertColor} from '/shared/utils/colorConversion.js';
-import {WCAGAnalyzer} from '/shared/accessibility/WCAGAnalyzer.js';
+import {ColorRole, ColorFormat} from '../shared/utils/constants.js';
+import {Color} from '../shared/types/Color.js';
+import {convertColor} from '../shared/utils/colorConversion.js';
+import {WCAGAnalyzer} from '../shared/accessibility/WCAGAnalyzer.js';
 
 /**
  * Returns '#ffffff' or '#000000' based on the luminance of the given Color,

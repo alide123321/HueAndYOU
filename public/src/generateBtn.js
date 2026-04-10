@@ -1,7 +1,8 @@
-import {Palette} from '/shared/types/Palette.js';
-import {GenerationSettings} from '/shared/types/GenerationSettings.js';
-import {ColorRole} from '/shared/utils/constants.js';
-import {Color} from '/shared/types/Color.js';
+import {GenerationSettings} from '../shared/types/GenerationSettings.js';
+import {Color} from '../shared/types/Color.js';
+import {ColorFormat, ColorHarmony} from '../shared/utils/constants.js';
+import {convertColor} from '../shared/utils/colorConversion.js';
+import {Generator} from '../runtime-src/lib/Generator.js';
 
 // Function to toggle between empty state and palette grid
 export function toggleView(emptyStateId, palettesGridId) {
@@ -35,38 +36,35 @@ export function initializeGenerateButtons(
   }
 }
 
-/** Generate a color palette based on the provided generation settings.
- *
- * @todo Fetches generate api from server and returns list of Palette objects.
+/**
+ * Generate palettes in-browser so static hosting (GitHub Pages) works without a Node API.
  *
  * @param {GenerationSettings} generationSettings
  * @author Ian Timchak, Ali Aldaghishy
- * @returns List of Palette Objects
+ * @returns {Promise<import('../shared/types/Palette.js').Palette[]>}
  */
 export async function generatePalette(generationSettings) {
-  const paletteList = await fetch('/api/generate', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-    },
-    body: JSON.stringify(generationSettings),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      //rehydrate the palette objects
-      const paletteList = data.map((p) => {
-        const palette = new Palette(
-          p.colorMap,
-          p.isDarkTheme,
-          p.varied ?? false
-        );
-        palette.rehydrateColorMap();
-        return palette;
-      });
+  const generator = new Generator();
+  const baseColor = Color.fromRGBString(generationSettings.baseColor);
 
-      return paletteList;
-    });
+  const rgb = baseColor.getRGB();
+  const oklch = convertColor(
+    {mode: 'rgb', r: rgb.r / 255, g: rgb.g / 255, b: rgb.b / 255},
+    ColorFormat.OKLCH
+  );
+  const chroma = oklch.c ?? 0;
+  const numberOfPalettes = chroma >= 0.1 ? 8 : chroma >= 0.04 ? 6 : 4;
 
-  return paletteList;
+  const gs = new GenerationSettings({
+    harmonyType: generationSettings.harmonyType || ColorHarmony.MONOCHROMATIC,
+    baseColor,
+    includeBgTextColors: true,
+    isLightMode: true,
+    numberOfPalettes,
+    numberOfColors: Number(generationSettings.numberOfColors) || 5,
+    opts: generationSettings.opts || {},
+  });
+
+  generator.applySettings(gs);
+  return generator.generate();
 }

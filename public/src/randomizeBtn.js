@@ -1,4 +1,4 @@
-import {FilterType} from '/shared/utils/constants.js';
+import {FilterType} from '../shared/utils/constants.js';
 /**
  * randomize function to set random values for harmony type, base color, number of swatches, and filter type.
  *
@@ -34,7 +34,9 @@ export function randomize(
     typeof colorPickerInstance.setColor === 'function'
   ) {
     const baseColorBtn = document.getElementById('base-color');
-    const randomColor = `#${Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0')}`;
+    const randomColor = `#${Math.floor(Math.random() * 16777215)
+      .toString(16)
+      .padStart(6, '0')}`;
     console.log('Random Color:', randomColor);
     document.querySelector('.color-preview').style.backgroundColor =
       randomColor;

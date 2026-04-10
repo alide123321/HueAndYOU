@@ -13,11 +13,11 @@
       }
     }
   </script>
-  <link rel="stylesheet" href="/views/style.css">
-  <link rel="stylesheet" href="/views/colorpicker.css" />
-  <link rel="stylesheet" href="/views/editPage.css" />
-  <link rel="stylesheet" href="/views/previewPanel.css" />
-  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./colorpicker.css" />
+  <link rel="stylesheet" href="./editPage.css" />
+  <link rel="stylesheet" href="./previewPanel.css" />
+  <link rel="icon" href="../favicon.ico" type="image/x-icon">
 </head>
 
 <body class="edit-page">
@@ -27,10 +27,10 @@
       <div class="brand">Hue & YOU</div>
       <div class="top-bar-right">
         <nav class="nav-menu">
-          <a href="/" class="nav-item">Generate</a>
-          <a href="/edit" class="nav-item active">Edit</a>
-          <a href="/library" class="nav-item">Library</a>
-          <a href="/about" class="nav-item">About</a>
+          <a href="./GenerationPage.html" class="nav-item">Generate</a>
+          <a href="./editPage.html" class="nav-item active">Edit</a>
+          <a href="./library.html" class="nav-item">Library</a>
+          <a href="./about.html" class="nav-item">About</a>
         </nav>
         <button class="icon-btn theme-toggle-sm" id="edit-theme-toggle" aria-label="Toggle theme" title="Toggle theme">
           <span class="icon-text">&#9728;</span>
@@ -49,7 +49,7 @@
     <div class="empty-state-card">
       <h1 class="empty-state-title">No palette to edit</h1>
       <p class="empty-state-text">Generate or select a palette first, then click "Edit" to modify it here.</p>
-      <a href="/" class="generate-btn" style="display:inline-block;text-decoration:none;text-align:center;">Go to Generator</a>
+      <a href="./GenerationPage.html" class="generate-btn" style="display:inline-block;text-decoration:none;text-align:center;">Go to Generator</a>
     </div>
   </div>
 
@@ -204,6 +204,6 @@
     <span class="preview-tab-label">Preview</span>
   </button>
 
-  <script type="module" src="/src/editPageController.js"></script>
+  <script type="module" src="../src/editPageController.js"></script>
 </body>
 </html>

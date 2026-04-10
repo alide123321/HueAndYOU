@@ -1,4 +1,4 @@
-import {FilterType} from '/shared/utils/constants.js';
+import {FilterType} from '../shared/utils/constants.js';
 
 /**
  * Toggles the theme between light and dark mode.

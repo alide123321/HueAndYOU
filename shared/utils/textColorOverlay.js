@@ -1,6 +1,6 @@
-import {Color} from '/shared/types/Color.js';
-import {convertColor} from '/shared/utils/colorConversion.js';
-import {ColorFormat} from '/shared/utils/constants.js';
+import {Color} from '../types/Color.js';
+import {convertColor} from './colorConversion.js';
+import {ColorFormat} from './constants.js';
 
 /**
  *

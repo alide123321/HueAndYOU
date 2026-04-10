@@ -1,7 +1,7 @@
-import {FilterType} from '/shared/utils/constants.js';
-import {toggleTheme} from '/src/toggleThemeBtn.js';
-import {getLibraryPalettes} from '/src/libraryPalettes.js';
-import {buildPaletteCard} from '/src/paletteCardBuilder.js';
+import {FilterType} from '../shared/utils/constants.js';
+import {toggleTheme} from './toggleThemeBtn.js';
+import {getLibraryPalettes} from './libraryPalettes.js';
+import {buildPaletteCard} from './paletteCardBuilder.js';
 
 export function initLibrary() {
   // set page theme based on localStorage
@@ -9,7 +9,8 @@ export function initLibrary() {
     toggleTheme(false);
 
   // Event listener for theme toggle button
-  document.getElementById('lib-theme-toggle')
+  document
+    .getElementById('lib-theme-toggle')
     .addEventListener('click', () => toggleTheme());
 
   const paletteList = getLibraryPalettes();

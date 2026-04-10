@@ -13,9 +13,9 @@
       }
     }
   </script>
-  <link rel="stylesheet" href="/views/style.css">
-  <link rel="stylesheet" href="/views/colorpicker.css" />
-  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./colorpicker.css" />
+  <link rel="icon" href="../favicon.ico" type="image/x-icon">
 </head>
 
 <body>
@@ -25,10 +25,10 @@
       <div class="brand">Hue & YOU</div>
       <div class="top-bar-right">
         <nav class="nav-menu">
-          <a href="/" class="nav-item">Generate</a>
-          <a href="/edit" class="nav-item">Edit</a>
-          <a href="/library" class="nav-item active">Library</a>
-          <a href="/about" class="nav-item">About</a>
+          <a href="./GenerationPage.html" class="nav-item">Generate</a>
+          <a href="./editPage.html" class="nav-item">Edit</a>
+          <a href="./library.html" class="nav-item active">Library</a>
+          <a href="./about.html" class="nav-item">About</a>
         </nav>
         <button class="icon-btn theme-toggle-sm" id="lib-theme-toggle" aria-label="Toggle theme" title="Toggle theme">
           <span class="icon-text">&#9728;</span>
@@ -57,7 +57,7 @@
   </div>
 
   <script type="module">
-    import initLibrary from '/src/libraryController.js';
+    import initLibrary from '../src/libraryController.js';
     // initialize library page behavior
     initLibrary();
   </script>

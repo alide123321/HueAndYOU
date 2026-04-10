@@ -2,15 +2,15 @@ import {
   ColorHarmony,
   FilterType,
   OFFSET_CONFIG,
-} from '/shared/utils/constants.js';
-import {ColorPicker} from '/paletteModule/colorPicker.js';
-import {initializeGenerateButtons} from '/src/generateBtn.js';
-import {share} from '/src/shareBtn.js';
-import {toggleTheme} from '/src/toggleThemeBtn.js';
-import {randomize} from '/src/randomizeBtn.js';
-import {generatePalette} from '/src/generateBtn.js';
-import {buildPaletteCard} from '/src/paletteCardBuilder.js';
-import {initPreviewPanel, openPreviewPanel} from '/src/previewPanel.js';
+} from '../shared/utils/constants.js';
+import {ColorPicker} from '../PaletteModule/colorPicker.js';
+import {initializeGenerateButtons} from './generateBtn.js';
+import {share} from './shareBtn.js';
+import {toggleTheme} from './toggleThemeBtn.js';
+import {randomize} from './randomizeBtn.js';
+import {generatePalette} from './generateBtn.js';
+import {buildPaletteCard} from './paletteCardBuilder.js';
+import {initPreviewPanel, openPreviewPanel} from './previewPanel.js';
 
 //set page theme based on localStorage @TODO a little slow may need optimization
 if (localStorage.getItem('theme') === FilterType.DARK_MODE) toggleTheme(false);

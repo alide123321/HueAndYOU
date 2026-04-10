@@ -3,13 +3,13 @@ import {
   ColorRole,
   ColorFormat,
   ColorHarmony,
-} from '/shared/utils/constants.js';
-import {toggleTheme} from '/src/toggleThemeBtn.js';
-import {buildPaletteCard} from '/src/paletteCardBuilder.js';
-import {Color} from '/shared/types/Color.js';
-import {Palette} from '/shared/types/Palette.js';
-import {WCAGAnalyzer} from '/shared/accessibility/WCAGAnalyzer.js';
-import {convertColor} from '/shared/utils/colorConversion.js';
+} from '../shared/utils/constants.js';
+import {toggleTheme} from './toggleThemeBtn.js';
+import {buildPaletteCard} from './paletteCardBuilder.js';
+import {Color} from '../shared/types/Color.js';
+import {Palette} from '../shared/types/Palette.js';
+import {WCAGAnalyzer} from '../shared/accessibility/WCAGAnalyzer.js';
+import {convertColor} from '../shared/utils/colorConversion.js';
 
 // init theme
 const themeToggleBtn = document.getElementById('about-theme-toggle');
